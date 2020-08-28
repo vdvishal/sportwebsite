@@ -511,7 +511,7 @@ export default function MyMatch(props) {
                           match.scoreboards ? 
                           match.scoreboards.map(inn => {
                             if(match.localteam.id === inn.team_id && inn.total !== 0){
-                              return(<div>
+                              return(<div key={match.localteam.id}>
 
                               <Typography variant="caption">
                                 {inn.total}/{inn.wickets}
@@ -540,7 +540,7 @@ export default function MyMatch(props) {
                           match.scoreboards ? 
                           match.scoreboards.map(inn => {
                             if(match.visitorteam.id === inn.team_id && inn.total !== 0){
-                              return(<div style={{
+                              return(<div key={match.visitorteam.id} style={{
                               textAlign: "end"
                             }}>
 

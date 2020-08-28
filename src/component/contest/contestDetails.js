@@ -496,6 +496,8 @@ export default function ContestDetails(props) {
   })
 
   const viewLeaderBoard = () => leaders.map(leader => {
+    console.log('-----------',leader);
+    // console.log('-----------',Date.now());
     return leader.users.map(user => <Paper key={user._id + "K"}
       elevation={0}
       style={{
@@ -537,7 +539,7 @@ export default function ContestDetails(props) {
       </div>
 
       <div
-        style={match.isLive === true ? // && new Date(match.starting_at).getTime() < Date.now() ?
+        style={match.isLive === true ||( match.isLive === false && match.status === "Finished" )? // && new Date(match.starting_at).getTime() < Date.now() ?
           {
             display: "flex",
             padding: 5,
@@ -556,8 +558,11 @@ export default function ContestDetails(props) {
   })
 
   const myLeaderBoard = () => {
+
+
     if ( new Date(match.starting_at).getTime() < Date.now() ) {
       return myLeader.map(leader => {
+         
         return leader.users.map(user => {
           return <Paper key={user._id}
             elevation={0}
@@ -1089,7 +1094,7 @@ export default function ContestDetails(props) {
             >
               <Tab label="Prize BreakUp" />
               <Tab label="Leaderboard" />
-              <Tab label="Players" />
+              {/* <Tab label="Players" /> */}
               <Tab label="My Teams" />
             </Tabs>
 
@@ -1191,7 +1196,7 @@ export default function ContestDetails(props) {
 
               </div>
               : <div />}
-            {value === 2 ?
+            {/* {value === 2 ?
               <div>
                 <Paper
                   elevation={0}
@@ -1219,9 +1224,9 @@ export default function ContestDetails(props) {
                 {viewPlayers()}
               </div>
 
-              : <div />}
+              : <div />} */}
 
-            {value === 3 ?
+            {value === 2 ?
               <div>
                 <Paper
                   elevation={0}

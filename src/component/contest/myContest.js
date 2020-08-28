@@ -350,29 +350,55 @@ const NestedFinalDiv = styled.div`
 `
 const StatDiv = styled.div`
   display:grid;
-  grid-template-columns: 85px 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 85px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  @media (max-width: 567px) {
+    grid-template-columns: 85px 63px 63px 63px 63px 63px 63px 63px;
+    
+    
+    }
 `
 
 const StatBowlerDiv = styled.div`
   display:grid;
-  grid-template-columns: 85px 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 85px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  @media (max-width: 567px) {
+    grid-template-columns:85px 63px 63px 63px 63px 63px 63px 63px;
+    
+    }
+  
 `
+const StatFieldDiv = styled.div`
+  display:grid;
+  grid-template-columns: 85px 1fr;
+ 
+  
+`
+
+
 const HeaderDiv = styled.div`
   padding-left: 1.5rem;
   color: #2b2c2d;
-  background-color: #F9F9FB;
+  background-color: #FFFFFF;
   border-color: #edeef0;
   padding: .75rem 12px;
+  text-align:center
 
+`
+
+const StatsContainerDiv = styled.div`
+  
+  @media (max-width: 567px) {
+    overflow-x: scroll    
+    }
 `
 
 const ContentDiv = styled.div`
   padding-left: 1.5rem;
   color: #2b2c2d;
-  background-color: #F9F9FB;
+  background-color: #FFFFFF;
   border-color: #edeef0;
   padding: .75rem 12px;
-
+  text-align:center;
 `
 
 let uState = {}
@@ -1194,6 +1220,11 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
         </ContentDiv>
         <ContentDiv>
           <Typography variant="caption">
+          {players.battingScoreCard ? players.battingScoreCard.ball : "Did not bat"}
+          </Typography>
+        </ContentDiv>
+        <ContentDiv>
+          <Typography variant="caption">
             {players.battingScoreCard ? players.battingScoreCard.score : "Did not bat"}
           </Typography>
         </ContentDiv>
@@ -1212,10 +1243,12 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
             {players.battingScoreCard ? players.battingScoreCard.rate : "Did not bat"}
           </Typography>
         </ContentDiv>
-        <ContentDiv style={{
-          
-          textAlign: "center"
-          }}>
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.catchStump ? players.catchStump: 0}
+          </Typography>
+        </ContentDiv>
+        <ContentDiv>
           <Typography variant="caption">
             {players.points ? players.points : 0}
           </Typography>
@@ -1233,6 +1266,7 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
             {players.fullname}
           </Typography>
         </ContentDiv>
+        
 
         <ContentDiv>
           <Typography variant="caption">
@@ -1264,6 +1298,11 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           </Typography>
 
         </ContentDiv>
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.catchStump ? players.catchStump: 0}
+          </Typography>
+        </ContentDiv>
         <ContentDiv style={{
           
           textAlign: "center"
@@ -1277,6 +1316,26 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
       <Divider />
     </div>
   })
+  const statslocalTeamField = () => teamStats.players[teamStats.localTeam].map((players) => {
+    return <div key={players.id + "b"} style={players.catchStump ? { display: "block" } : { display: "none" }}>
+      <StatFieldDiv>
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.fullname}
+          </Typography>
+        </ContentDiv>
+        
+
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.catchStump ? players.catchStump : 0}
+          </Typography>
+
+        </ContentDiv>
+      </StatFieldDiv>
+      <Divider />
+    </div>
+  })
 
   const statsVisitorTeam = () => teamStats.players[teamStats.visitorTeam].map((players) => {
     return <div key={players.id} style={players.battingScoreCard ? { display: "block" } : { display: "none" }}>
@@ -1286,6 +1345,11 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           {players.fullname}
         </Typography>
       </ContentDiv>
+      <ContentDiv>
+          <Typography variant="caption">
+          {players.battingScoreCard ? players.battingScoreCard.ball : "Did not bat"}
+          </Typography>
+        </ContentDiv>
       <ContentDiv>
         <Typography variant="caption">
           {players.battingScoreCard ? players.battingScoreCard.score : "Did not bat"}
@@ -1306,6 +1370,11 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           {players.battingScoreCard ? players.battingScoreCard.rate : "Did not bat"}
         </Typography>
       </ContentDiv>
+      <ContentDiv>
+          <Typography variant="caption">
+            {players.catchStump ? players.catchStump: 0}
+          </Typography>
+        </ContentDiv>
       <ContentDiv  style={{
         
         textAlign: "center"
@@ -1358,6 +1427,11 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           </Typography>
 
         </ContentDiv>
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.catchStump ? players.catchStump: 0}
+          </Typography>
+        </ContentDiv>
         <ContentDiv style={{
           
           textAlign: "center"
@@ -1371,6 +1445,28 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
       <Divider />
     </div>
   })
+
+  const statsVisitorTeamField = () => teamStats.players[teamStats.visitorTeam].map((players) => {
+    return <div key={players.id + "b"} style={players.catchStump ? { display: "block" } : { display: "none" }}>
+      <StatFieldDiv>
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.fullname}
+          </Typography>
+        </ContentDiv>
+        
+
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.catchStump ? players.catchStump : 0}
+          </Typography>
+
+        </ContentDiv>
+      </StatFieldDiv>
+      <Divider />
+    </div>
+  })
+
   /**
    * @VIEWMATCH
    */
@@ -1434,9 +1530,10 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                       }}>
                         <Typography variant="caption" style={{
                         fontWeight: 600,
-                        textAlign: "start"
+                        textAlign: "start",
+                        
                       }}>
-                        {match.localteam.code}
+                        {match.localteam.name}
                       </Typography>
                         {
                           match.scoreboards ?
@@ -1468,17 +1565,22 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                         alignContent: "center",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        marginBottom: "3.5px"
+                        // marginBottom: "3.5px",
+                        margin:10
                       }}
                     >
-                       {!match.isLive ?   <Typography>
+                       {!match.isLive ? match.status === "Finished" ?
+                       <Typography variant={"caption"}>{match.note}</Typography>  : 
+                       match.status === "Aban." || match.status === "Cancl." ?  <Typography variant={"caption"}>{match.note}</Typography> 
+                       
+                       : <Typography variant={"caption"}>
                        
                       <Countdown 
                       date={match.starting_at ? match.starting_at : match.starting_at} 
                       daysInHours={false} />
   
                       </Typography>
-                      : match.status === "Finished" ?<Typography>{match.notes}</Typography>  : <div/>
+                      :  <div/>
                       }
                     </div>
                     
@@ -1492,7 +1594,7 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                         fontWeight: 600,
                         textAlign: "end"
                       }}>
-                        {match.visitorteam.code}
+                        {match.visitorteam.name}
                       </Typography>
                         {  match.scoreboards ? 
                           match.scoreboards.map(inn => {
@@ -1693,12 +1795,13 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                 <Tab label={Object.entries(teamStats).length > 0 ? teamStats.matchDetail.visitorteam.code : ''} />
 
               </Tabs>
-            <div style={value2 === 0 ? { position: "relative" } : { display: 'none' }}>
+            <StatsContainerDiv style={value2 === 0 ? { position: "relative"} : { display: 'none' }}>
             {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                     BATTING
                  </Typography>
                 </div> : <div/>}  
+                <Divider />
               <StatDiv >
                 <HeaderDiv>
                   <Typography variant="caption" style={{
@@ -1707,6 +1810,16 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     lineHeight: "1.5"
                   }}>
                     BAT
+          </Typography>
+
+                </HeaderDiv>
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                   B
           </Typography>
 
                 </HeaderDiv>
@@ -1750,6 +1863,16 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           </Typography>
 
                 </HeaderDiv>
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    Catch/Stump/Run-Out
+          </Typography>
+
+                </HeaderDiv>
                 <HeaderDiv  style={{
  
                 textAlign: "center"
@@ -1775,7 +1898,8 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                   BOWLING
                  </Typography>
-                </div> : <div/>}                  
+                </div> : <div/>} 
+                <Divider />                 
               <StatBowlerDiv >
                 <HeaderDiv>
                   <Typography variant="caption" style={{
@@ -1837,6 +1961,16 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           </Typography>
 
                 </HeaderDiv>
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    Catch/Stump/Run-Out
+          </Typography>
+
+                </HeaderDiv>
                 <HeaderDiv style={{
  
                 textAlign: "center"
@@ -1858,15 +1992,60 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     Stats will be updated soon
                  </Typography>
                 </div>}
+                
+                <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
+                  FIELDING
+                 </Typography>
+                </div>
+                <Divider />
+                <StatFieldDiv >
 
-            </div>
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    FIELD
+          </Typography>
 
-            <div style={value2 === 1 ? { position: "relative" } : { display: 'none' }}>
+                </HeaderDiv>
+             
+                 
+ 
+                 
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    Catch/Stump/Run-Out
+          </Typography>
+
+                </HeaderDiv>
+                 
+              </StatFieldDiv>
+              <Divider />
+              {Object.entries(teamStats).length > 0 ? statslocalTeamField() :
+                <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                    Stats will be updated soon
+                 </Typography>
+                </div>}
+
+                
+
+            </StatsContainerDiv>
+
+            <StatsContainerDiv style={value2 === 1 ? { position: "relative"} : { display: 'none' }}>
             {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                   BATTING
                  </Typography>
                 </div> : <div/>}  
+                <Divider />
               <StatDiv >
                 <HeaderDiv>
                   <Typography variant="caption" style={{
@@ -1875,6 +2054,16 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     lineHeight: "1.5"
                   }}>
                     BAT
+          </Typography>
+
+                </HeaderDiv>
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    B
           </Typography>
 
                 </HeaderDiv>
@@ -1918,6 +2107,16 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           </Typography>
 
                 </HeaderDiv >
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    Catch/Stump/Run-Out
+          </Typography>
+
+                </HeaderDiv>
                 <HeaderDiv style={{
  
                     textAlign: "center"
@@ -1944,7 +2143,8 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                   BOWLING
                  </Typography>
-                </div> : <div/>}                  
+                </div> : <div/>} 
+                <Divider />                 
               <StatBowlerDiv >
                 <HeaderDiv>
                   <Typography variant="caption" style={{
@@ -2006,6 +2206,16 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           </Typography>
 
                 </HeaderDiv>
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    Catch/Stump/Run-Out
+          </Typography>
+
+                </HeaderDiv>
                 <HeaderDiv style={{
  
                 textAlign: "center"
@@ -2027,8 +2237,49 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     Stats will be updated soon
                  </Typography>
                 </div>}
+                <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
+                  FIELDING
+                 </Typography>
+                </div>
+                <Divider />
+                <StatFieldDiv >
 
-            </div>
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    FIELD
+          </Typography>
+
+                </HeaderDiv>
+             
+                 
+ 
+                 
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    Catch/Stump/Run-Out
+          </Typography>
+
+                </HeaderDiv>
+                 
+              </StatFieldDiv>
+              <Divider />
+              {Object.entries(teamStats).length > 0 ? statsVisitorTeamField() :
+                <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                    Stats will be updated soon
+                 </Typography>
+                </div>}
+
+            </StatsContainerDiv>
 
             </Paper>
           </Container>
