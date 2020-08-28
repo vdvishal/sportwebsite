@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url> <loc>https://www.fantasyjutsu.com/</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/register</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/contest/:matchId</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/contest/mymatch/:matchId</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/contest/details/:matchId/:contestId</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/team/:matchId</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/team/edit/:matchId/:teamId</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/profile</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/match/mymatch</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/myaccount</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/kyc</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/withdraw</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/transactions</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/faq</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/pointsystem</loc> </url>
+<url> <loc>https://www.fantasyjutsu.com/terms</loc> </url>
+</urlset>
