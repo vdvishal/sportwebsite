@@ -330,11 +330,8 @@ const Line = styled.div`
  
 
 const FinalValue = styled.div`
- 
-    position: absolute;
-    left: 25%;
-    top: 28px;
-    right: -5px;
+display: flex;
+justify-content: center;
   
 `
 const NestedFinalDiv = styled.div`
@@ -369,7 +366,7 @@ const StatBowlerDiv = styled.div`
 `
 const StatFieldDiv = styled.div`
   display:grid;
-  grid-template-columns: 85px 1fr;
+  grid-template-columns: 85px 1fr 1fr;
  
   
 `
@@ -378,10 +375,10 @@ const StatFieldDiv = styled.div`
 const HeaderDiv = styled.div`
   padding-left: 1.5rem;
   color: #2b2c2d;
-  background-color: #FFFFFF;
-  border-color: #edeef0;
+   border-color: #edeef0;
   padding: .75rem 12px;
-  text-align:center
+  text-align:center;
+  
 
 `
 
@@ -399,6 +396,9 @@ const ContentDiv = styled.div`
   border-color: #edeef0;
   padding: .75rem 12px;
   text-align:center;
+  display:grid;
+  align-items:center;
+  justify-content:center;
 `
 
 let uState = {}
@@ -725,8 +725,11 @@ export default function Contest(props) {
 
 
             <ContestvalueArea>
-              <div style={{ positon: "relative" }}>
-                <Line>
+              <div style={{ positon: "relative" ,
+                  display: "flex",
+                  justifyContent: "center",
+              }}>
+            
                   <NestedFinalDiv
                     style={
                       contest2['winner'] ?
@@ -748,7 +751,7 @@ export default function Contest(props) {
 
                     </Typography>
                   </NestedFinalDiv>
-                </Line>
+           
                 <Typography variant="caption"  >
 
                   {/* {multipleArr2[index]}X */}
@@ -794,7 +797,10 @@ export default function Contest(props) {
 
 
           <ContestvalueArea>
-            <div style={{ positon: "relative" }}>
+            <div style={{ positon: "relative" ,
+                  display: "flex",
+                  justifyContent: "center",
+              }}>
 
               <FinalValue >
                 <NestedFinalDiv style={
@@ -811,7 +817,7 @@ export default function Contest(props) {
                 }         >
 
                   <Typography variant="caption">
-                    {multipleArr2[Object.keys(contest2.wonContest).length - 1]}X
+                    {  contest2.lostContest !== null  &&  contest2.lostContest !== undefined && contest2.lostContest.length === 0 ? multipleArr2[Object.keys(contest2.wonContest).length - 1]:''}X
 
                   </Typography>
 
@@ -833,16 +839,19 @@ export default function Contest(props) {
           </Typography> */}
 
 
-            {contest2['winner'] && contest2['status'] === "Finished" ? contest2.wonContest.length !== 0 && contest2.lostContest.length === 0 ?
+            {contest2['winner'] && contest2['status'] === "Finished" ?  
+            contest2.wonContest.length !== 0 && contest2.lostContest.length === 0 ?
 
               <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                 <span style={{ color: "#00A826", fontWeight: 500,  }} >
                   You won
               ₹{multipleArr2[Object.keys(contest2.wonContest).length - 1] * contest2.amount}
                 </span>
-              </Typography> : 
-contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ? 
-<Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+              </Typography>
+               : 
+              contest2.wonContest.length === 0 && contest2.lostContest.length === 0 
+              ? 
+                <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                 <span style={{ color: "#00A826", fontWeight: 500,  }} >
                  Refund 
               ₹{contest2.amount}
@@ -854,9 +863,14 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                   You lost {contest2.lostContest.length} contest
               </span>
               </Typography>
-
-
-              : <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+              : 
+              contest2['status'] === "Aban." ?  
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }}>
+                      Refund due to match abandoned
+                    </Typography> 
+              :
+              
+              <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                  <Typography variant="caption">
                     Entry: 
                     <span style={{ color: "#00A826", fontWeight: 500 }} >
@@ -866,8 +880,13 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                   </Typography>
                   <br/>
                 Payout: <span style={{ color: "#00A826", fontWeight: 500 }} >
-               
-                  ₹{multipleArr2[Object.keys(contest2.wonContest).length - 1] * contest2.amount}
+                {contest2.lostContest !== null && contest2.lostContest.length > 0 ? 
+                     "You lost " + contest2.lostContest.length + " contest"
+                  : 
+                  contest2.wonContest !== null && contest2.wonContest.length > 0 ?  
+                  "₹"+ contest2.wonContest.length > 0 ? 
+                  multipleArr2[contest2.wonContest.length - 1] * contest2.amount : 0 : 0}
+                  
                 </span>
               </Typography>}
           </ContestvalueArea>
@@ -931,8 +950,11 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
 
 
             <ContestvalueArea>
-              <div style={{ positon: "relative" }}>
-                <Line >
+              <div style={{ positon: "relative" ,
+                  display: "flex",
+                  justifyContent: "center",
+              }}>
+        
 
 
 
@@ -957,14 +979,34 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
 
                     </Typography>
                   </NestedFinalDiv>
-                </Line>
+ 
                 <Typography variant="caption"  >
 
                   {/* {multipleArr2[index]}X */}
                 </Typography>
               </div>
 
-              <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+              <div
+                style={{
+                  
+                  display:"flex",
+                  flexDirection:"row-reverse",
+                  alignItems:"center",
+
+                }}
+              >
+              <div className="image" style={{
+
+                // padding: '16.5px',
+                // margin: '5.5px',
+
+
+                }}>
+                 { contest.players[contest.player1].id !== contest2['selectedTeam'][contest._id]['playerDetails'].id ? 
+                    <Avatar src={contest.players[contest.player1].image_path} variant="circle" />
+                    : <Avatar src={contest.players[contest.player2].image_path} variant="circle" />}
+                </div>
+                <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
 
                 {
                   contest.status === "Discarded" ?
@@ -979,9 +1021,12 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                           `${contest.players[contest.player2].firstname[0]}. ${contest.players[contest.player2].lastname}`
                       }</span></Typography>}
                 <br />
+                
 
               </Typography>
-            </ContestvalueArea>
+           
+              </div>
+               </ContestvalueArea>
           </ContestType2>
         )}
       </Collapse>
@@ -1017,7 +1062,8 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     } : { display: "block" }
                 }         >
                   <Typography variant="caption">
-                    {multipleArr[Object.keys(contest2.wonContest).length - 1]}X
+ 
+                  {  contest2.lostContest !== null  &&  contest2.lostContest !== undefined && contest2.lostContest.length === 0 ? multipleArr[Object.keys(contest2.wonContest).length - 1]:''}X
 
                   </Typography>
 
@@ -1034,7 +1080,7 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
 
             {contest2['winner'] && contest2['status'] === "Finished" ?  
             
-              contest2.lostContest.length === 0  && contest2.wonContest.length !== 0?
+              contest2.lostContest.length === 0  && contest2.wonContest.length !== 0 ?
 
               <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                 <span style={{ color: "#00A826", fontWeight: 500,  }} >
@@ -1057,17 +1103,25 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
               </Typography>
 
 
+              : contest2['status'] === "Aban." ?  
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }}>
+                      Refund due to match abandoned
+                    </Typography>
               : <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                 <Typography variant="caption">
                     Entry: 
                     <span style={{ color: "#00A826", fontWeight: 500 }} >
                
-               ₹{contest2.amount}
-             </span>
-                  </Typography>
+                   ₹{contest2.amount}
+                  </span>
+                </Typography>
                   <br/>
                 Payout: <span style={{ color: "#00A826", fontWeight: 500 }} >
-                  ₹{multipleArr[Object.keys(contest2.wonContest).length - 1] * contest2.amount}
+                  {contest2.lostContest !== null && contest2.lostContest.length > 0 ? 
+                     "You lost " + contest2.lostContest.length + " contest"
+                  : contest2.wonContest !== null && contest2.wonContest.length > 0 ?
+                   "₹"+ Object.keys(contest2.wonContest).length > 0 ? 
+                  multipleArr[Object.keys(contest2.wonContest).length - 1] * contest2.amount : 0 : 0 }
                 </span>
               </Typography>}
           </ContestvalueArea>
@@ -1332,6 +1386,15 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           </Typography>
 
         </ContentDiv>
+        <ContentDiv style={{
+          
+          textAlign: "center"
+          }}>
+          <Typography variant="caption" >
+            {players.points ? players.points : 0}
+          </Typography>
+
+        </ContentDiv>
       </StatFieldDiv>
       <Divider />
     </div>
@@ -1462,6 +1525,15 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
           </Typography>
 
         </ContentDiv>
+        <ContentDiv style={{
+          
+          textAlign: "center"
+          }}>
+          <Typography variant="caption" >
+            {players.points ? players.points : 0}
+          </Typography>
+
+        </ContentDiv>
       </StatFieldDiv>
       <Divider />
     </div>
@@ -1571,7 +1643,7 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     >
                        {!match.isLive ? match.status === "Finished" ?
                        <Typography variant={"caption"}>{match.note}</Typography>  : 
-                       match.status === "Aban." || match.status === "Cancl." ?  <Typography variant={"caption"}>{match.note}</Typography> 
+                       match.status === "Aban." || match.status === "Cancl." ?  <Typography variant={"caption"}>Match Abandoned: {match.note}</Typography> 
                        
                        : <Typography variant={"caption"}>
                        
@@ -1580,7 +1652,7 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                       daysInHours={false} />
   
                       </Typography>
-                      :  <div/>
+                      :  <Typography variant={"caption"}>{match.note}</Typography>
                       }
                     </div>
                     
@@ -1796,13 +1868,13 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
 
               </Tabs>
             <StatsContainerDiv style={value2 === 0 ? { position: "relative"} : { display: 'none' }}>
-            {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
+            {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                     BATTING
                  </Typography>
                 </div> : <div/>}  
                 <Divider />
-              <StatDiv >
+              <StatDiv style={{backgroundColor:"#E4E5E6"}} >
                 <HeaderDiv>
                   <Typography variant="caption" style={{
                     fontSize: "0.85rem",
@@ -1869,7 +1941,7 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     fontWeight: "750",
                     lineHeight: "1.5"
                   }}>
-                    Catch/Stump/Run-Out
+                    Catch/Stump
           </Typography>
 
                 </HeaderDiv>
@@ -1894,13 +1966,13 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                  </Typography>
                 </div>}
 
-                {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
+                {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                   BOWLING
                  </Typography>
                 </div> : <div/>} 
                 <Divider />                 
-              <StatBowlerDiv >
+              <StatBowlerDiv style={{backgroundColor:"#E4E5E6"}} >
                 <HeaderDiv>
                   <Typography variant="caption" style={{
                     fontSize: "0.85rem",
@@ -1967,7 +2039,7 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     fontWeight: "750",
                     lineHeight: "1.5"
                   }}>
-                    Catch/Stump/Run-Out
+                    Catch/Stump
           </Typography>
 
                 </HeaderDiv>
@@ -1993,13 +2065,13 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                  </Typography>
                 </div>}
                 
-                <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
+                <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                   FIELDING
                  </Typography>
                 </div>
                 <Divider />
-                <StatFieldDiv >
+                <StatFieldDiv style={{backgroundColor:"#E4E5E6"}}>
 
                 <HeaderDiv>
                   <Typography variant="caption" style={{
@@ -2021,7 +2093,17 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     fontWeight: "750",
                     lineHeight: "1.5"
                   }}>
-                    Catch/Stump/Run-Out
+                    Catch/Stump
+          </Typography>
+
+                </HeaderDiv>
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    FP
           </Typography>
 
                 </HeaderDiv>
@@ -2040,13 +2122,13 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
             </StatsContainerDiv>
 
             <StatsContainerDiv style={value2 === 1 ? { position: "relative"} : { display: 'none' }}>
-            {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
+            {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                   BATTING
                  </Typography>
                 </div> : <div/>}  
                 <Divider />
-              <StatDiv >
+              <StatDiv style={{backgroundColor:"#E4E5E6"}} >
                 <HeaderDiv>
                   <Typography variant="caption" style={{
                     fontSize: "0.85rem",
@@ -2113,7 +2195,7 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     fontWeight: "750",
                     lineHeight: "1.5"
                   }}>
-                    Catch/Stump/Run-Out
+                    Catch/Stump
           </Typography>
 
                 </HeaderDiv>
@@ -2139,13 +2221,13 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                  </Typography>
                 </div>}
 
-                {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
+                {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                   BOWLING
                  </Typography>
                 </div> : <div/>} 
                 <Divider />                 
-              <StatBowlerDiv >
+              <StatBowlerDiv style={{backgroundColor:"#E4E5E6"}} >
                 <HeaderDiv>
                   <Typography variant="caption" style={{
                     fontSize: "0.85rem",
@@ -2212,7 +2294,7 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     fontWeight: "750",
                     lineHeight: "1.5"
                   }}>
-                    Catch/Stump/Run-Out
+                    Catch/Stump
           </Typography>
 
                 </HeaderDiv>
@@ -2237,13 +2319,13 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     Stats will be updated soon
                  </Typography>
                 </div>}
-                <div style={{ width: "100%", textAlign: "center",  marginTop:25 }}>
+                <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
                   FIELDING
                  </Typography>
                 </div>
                 <Divider />
-                <StatFieldDiv >
+                <StatFieldDiv style={{backgroundColor:"#E4E5E6"}} >
 
                 <HeaderDiv>
                   <Typography variant="caption" style={{
@@ -2265,7 +2347,17 @@ contest2.wonContest.length === 0 && contest2.lostContest.length === 0 ?
                     fontWeight: "750",
                     lineHeight: "1.5"
                   }}>
-                    Catch/Stump/Run-Out
+                    Catch/Stump
+          </Typography>
+
+                </HeaderDiv>
+                <HeaderDiv>
+                  <Typography variant="caption" style={{
+                    fontSize: "0.85rem",
+                    fontWeight: "750",
+                    lineHeight: "1.5"
+                  }}>
+                    FP
           </Typography>
 
                 </HeaderDiv>

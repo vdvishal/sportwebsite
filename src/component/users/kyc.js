@@ -149,13 +149,13 @@ export default function KYC() {
  
                     </Paper>
                     <Paper style={{display:"flex",flexDirection:"column",marginTop:15,fontWeight:700,padding:10}}>
-                        <div>
+                        {/* <div>
                             <Typography variant="caption"  style={{ padding: 10,color:"grey",fontSize:"0.75em",fontWeight:700 }}>
                                 ID Verification
                             </Typography>
-                        </div>
+                        </div> */}
                         <div
-                        style={{ padding:"50px 10px 0 0",}}
+                       
                             >
                              <Select
                              id="demo-simple-select"
@@ -163,7 +163,12 @@ export default function KYC() {
                             onChange={(event) => setID(event.target.value)}
                             >
                                 {/* <MenuItem value={1}>Aadhar Card</MenuItem> */}
-                                <MenuItem value={2}>Pan Card</MenuItem>
+                                <MenuItem value={2}>
+                                    
+                                    <Typography variant="caption"  style={{ color:"grey",fontSize:"0.75em",fontWeight:700 }}>
+                                    Pan Card
+                                        </Typography>
+                                    </MenuItem>
                             </Select>
                         </div>
                         <div
@@ -183,8 +188,9 @@ export default function KYC() {
                             >
                                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDatePicker
-                                disableToolbar
+                                // disableToolbar
                                 variant="inline"
+
                                 format="MM/dd/yyyy"
                                 margin="normal"
                                 id="date-picker-inline"
@@ -209,8 +215,9 @@ export default function KYC() {
                 withIcon={true}
                 buttonText='Choose images'
                 onChange={onDrop}
-                imgExtension={['.jpg',  '.png' ]}
-                maxFileSize={5242880}
+                imgExtension={['.jpg','.png' ]}
+                maxFileSize={10485760}
+                label={'Max file size: 10mb, accepted: jpg,png'}
             /> : complete ?  <img src={image} alt="ID" />:
             <LinearProgress color="secondary" />}
  

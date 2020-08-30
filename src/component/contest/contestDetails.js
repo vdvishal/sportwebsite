@@ -252,6 +252,15 @@ export default function ContestDetails(props) {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if(newValue === 1){
+        api.leaderBoard(props.match.params.contestId, 1)
+        .then(response => {
+          console.log(response.data.data);
+          
+          setLeaderBoard(response.data.data);
+          setSize(response.data.size)
+        })
+    }
   };
 
   const handleNotificationClose = () => {
@@ -664,62 +673,7 @@ export default function ContestDetails(props) {
 
   }
 
-
-  const viewPlayers = () => players.map((leader, index) => {
-    return <div
-      key={`${index}_players`}
-    > <Paper
-      elevation={0}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-
-        padding: 5,
-        justifyContent: "space-between"
-      }}
-    >
-        <div style={{
-          display: "flex",
-          padding: 5,
-          flexDirection: "row",
-
-          alignItems: "center"
-        }}>
-          <Avatar src={leader.image_path} />
-          <div style={{ marginLeft: 10 }}>
-            <Typography variant="caption" style={{ fontWeight: 700 }}>
-              {leader.firstname}
-            </Typography>
-            <br />
-            <Typography variant="caption" >
-              {match.localteam.id === leader.teamId ? match.localteam.code : match.visitorteam.code}
-            </Typography>
-            <br />
-            <Typography variant="caption" >
-              {leader.position.name.slice(0, 3)}
-            </Typography>
-          </div>
-
-        </div>
-        <div
-          style={{
-            display: "flex",
-            padding: 5,
-            flexDirection: "row",
-
-            alignItems: "center",
-            justifyContent: "flex-end"
-          }}>
-          <Typography variant="caption" style={{ fontWeight: 500,color:'grey' }}>
-            { new Date(match.starting_at).getTime() < Date.now() ? 
-            leader.points || 0 : leader.credit}
-          </Typography>
-        </div>
-
-      </Paper>
-      <Divider />
-    </div>
-  })
+ 
 
   const viewJoinTeam = () => teamList.map(team => (
     <ListItem style={{ padding: 0 }} key={team._id}>

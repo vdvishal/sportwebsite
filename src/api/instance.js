@@ -15,6 +15,8 @@ instance.interceptors.response.use(response => {
   return response
 }, async function (error) {
   
+  console.log(window.location.pathname);
+  
   if(error && error.response && error.response.status === 496 && localStorage.getItem("isLogged") === "true"){
  
      localStorage.setItem("isLogged",false); 
@@ -23,6 +25,14 @@ instance.interceptors.response.use(response => {
      window.location.replace('/');
 
    } 
+   if(error && error.response && error.response.status === 496 && localStorage.getItem("isLogged") === "false" && window.location.pathname !== "/"){
+ 
+    localStorage.setItem("isLogged",false); 
+
+
+    window.location.replace('/');
+
+  } 
 
    if(error && error.response && error.response.status === 401 && localStorage.getItem("isLogged") === "true"){
  

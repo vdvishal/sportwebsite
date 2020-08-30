@@ -13,6 +13,8 @@ import CloseOutlined from '@material-ui/icons/CloseOutlined';
 
 import { Link } from "react-router-dom";
 
+import * as publicIp from "public-ip";
+
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -56,6 +58,8 @@ export default function HomePage(props) {
     const theme = useTheme();
 
     const [dt, setCountDown] = React.useState(120);
+
+    const [userIp,setIp]  = React.useState(0);
 
 
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
@@ -209,14 +213,15 @@ export default function HomePage(props) {
 
 
 
-    const login = () => {
+    const login = async () => {
         if (password.length === 0) {
             setmessage("Password can't be empty")
             setopen(true)
             setType('info')
             return
         }
-        api.login({ email: email, password: password }).then(response => {
+        let ip = await publicIp.v4()
+        await api.login({ email: email, password: password,ip:ip }).then(response => {
             if (response && response.status === 200) {
                 console.log(window.location.pathname)
                 if(window.location.pathname === '/register'){
@@ -979,7 +984,7 @@ export default function HomePage(props) {
                                         color: '#262626'
                                     }}
                                 >
-                                    <MenuItem
+                                    <MenuItem onClick={handleClose}
                                     > <Typography variant="caption">Profile</Typography> </MenuItem>
                                 </Link>
                                 <Link

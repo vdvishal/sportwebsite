@@ -1,6 +1,6 @@
  
 import React from 'react';
-import ReactGA from 'react-ga';
+ 
 
 
 import Snackbar from '@material-ui/core/Snackbar';
@@ -17,7 +17,7 @@ const Notification = (props) => {
         return(           
           <Snackbar
                  open={props.open}
-                 autoHideDuration={6000}
+                 autoHideDuration={1500}
                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                  key={`top,right`}
                  onClose={props.close}

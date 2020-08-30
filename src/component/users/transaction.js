@@ -52,7 +52,7 @@ export default function Transaction() {
                             alignContent:"center"
                         }} 
                         variant="caption" >
-                        {orders.status === 'paid' || orders.status === 'bonus' || orders.status === 'contest_credit' ? <span style={{color:"#00A826"}}>+{orders.amount/100} INR</span>: <span style={{color:"red"}}>-{orders.amount/100} INR</span>}
+                        {orders.status === 'paid' || orders.status === 'bonus' || orders.status === 'contest_credit' ? <span style={{color:"#00A826"}}>+{(orders.amount/100).toFixed(2)} INR</span>: <span style={{color:"red"}}>-{(orders.amount/100).toFixed(2)} INR</span>}
                           {/* {orders.status === 'paid' ?   <ImportExportIcon color="secondary" />    : <ImportExportIcon style={{color:"red"}} />} */}
                         </Typography>
                 </Div>

@@ -97,20 +97,33 @@ const handleClick = async (event) => {
       </Paper>
 
       
-      <form id="redirectForm" method="post" action="https://test.cashfree.com/billpay/checkout/post/submit">
-          <input type="hidden" name="appId" value="300426d0c3affe8a8566b5f2e24003"/>
-          <input type="hidden" name="orderId" value="order00001"/>
-          <input type="hidden" name="orderAmount" value="100"/>
-          <input type="hidden" name="orderCurrency" value="INR"/>
-          <input type="hidden" name="orderNote" value="test"/>
-          <input type="hidden" name="customerName" value="John Doe"/>
-          <input type="hidden" name="customerEmail" value="Johndoe@test.com"/>
-          <input type="hidden" name="customerPhone" value="9999999999"/>
-          <input type="hidden" name="returnUrl" value="rewas.com"/>
-          <input type="hidden" name="notifyUrl" value="rewas.com"/>
-          <input type="hidden" name="signature" value="HKBagH7ovz5FpmLyuwGnNeTpB79CLQP8DfrkR3r4wjE="/>
-          <input type="submit" value="Pay"></input>
-        </form>
+       <TextField
+                      
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                         label="Amount"
+                        fullWidth
+                        onChange={(event) => setAmount(event.target.value)}
+                        value={amount}
+                    />
+                    <div
+                       style={{
+                        justifyContent:'center',
+                        display:'flex',
+                        flexDirection:'row',
+                        flexWrap:'wrap',
+                        alignItems:'center'
+                    }}
+                    >
+                    <Button  size="medium" variant="contained" style={{
+                                    backgroundColor: js.buttonGreen,
+                                    color: 'white',
+                                    width:200
+                                }} onClick={handleClick}>
+        Deposit
+      </Button>
+                     </div>
 
  
  

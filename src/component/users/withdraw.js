@@ -80,6 +80,8 @@ export default function Profile() {
                 handleNotificationClick("Documents uploaded");
 
             }
+        }).catch(err => {
+            console.log(err.response)
         })
     }
 
@@ -321,8 +323,9 @@ export default function Profile() {
                                 withIcon={true}
                                 buttonText='Choose images'
                                 onChange={onDrop}
-                                imgExtension={['.jpg', '.png']}
-                                maxFileSize={5242880}
+                                imgExtension={['.jpg','.png' ]}
+                                maxFileSize={10485760}
+                                label={'Max file size: 10mb, accepted: jpg,png'}
                             /> : complete ? <img src={image} alt="ID" /> :
                                     <LinearProgress color="secondary" />}
                         </div>

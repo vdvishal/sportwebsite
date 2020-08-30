@@ -272,7 +272,7 @@ export default function PointSystem() {
             <Div>
                 <div>
                     <Typography variant="caption">
-                    Run-out
+                     Run-out(Stumping)
                     </Typography>
                     
                 </div>
@@ -623,7 +623,9 @@ export default function PointSystem() {
             </Div>
             <Divider />
  
-            <h6>FIELDING</h6>
+            <h6 style={{marginBottom:0}}>FIELDING</h6>
+            <Typography variant="caption" style={{marginTop:0,marginBlockEnd: "2.33em"}}>*Points are not honored to the thrower in run-outs.</Typography>
+
             <Div>
                 <div>
                     <Typography variant="caption">
@@ -655,7 +657,7 @@ export default function PointSystem() {
             <Div>
                 <div>
                     <Typography variant="caption">
-                    Run-out
+                     Run-out(Stumping)
                     </Typography>
                     
                 </div>
@@ -665,6 +667,7 @@ export default function PointSystem() {
                     </Typography>
                 </div>
             </Div>
+             
             <Divider />
 
         
@@ -1038,7 +1041,7 @@ export default function PointSystem() {
             <Div>
                 <div>
                     <Typography variant="caption">
-                    Run-out
+                     Run-out(Stumping)
                     </Typography>
                     
                 </div>
