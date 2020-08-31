@@ -26,7 +26,7 @@ import Button from '@material-ui/core/Button';
  
 import EditIcon from '@material-ui/icons/Edit';
 
-import { Divider, IconButton, Dialog, Avatar, Input, Toolbar, Badge } from '@material-ui/core';
+import { Divider, IconButton, Dialog,TextField, Avatar,Slider, Input, Toolbar, Badge } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
@@ -511,9 +511,8 @@ transform: rotate(-45deg);
 width: 25px;
 height: 25px;
 display:flex;
-align-items:center;
-align-content:center;
-justify-content:center;
+place-content:center;
+text-align:center;
 `
 
 const AntiDiagonalTrans = styled.div`
@@ -522,7 +521,7 @@ background-color: #0ED145;
             width: 25px;
             height: 25px;
             display:flex;
-            align-items:center;
+            border:1px solid white;
             align-content:center;
             justify-content:center;
             color: white;
@@ -532,7 +531,7 @@ background-color: #0ED145;
                     transform: rotate(45deg);
 `
 
-
+// align-items:center;
 let combo = {};
 
 export default function Contest(props) {
@@ -625,7 +624,72 @@ export default function Contest(props) {
   const [fantasyOrginal, setfantasyOrginal] = React.useState([]);
 
   const [wait, setWait] = React.useState(false);
+  const [custom, setCustom] = React.useState(null);
 
+  const [min, setMinRange] = React.useState(0);
+  const [max, setMaxRange] = React.useState(0);
+ 
+  const [filterCustom, setCustomFilter] = React.useState(1);
+
+  const [, setPage] = React.useState(0);
+  const [directionCustom, setCustomDirection] = React.useState(1);
+
+  const [, setCustomDirectionValue] = React.useState(1);
+
+  const [openCustom, handleCustomDialog] = React.useState(false);
+
+  
+
+  const handleFilterCustom = (value) => {
+    setCustomFilter(value)
+
+  }
+  
+
+  const handleCustomDirectionChange = (dir) => {
+    let fanD = custom;
+    if (dir === 1) {
+      setCustomDirection(1);
+
+      setCustomDirectionValue('asc');
+      fanD = _.orderBy(fanD, 'amount', ['asc']);
+      setCustom(fanD)
+    } else {
+      setCustomDirection(dir);
+
+      setCustomDirectionValue('desc')
+      fanD = _.orderBy(fanD, 'amount', ['desc']);
+      setCustom(fanD)
+    }
+  }
+
+  const getFilteredCustom = () => {
+    api.customContest(props.match.params.matchId,min,max,0,1).then(response => {
+      let ff = response.data.data;
+      if(filterCustom === 0 ){
+        ff = _.filter(response.data.data, ['contestType', 5]);
+      }
+      if(filterCustom === 1 ){
+        ff = _.filter(response.data.data, ['contestType', 6]);
+      }
+       
+      setCustom(ff);
+
+    })
+  }
+
+  const getPageCustom = (page) => {
+    setPage(page)
+    api.customContest(props.match.params.matchId,min,max,0,page).then(response => {
+      let ff = response.data.data;
+      if(filterCustom !== 0 ){
+        ff = _.filter(response.data.data, ['contestType', filterCustom]);
+      }
+      
+      setCustom(ff);
+
+    })
+  }
 
   const handleTeamOpen = () => {
     setWait(true)
@@ -725,7 +789,13 @@ export default function Contest(props) {
 
     })
 
+    api.customContest(props.match.params.matchId,0,100000,0,1).then(response => {
+      
+      setCustom(response.data.data);
 
+    })
+
+    
     api.fantasy(props.match.params.matchId).then(response => {
       let fff = _.orderBy(response.data.data, ['prizePool'], ['desc'])
       setfantasy(fff)
@@ -1100,6 +1170,127 @@ export default function Contest(props) {
 
 
   const viewCombo = () => matchUps.map(contest => (
+    <Duels key={contest._id}>
+      
+      <DuelSingle onClick={() => { setEnterContest(true); makeCombo(contest._id, contest._id + "playerL", contest.players[contest.player1].id, contest.players[contest.player1]) }}
+        style={{ cursor: "pointer", boxShadow: dynamicObj[contest._id][contest._id + "playerL"] ? "0 0 1em 0 #71bc4f" : "", backgroundColor: dynamicObj[contest._id][contest._id + "playerL"] ? color.secondary.main : "#FFFFFF", color: dynamicObj[contest._id][contest._id + "playerL"] ? "white" : "black" }}>
+ 
+        <DuelSingleLeft >
+          <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center"
+          }}>
+            <Typography variant="subtitle2">
+            <StarRateIcon style={dynamicObj[contest._id][contest._id + "playerL"] ? { margin: 10,color:"#ebff00" } : { margin: 10,color:"#f79123" }} />
+
+            </Typography>
+          </div>
+          <DuelSingleLeftSub  >
+            <Typography variant="caption">
+              {contest.players[contest.player1].fullname}
+
+            </Typography>
+
+            <Typography variant="caption">
+              <span style={{ fontWeight: 600 }}>
+                {contest.players[contest.player1].team.code}
+              </span>
+                           -{contest.players[contest.player2].team.code}
+
+            </Typography>
+            <Typography variant="caption">
+              {contest.players[contest.player1].position.name}
+
+            </Typography>
+          </DuelSingleLeftSub>
+        </DuelSingleLeft>
+       
+        <div style={{
+
+          padding: '2.5px',
+          margin: '5.5px',
+
+        }}>
+          <Avatar src={contest.players[contest.player1].image_path} variant="circle" />
+        </div>
+      
+     </DuelSingle>
+      
+      <div style={{
+        display: "flex",
+        alignContent: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%"
+      }}>
+        <AntiDiagonalTrans>
+          <DiagonalTrans>
+            vs
+          </DiagonalTrans>
+        </AntiDiagonalTrans>
+
+      </div>
+
+
+      <DuelSingleRightTop  
+        onClick={() => { setEnterContest(true); makeCombo(contest._id, contest._id + "playerR", contest.players[contest.player2].id, contest.players[contest.player2]) }} 
+        style={{  cursor: "pointer", 
+        boxShadow: dynamicObj[contest._id][contest._id + "playerR"] ? "0 0 1em 0 #71bc4f" 
+        : "",
+         backgroundColor: dynamicObj[contest._id][contest._id + "playerR"] ? color.secondary.main 
+         : "#FFFFFF", 
+         color: dynamicObj[contest._id][contest._id + "playerR"] ? "white" : "black" }} >
+        <div style={{
+          padding: '2.5px',
+          margin: '5.5px',
+        }}>
+          <Avatar src={contest.players[contest.player2].image_path} variant="circle" />
+
+        </div>
+
+        <DuelSingleRight style={{ flexDirection: "row-reverse" }} >
+          <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center"
+          }}>
+            <Typography variant="subtitle2">
+              {/* <CheckCircleSharpIcon style={{ margin: 10 }} /> */}
+
+            </Typography>
+          </div>
+          <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column"
+          }}>
+            <Typography variant="caption">
+              {contest.players[contest.player2].fullname}
+
+            </Typography>
+
+            <Typography variant="caption">
+
+              {contest.players[contest.player1].team.code}-
+                           <span style={{ fontWeight: 600 }}>
+                {contest.players[contest.player2].team.code}
+              </span>
+
+            </Typography>
+            <Typography variant="caption">
+              {contest.players[contest.player2].position.name}
+
+            </Typography>
+          </div>
+        </DuelSingleRight>
+      </DuelSingleRightTop>
+    </Duels>
+
+  ))
+
+  const viewCustom = () => setCustom.map(contest => (
     <Duels key={contest._id}>
       
       <DuelSingle onClick={() => { setEnterContest(true); makeCombo(contest._id, contest._id + "playerL", contest.players[contest.player1].id, contest.players[contest.player1]) }}
@@ -2113,6 +2304,7 @@ export default function Contest(props) {
             <Tab label="Under/Over" />
             <Tab label="Combo Duels" />
             <Tab label="Fantasy 11" />
+            <Tab label="Custom Duels" />
 
           </Tabs>
 
@@ -2279,6 +2471,100 @@ export default function Contest(props) {
               backgroundColor:"#F9F8FC"
             }} >
               {fantasy.length > 0 ? viewFantasy() : <div ></div>}
+            </Paper>
+          </Paper>
+
+        </div>
+
+        <div style={value === 3 ? { display: 'block',   position: "relative", marginTop: '10px' } : { display: 'none' }}>
+          <Paper elevation={0} style={{  backgroundColor:"#F9F8FC", }}>
+            <Paper elevation={0} style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              padding: "10px",
+              position:"sticky",
+            }}>
+              <div elevation={0} style={{
+                textAlign: 'start',
+
+              }}>
+                <Typography variant="caption" style={{ marginRight: 5 }}>
+                  Filter
+              </Typography>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={filterCustom}
+                  onChange={(event) => handleFilterCustom(event.target.value)}
+                >
+                  <MenuItem value={0}>Under/Over</MenuItem>
+                  <MenuItem value={1}>Duel</MenuItem>
+
+                </Select>
+              </div>
+  
+              <div elevation={0} style={{
+                textAlign: 'end',
+
+              }}>
+                <Typography variant="caption" style={{ marginRight: 5 }}>
+                  Sort
+              </Typography>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={directionCustom}
+                  onChange={(event) => handleCustomDirectionChange(event.target.value)}
+                >    
+                  <MenuItem value={1}>Asc</MenuItem>
+                  <MenuItem value={-1}>Dsc</MenuItem>
+                </Select>
+              </div>
+
+
+
+            </Paper>
+            <Paper elevation={0} style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              padding: "10px",
+              position:"sticky",
+            }}>
+                <div elevation={0} style={{
+                textAlign: 'start',
+
+              }}>
+ 
+                   <Input type="text" placeholder="₹Min" style={{ width: '50px',marginRight:5 }} onChange={(e) => setMinRange((e.target.value))} />
+
+               
+                  <Input type="text" placeholder="₹Max" style={{ width: '50px',marginRight:5 }} onChange={(e) => setMaxRange((e.target.value))} />
+
+                  <Button variant={"outlined"} size="small" onClick={getFilteredCustom} >
+                    Filter
+                  </Button>
+                  </div>
+              
+              <div elevation={0} style={{
+                textAlign: 'end',
+
+              }}>
+                <Button variant={"outlined"} size="small" onClick={() => handleCustomDialog(true)} >
+                    Create
+                  </Button>
+              </div>
+
+
+
+            </Paper>
+
+            <Paper elevation={0} style={{
+              marginBottom: 60,
+              backgroundColor:"#F9F8FC"
+            }} >
+               
             </Paper>
           </Paper>
 

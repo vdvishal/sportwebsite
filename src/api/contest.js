@@ -33,6 +33,18 @@ export const contest = (matchId,sort) => instance.get(`/contest/${matchId}?sort=
     return (response);
   });
 
+  export const customContest = (matchId,min,max,contestType,page) => 
+        instance
+        .get(`/contest/custom/${matchId}?min=${min}&max=${max}&contestType=${contestType}&page=${page}`,{
+    auth:{
+      username: "app",
+      password: 'qwewqinasdoinoinacino'
+    },
+  })
+  .then((response) => {
+    return (response);
+  });
+
   export const fantasy = (matchId) => instance.get(`/contest/fantasy/${matchId}`,{
     auth:{
       username: "app",
