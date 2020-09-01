@@ -199,6 +199,40 @@ const ColorLinearProgress = withStyles({
   },
 })(LinearProgress);
 
+const DuelsCustom = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 1fr;
+  margin-bottom: 0.25em;
+  grid-gap: 2px;
+  -webkit-align-items: end;
+  -ms-flex-align: end;
+  align-items: end;
+  grid-template-rows: auto 1fr;
+ 
+  @media ${device.mobileL} {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    align-items: center;
+    margin:0px 0 24px 0;
+     
+  }
+`
+const DuelsCustomDiv = styled.div`
+display:flex;
+flex-direction:row;
+margin:2px;
+border:1px solid #cbd4df;
+background-color: #FFFFFF;
+padding:5px;
+border-radius:4px;
+transition: transform .2s;
+cursor:pointer;
+@media ${device.mobileL} {
+   }
+ 
+`;
+
 
 
 const Duels = styled.div`
@@ -342,7 +376,7 @@ color:white;
 `;
 
 const BetFooter = styled.div`
-background-color: #00A826;
+background-color: #77BC37;
 width:100%;
 padding: 5px;
 height:25px;
@@ -517,7 +551,7 @@ text-align:center;
 
 const AntiDiagonalTrans = styled.div`
 
-background-color: #0ED145;
+background-color: #77BC37;
             width: 25px;
             height: 25px;
             display:flex;
@@ -624,7 +658,7 @@ export default function Contest(props) {
   const [fantasyOrginal, setfantasyOrginal] = React.useState([]);
 
   const [wait, setWait] = React.useState(false);
-  const [custom, setCustom] = React.useState(null);
+  const [custom, setCustom] = React.useState([1]);
 
   const [min, setMinRange] = React.useState(0);
   const [max, setMaxRange] = React.useState(0);
@@ -712,7 +746,7 @@ export default function Contest(props) {
   const handleTeamClose = () => {
     setTeamOpen(false);
     setOpenTeamSelect(false)
-
+    handleCustomDialog(false)
   };
 
   const PrizePoolClose = () => {
@@ -791,8 +825,8 @@ export default function Contest(props) {
 
     api.customContest(props.match.params.matchId,0,100000,0,1).then(response => {
       
-      setCustom(response.data.data);
-
+      //setCustom(response.data.data);
+      setCustom([1])
     })
 
     
@@ -1290,95 +1324,30 @@ export default function Contest(props) {
 
   ))
 
-  const viewCustom = () => setCustom.map(contest => (
-    <Duels key={contest._id}>
-      
-      <DuelSingle onClick={() => { setEnterContest(true); makeCombo(contest._id, contest._id + "playerL", contest.players[contest.player1].id, contest.players[contest.player1]) }}
-        style={{ cursor: "pointer", boxShadow: dynamicObj[contest._id][contest._id + "playerL"] ? "0 0 1em 0 #71bc4f" : "", backgroundColor: dynamicObj[contest._id][contest._id + "playerL"] ? color.secondary.main : "#FFFFFF", color: dynamicObj[contest._id][contest._id + "playerL"] ? "white" : "black" }}>
+  const viewCustom = () => custom.map(contest => (
+    <DuelsCustom key={"contest._id"}>
  
-        <DuelSingleLeft >
-          <div style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center"
-          }}>
-            <Typography variant="subtitle2">
-            <StarRateIcon style={dynamicObj[contest._id][contest._id + "playerL"] ? { margin: 10,color:"#ebff00" } : { margin: 10,color:"#f79123" }} />
+   
 
-            </Typography>
-          </div>
-          <DuelSingleLeftSub  >
-            <Typography variant="caption">
-              {contest.players[contest.player1].fullname}
-
-            </Typography>
-
-            <Typography variant="caption">
-              <span style={{ fontWeight: 600 }}>
-                {contest.players[contest.player1].team.code}
-              </span>
-                           -{contest.players[contest.player2].team.code}
-
-            </Typography>
-            <Typography variant="caption">
-              {contest.players[contest.player1].position.name}
-
-            </Typography>
-          </DuelSingleLeftSub>
-        </DuelSingleLeft>
-       
-        <div style={{
-
-          padding: '2.5px',
-          margin: '5.5px',
-
-        }}>
-          <Avatar src={contest.players[contest.player1].image_path} variant="circle" />
-        </div>
-      
-     </DuelSingle>
-      
-      <div style={{
-        display: "flex",
-        alignContent: "center",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%"
-      }}>
-        <AntiDiagonalTrans>
-          <DiagonalTrans>
-            vs
-          </DiagonalTrans>
-        </AntiDiagonalTrans>
-
-      </div>
-
-
-      <DuelSingleRightTop  
-        onClick={() => { setEnterContest(true); makeCombo(contest._id, contest._id + "playerR", contest.players[contest.player2].id, contest.players[contest.player2]) }} 
-        style={{  cursor: "pointer", 
-        boxShadow: dynamicObj[contest._id][contest._id + "playerR"] ? "0 0 1em 0 #71bc4f" 
-        : "",
-         backgroundColor: dynamicObj[contest._id][contest._id + "playerR"] ? color.secondary.main 
-         : "#FFFFFF", 
-         color: dynamicObj[contest._id][contest._id + "playerR"] ? "white" : "black" }} >
+      <DuelsCustomDiv style={{padding: "6px"}} >
         <div style={{
           padding: '2.5px',
           margin: '5.5px',
         }}>
-          <Avatar src={contest.players[contest.player2].image_path} variant="circle" />
+          <Avatar  variant="circle" />
 
         </div>
 
-        <DuelSingleRight style={{ flexDirection: "row-reverse" }} >
+        <DuelSingleRight >
           <div style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center"
+            
           }}>
             <Typography variant="subtitle2">
-              {/* <CheckCircleSharpIcon style={{ margin: 10 }} /> */}
-
+             Name
+            </Typography>
+      
+            <Typography variant="subtitle2">
+             Level
             </Typography>
           </div>
           <div style={{
@@ -1388,26 +1357,147 @@ export default function Contest(props) {
             flexDirection: "column"
           }}>
             <Typography variant="caption">
-              {contest.players[contest.player2].fullname}
-
+ 
             </Typography>
 
             <Typography variant="caption">
 
-              {contest.players[contest.player1].team.code}-
-                           <span style={{ fontWeight: 600 }}>
-                {contest.players[contest.player2].team.code}
+                            <span style={{ fontWeight: 600 }}>
+              
               </span>
 
             </Typography>
             <Typography variant="caption">
-              {contest.players[contest.player2].position.name}
+             
 
             </Typography>
           </div>
         </DuelSingleRight>
-      </DuelSingleRightTop>
-    </Duels>
+        <DuelSingleRight style={{
+             justifyContent:"flex-end",
+             textAlign:"end"
+         }}>
+          <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-end",
+            flexDirection: "column",
+            textAlign:"end",
+            padding: "3.89px 0"
+          }}>
+            <Typography variant="caption">
+             Type(under)
+            </Typography>
+      
+            <Typography variant="caption">
+             Points
+            </Typography>
+          </div>
+          <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column"
+          }}>
+            <Typography variant="caption">
+ 
+            </Typography>
+
+            <Typography variant="caption">
+
+                            <span style={{ fontWeight: 600 }}>
+              
+              </span>
+
+            </Typography>
+            <Typography variant="caption">
+             
+
+            </Typography>
+          </div>
+        </DuelSingleRight>
+      </DuelsCustomDiv>
+      <DuelsCustomDiv >
+        <div style={{
+          padding: '2.5px',
+          margin: '5.5px',
+        }}>
+          <Avatar  variant="circle" />
+
+        </div>
+
+        <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column"
+          }}>
+            <Typography variant="caption">
+              "fullname"
+
+            </Typography>
+
+            <Typography variant="caption">
+              <span style={{ fontWeight: 600 }}>
+                "team"
+              </span>
+                           -team22
+
+            </Typography>
+            <Typography variant="caption">
+            "position"
+
+            </Typography>
+          </div>
+        </DuelsCustomDiv>
+      <DuelsCustomDiv style={{padding: "6px"}} >
+      <div style={{
+          padding: '2.5px',
+          margin: '5.5px',
+        }}>
+          {/* <Avatar src={contest.players[contest.player2].image_path} variant="circle" /> */}
+
+        </div>
+
+
+        <DuelSingleRight >
+          <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column",
+            padding: "6.89px 0"
+          }}>
+            <Typography variant="caption">
+             Type(over)
+            </Typography>
+      
+            <Typography variant="caption">
+             26
+            </Typography>
+          </div>
+          <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column",
+            justifyContent:"center"
+          }}>
+                        <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
+
+                  <Button size="small" 
+                  //  onClick={() => handleCustomDialog(true)} 
+                  variant="contained" style={{
+                    backgroundColor: '#77BC37',
+                    color: 'white'
+                  }}>₹25</Button>
+
+                  </span>
+          </div>
+        </DuelSingleRight>
+      </DuelsCustomDiv>
+     
+     </DuelsCustom>
 
   ))
 
@@ -1455,7 +1545,7 @@ export default function Contest(props) {
             <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
 
               <Button size="small" onClick={() => joinFantasyContest(cnt._id, cnt.entryFee)} variant="contained" style={{
-                backgroundColor: '#00A826',
+                backgroundColor: '#77BC37',
                 color: 'white'
               }}>₹{cnt.entryFee}</Button>
 
@@ -2564,7 +2654,20 @@ export default function Contest(props) {
               marginBottom: 60,
               backgroundColor:"#F9F8FC"
             }} >
-               
+               {custom !== null ? 
+               custom.length > 0 ? viewCustom() : 
+               <div style={{
+                 textAlign:"center",
+                 marginTop:30
+               }}>
+                 <Typography variant="caption" >Create a Duel.</Typography> 
+               </div>
+               :
+               <CircularProgress style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%"
+      }} disableShrink />}
             </Paper>
           </Paper>
 
@@ -2645,7 +2748,7 @@ export default function Contest(props) {
 
                </Typography>
               <div>
-                <Typography variant="caption" style={{ color: "#00A826", fontWeight: 700 }}>
+                <Typography variant="caption" style={{ color: "#77BC37", fontWeight: 700 }}>
                   {isNaN(betAmount * multiple) ? 0 : (betAmount * multiple).toFixed(2)}₹
                </Typography>
 
@@ -2748,7 +2851,7 @@ export default function Contest(props) {
 
                </Typography>
               <div>
-                <Typography variant="caption" style={{ color: "#00A826", fontWeight: 700 }}>
+                <Typography variant="caption" style={{ color: "#77BC37", fontWeight: 700 }}>
                   {isNaN(betAmount * multiple) ? 0 : (betAmount * multiple).toFixed(2)}₹
                </Typography>
 
@@ -2907,7 +3010,7 @@ export default function Contest(props) {
           </AppBar>
           <Container maxWidth="md" style={{ padding: 10 }}>
             <Paper elevation={0} style={{
-              marginBottom: 60
+               
             }} >
               <List>
                 <Paper
@@ -2939,7 +3042,44 @@ export default function Contest(props) {
 
 
         </Dialog>
-{  wait ? <CircularProgress style={{
+  
+        <Dialog fullScreen={fullScreen} open={openCustom} onClose={handleTeamClose} TransitionComponent={Transition}>
+          <AppBar color="secondary" position={"relative"} className={classes.appBar}>
+            <Toolbar>
+              <IconButton edge="start" style={{ color: "white",padding:"12px 6px" }} onClick={handleTeamClose} aria-label="close">
+                <CloseIcon />
+              </IconButton>
+              <Typography variant="h6" style={{ color: "white" }}  >
+                New Duel
+            </Typography>
+            </Toolbar>
+          </AppBar>
+          <Container maxWidth="md" style={{ padding: 10 }}>
+            <Paper elevation={0} style={{
+              
+            }} >
+              <Typography>
+                Contest Type
+              </Typography>
+             
+              <Typography>
+              player
+              </Typography>
+              <Typography>
+              value
+              </Typography>
+              <Typography>
+              amount
+              </Typography>
+            </Paper>
+          </Container>
+
+
+        </Dialog>
+  
+        
+
+      {  wait ? <CircularProgress style={{
           position: "fixed",
           top: "50%",
           left: "50%"

@@ -3,7 +3,7 @@
         "main": "#1A1E23"
     },
     "secondary": {
-        "main": "#00A826"
+        "main": "#77BC37"
         
     },
     "other": {
@@ -14,16 +14,16 @@
         "main": "white"
     },
     "team":{
-        "red": "#00A826",
-        "blue":"#00A826",
-        "green": "#00A826",
-        "yellow": "#00A826",
-        "black": "#00A826",
-        "orange": "#00A826",
-        "purple": "#00A826",
-        "brown":"#00A826",
-        "pink": "#00A826",
-        "grey":"#00A826"
+        "red": "#77BC37",
+        "blue":"#77BC37",
+        "green": "#77BC37",
+        "yellow": "#77BC37",
+        "black": "#77BC37",
+        "orange": "#77BC37",
+        "purple": "#77BC37",
+        "brown":"#77BC37",
+        "pink": "#77BC37",
+        "grey":"#77BC37"
     },
     "fontText":{
         "red": "#f44336",

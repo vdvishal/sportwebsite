@@ -64,7 +64,7 @@ export default function HomePage(props) {
 
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
-    const arrowView = useMediaQuery('(max-width: 768px)');
+    const arrowView = useMediaQuery('(max-width: 450px)');
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -820,12 +820,13 @@ export default function HomePage(props) {
                         
                         <Toolbar style={{
                             display: 'flex',
-                            justifyContent: 'space-between'
+                            justifyContent: 'space-between',
+                            padding:"0 0 0 10px"
                         }} > 
                         <div style={{
                                 alignItems: "center",
                                 display: "flex",
-                                color: "#0ed145",
+                                color: "#77BC37",
                         }}>
                         <ArrowBackIosIcon style={arrowView ? {display:"block"} :  {display:"none"} } onClick={() => history.goBack()} />
 
@@ -837,7 +838,7 @@ export default function HomePage(props) {
                                     textDecoration: 'none',
                                     color: 'white'
                                 }}>
-                                    <img src={logo} width='100px' alt="logo"></img>
+                                    <img src={logo} height="60px" alt="logo"></img>
                             </Link>
                         </div>
 
@@ -860,7 +861,7 @@ export default function HomePage(props) {
                                             alignItems: 'center', margin: '0 5px'
                                         }}
                                     >
-                                        <span style={{ fontSize: '12px', fontWeight: 400 }}>Balance</span><span style={{ color: '#00A826', fontSize: '15px', fontWeight: 600 }}>₹{balance.toFixed(2)}</span>
+                                        <span style={{ fontSize: '12px', fontWeight: 400 }}>Balance</span><span style={{ color: '#77BC37', fontSize: '15px', fontWeight: 600 }}>₹{balance.toFixed(2)}</span>
                                     </div>
                                     <div
                                         style={{
@@ -872,7 +873,9 @@ export default function HomePage(props) {
                                     >
                                         <span style={{ fontSize: '12px', fontWeight: 400 }}>Bonus</span><span style={{ color: '#F79123', fontSize: '15px', fontWeight: 600 }}>₹{bonus.toFixed(2)}</span>
                                     </div>
-                                    {pic && pic.length === 0 ? <Avatar style={{cursor:"pointer" } }  onClick={handleClick}   /> : <Avatar src={pic} style={{cursor:"pointer"} } onClick={handleClick} />}
+                                    {pic && pic.length === 0 ? 
+                                    <Avatar style={ !arrowView ? {display:"flex",cursor:"pointer" } :  {display:"none",cursor:"pointer" }}  onClick={handleClick}   /> :
+                                    <Avatar src={pic} style={ !arrowView ? {display:"flex",cursor:"pointer" } :  {display:"none",cursor:"pointer" }} onClick={handleClick} />}
                                         <MoreVertIcon  onClick={handleClick}  style={{cursor:"pointer"}} />
                                 </div> 
                                 : <div

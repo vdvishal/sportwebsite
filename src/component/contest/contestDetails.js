@@ -959,7 +959,7 @@ export default function ContestDetails(props) {
                     {
                       (match.isLive === undefined) || (match.isLive !== true && match.status !== "Finished")
                         ? <Button size="small" onClick={() => joinFantasyContest(contest._id, contest.entryFee)} variant="contained" style={{
-                          backgroundColor: '#00A826',
+                          backgroundColor: '#77BC37',
                           color: 'white'
                         }}>₹{contest.entryFee}</Button> : <div />}
 

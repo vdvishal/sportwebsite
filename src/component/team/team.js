@@ -1227,7 +1227,7 @@ export default function Team(props) {
               justifyContent:"center",
               border: !value.viceCaptain ? "1px solid" : "1px solid white",
               color: !value.viceCaptain ? "black" : "white",
-              backgroundColor: value.viceCaptain ? "#00A826" : "rgba(0,0,0,0)"
+              backgroundColor: value.viceCaptain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
               VC
@@ -1266,7 +1266,7 @@ export default function Team(props) {
               justifyContent:"center",
               border: !value.captain ? "1px solid" : "1px solid white",
               color: !value.captain ? "black" : "white",
-              backgroundColor: value.captain ? "#00A826" : "rgba(0,0,0,0)"
+              backgroundColor: value.captain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
               C
@@ -1368,7 +1368,7 @@ export default function Team(props) {
                 justifyContent:"center",
                 border: !value.viceCaptain ? "1px solid" : "1px solid white",
                 color: !value.viceCaptain ? "black" : "white",
-                backgroundColor: value.viceCaptain ? "#00A826" : "rgba(0,0,0,0)"
+                backgroundColor: value.viceCaptain ? "#77BC37" : "rgba(0,0,0,0)"
               }}
               >
                 VC
@@ -1405,7 +1405,7 @@ export default function Team(props) {
               justifyContent:"center",
               border: !value.captain ? "1px solid" : "1px solid white",
               color: !value.captain ? "black" : "white",
-              backgroundColor: value.captain ? "#00A826" : "rgba(0,0,0,0)"
+              backgroundColor: value.captain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
               C
@@ -1505,7 +1505,7 @@ export default function Team(props) {
               justifyContent:"center",
               border: !value.viceCaptain ? "1px solid" : "1px solid white",
               color: !value.viceCaptain ? "black" : "white",
-              backgroundColor: value.viceCaptain ? "#00A826" : "rgba(0,0,0,0)"
+              backgroundColor: value.viceCaptain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
               VC
@@ -1542,7 +1542,7 @@ export default function Team(props) {
               justifyContent:"center",
               border: !value.captain ? "1px solid" : "1px solid white",
               color: !value.captain ? "black" : "white",
-              backgroundColor: value.captain ? "#00A826" : "rgba(0,0,0,0)"
+              backgroundColor: value.captain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
               C
@@ -1644,7 +1644,7 @@ export default function Team(props) {
               justifyContent:"center",
               border: !value.viceCaptain ? "1px solid" : "1px solid white",
               color: !value.viceCaptain ? "black" : "white",
-              backgroundColor: value.viceCaptain ? "#00A826" : "rgba(0,0,0,0)"
+              backgroundColor: value.viceCaptain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             
             >
@@ -1684,7 +1684,7 @@ export default function Team(props) {
               justifyContent:"center",
               border: !value.captain ? "1px solid" : "1px solid white",
               color: !value.captain ? "black" : "white",
-              backgroundColor: value.captain ? "#00A826" : "rgba(0,0,0,0)"
+              backgroundColor: value.captain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
               C
@@ -1717,16 +1717,17 @@ export default function Team(props) {
        <AppBar elevation={0} position="sticky" 
        style={{ width: "100%", 
        background: "#F9F8FC", top: 55, 
+       borderRadius: 7,
        boxShadow: 0 
        }}>
        <Paper  elevation={3} style={{
-        border: "1px solid #00A826",
-        backgroundColor: "#00A826",
+        border: "1px solid #77BC37",
+        backgroundColor: "#77BC37",
          
       }}>
         {Object.keys(contest).length > 0 ?
           <div >
-            <HeaderTop style={{ backgroundColor: "#00A826", color: "white" }}>
+            <HeaderTop style={{ backgroundColor: "#77BC37", color: "white" }}>
               <CreditView>
                 <div>
 
@@ -1812,7 +1813,7 @@ export default function Team(props) {
                 </div>
               </PlayerView>
             </HeaderTop>
-            <HeaderTop2 style={{ backgroundColor: "#00A826", color: "white" }}>
+            <HeaderTop2 style={{ backgroundColor: "#77BC37", color: "white" }}>
               <CreditView2>
                 <div>
 

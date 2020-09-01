@@ -311,7 +311,7 @@ const ContestCardheader = styled.div`
   justify-content:space-between;
   align-items: center;
 
-  background-color: #00a826;
+  background-color: #77BC37;
    @media (min-width: 627px) {
     &:hover {
     
@@ -524,7 +524,7 @@ export default function Contest(props) {
   //       flexDirection: "row",
   //       justifyContent: "space-between",
   //       color: "white",
-  //       backgroundColor: "#00A826",
+  //       backgroundColor: "#77BC37",
   //       borderBottomLeftRadius: 0,
   //       borderBottomRightRadius: 0
   //     }}
@@ -636,7 +636,7 @@ export default function Contest(props) {
 
   //                 <ContestBodyThird >
   //                   <Typography variant="caption">
-  //                   <span style={{color:"#00A826",fontWeight:700}} >Joined</span>
+  //                   <span style={{color:"#77BC37",fontWeight:700}} >Joined</span>
   //                     </Typography>
   //                   <br />
   //                   <Typography variant="caption">
@@ -734,8 +734,8 @@ export default function Contest(props) {
                     style={
                       contest2['winner'] ?
                       contest2['winner'][contest._id] === 1 ? {
-                          backgroundColor: "#00A826",
-                          boxShadow: "0px 0px 12px 1px #00A826",
+                          backgroundColor: "#77BC37",
+                          boxShadow: "0px 0px 12px 1px #77BC37",
                           // marginLeft: "-17px"
                         } :  {
                             backgroundColor:  contest2['winner'][contest._id] === 2 ? "#F79123" : "#f58f22",
@@ -768,7 +768,7 @@ export default function Contest(props) {
                     :
                     <Typography variant="caption">
                       Gets <span style={contest2['winner'] ?
-                        contest2['winner'][contest._id] === 1 ? { color: "#00A826", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 }} >
+                        contest2['winner'][contest._id] === 1 ? { color: "#77BC37", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 }} >
                         {contest2['selectedTeam'][contest._id]['typeName']}
                       </span>
                     </Typography>}
@@ -805,8 +805,8 @@ export default function Contest(props) {
               <FinalValue >
                 <NestedFinalDiv style={
                   contest2['winner'] && contest2['status'] === "Finished" ? contest2.lostContest.length === 0 ? {
-                    backgroundColor: "#00A826",
-                    boxShadow: "0px 0px 12px 1px #00A826",
+                    backgroundColor: "#77BC37",
+                    boxShadow: "0px 0px 12px 1px #77BC37",
                   } : {
                       backgroundColor: "#f58f22",
                       boxShadow: "0px 0px 12px 1px #f58f22",
@@ -833,7 +833,7 @@ export default function Contest(props) {
 
 
             {/* <Typography variant="caption" style={{padding:"0 10px",textAlign:"end"}} >
-            Payout: <span style={{color:"#00A826",fontWeight:700}} >
+            Payout: <span style={{color:"#77BC37",fontWeight:700}} >
             ₹{multipleArr2[contest2.contest.length - 1]*contest2.amount}
               </span>
           </Typography> */}
@@ -843,7 +843,7 @@ export default function Contest(props) {
             contest2.wonContest.length !== 0 && contest2.lostContest.length === 0 ?
 
               <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#00A826", fontWeight: 500,  }} >
+                <span style={{ color: "#77BC37", fontWeight: 500,  }} >
                   You won
               ₹{multipleArr2[Object.keys(contest2.wonContest).length - 1] * contest2.amount}
                 </span>
@@ -852,7 +852,7 @@ export default function Contest(props) {
               contest2.wonContest.length === 0 && contest2.lostContest.length === 0 
               ? 
                 <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#00A826", fontWeight: 500,  }} >
+                <span style={{ color: "#77BC37", fontWeight: 500,  }} >
                  Refund 
               ₹{contest2.amount}
                 </span>
@@ -873,13 +873,13 @@ export default function Contest(props) {
               <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                  <Typography variant="caption">
                     Entry: 
-                    <span style={{ color: "#00A826", fontWeight: 500 }} >
+                    <span style={{ color: "#77BC37", fontWeight: 500 }} >
                
                ₹{contest2.amount}
              </span>
                   </Typography>
                   <br/>
-                Payout: <span style={{ color: "#00A826", fontWeight: 500 }} >
+                Payout: <span style={{ color: "#77BC37", fontWeight: 500 }} >
                 {contest2.lostContest !== null && contest2.lostContest.length > 0 ? 
                      "You lost " + contest2.lostContest.length + " contest"
                   : 
@@ -962,8 +962,8 @@ export default function Contest(props) {
                     style={
                       contest2['winner'] ?
                         contest2['winner'][contest._id] === 1 ? {
-                          backgroundColor: "#00A826",
-                          boxShadow: "0px 0px 12px 1px #00A826",
+                          backgroundColor: "#77BC37",
+                          boxShadow: "0px 0px 12px 1px #77BC37",
                            
                         } : {
                             backgroundColor: "#f58f22",
@@ -1054,8 +1054,8 @@ export default function Contest(props) {
               <FinalValue >
                 <NestedFinalDiv style={
                   contest2['winner'] && contest2['status'] === "Finished" ? contest2.lostContest.length === 0 ? {
-                    backgroundColor: "#00A826",
-                    boxShadow: "0px 0px 12px 1px #00A826",
+                    backgroundColor: "#77BC37",
+                    boxShadow: "0px 0px 12px 1px #77BC37",
                   } : {
                       backgroundColor: "#f58f22",
                       boxShadow: "0px 0px 12px 1px #f58f22",
@@ -1083,7 +1083,7 @@ export default function Contest(props) {
               contest2.lostContest.length === 0  && contest2.wonContest.length !== 0 ?
 
               <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#00A826", fontWeight: 500,  }} >
+                <span style={{ color: "#77BC37", fontWeight: 500,  }} >
                   You won
                 ₹{multipleArr[Object.keys(contest2.wonContest).length - 1] * contest2.amount}
                 </span>
@@ -1091,7 +1091,7 @@ export default function Contest(props) {
 
               : contest2.lostContest.length === 0  && contest2.wonContest.length === 0 ?
               <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#00A826", fontWeight: 500,  }} >
+                <span style={{ color: "#77BC37", fontWeight: 500,  }} >
                   Refunded
                 ₹{contest2.amount}
                 </span>
@@ -1110,13 +1110,13 @@ export default function Contest(props) {
               : <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                 <Typography variant="caption">
                     Entry: 
-                    <span style={{ color: "#00A826", fontWeight: 500 }} >
+                    <span style={{ color: "#77BC37", fontWeight: 500 }} >
                
                    ₹{contest2.amount}
                   </span>
                 </Typography>
                   <br/>
-                Payout: <span style={{ color: "#00A826", fontWeight: 500 }} >
+                Payout: <span style={{ color: "#77BC37", fontWeight: 500 }} >
                   {contest2.lostContest !== null && contest2.lostContest.length > 0 ? 
                      "You lost " + contest2.lostContest.length + " contest"
                   : contest2.wonContest !== null && contest2.wonContest.length > 0 ?
@@ -1177,7 +1177,7 @@ export default function Contest(props) {
                   //  onClick={() => viewFantasyContest(cnt._id)} 
                   variant="contained"
                   style={{
-                    backgroundColor: '#00A826',
+                    backgroundColor: '#77BC37',
                     color: 'white'
                   }}>View Info</Button>
               </Link>

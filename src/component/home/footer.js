@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import styled from 'styled-components'
+import * as logo from './logo_transparent.png'
 
 const TopContainer = styled.div`
             background-color: #1A1E23;
@@ -18,7 +19,7 @@ const Section2 = styled.div`
             display:grid;
             font-size: 14px;
             grid-template-columns: 1fr;
-            grid-template-rows: 50px 1fr 1fr 1fr;
+            
 `
 const Section2Sub = styled.div`
 font-size: 1.35em;font-weight: bold;line-height: 30px;padding-top: 15px;
@@ -44,8 +45,9 @@ export default function Footer(props) {
     return (<div>
           <TopContainer>
                 <div className="footer">
-                <div>
-                    LOGO
+                <div style={{padding:10,margin:5,textAlign:"center"}}>
+                    <img src={logo} height="90px" alt="logo"></img>
+
                 </div>
                 <Section1>
                     <Section1Sub  >
