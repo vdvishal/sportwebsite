@@ -208,16 +208,56 @@ const DuelsCustom = styled.div`
   -ms-flex-align: end;
   align-items: end;
   grid-template-rows: auto 1fr;
- 
+ margin-top:10px;
   @media ${device.mobileL} {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
     align-items: center;
-    margin:0px 0 24px 0;
-     
+    margin:10px 0 24px 0;
+    background-color:white;
+     text-align:center;
+     border: 1px solid #cdcbcb;
+    border-radius: 5px;
+ 
   }
 `
+
+const DuelsCustom2 = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  margin-bottom: 0.25em;
+  grid-gap: 2px;
+  -webkit-align-items: end;
+  -ms-flex-align: end;
+  align-items: end;
+  grid-template-rows: auto 1fr;
+ margin-top:10px;
+  @media ${device.mobileL} {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    align-items: center;
+    margin:10px 0 24px 0;
+    background-color:white;
+     text-align:center;
+     border: 1px solid #cdcbcb;
+    border-radius: 5px;
+ 
+  }
+`
+
+
+const DuelCustomHeader = styled.div`
+  display:none;
+  font-weight:600;
+  color:grey;
+  padding:6.5px;
+  @media ${device.mobileL} {
+    display:flex
+  }
+`
+
 const DuelsCustomDiv = styled.div`
 display:flex;
 flex-direction:row;
@@ -229,6 +269,9 @@ border-radius:4px;
 transition: transform .2s;
 cursor:pointer;
 @media ${device.mobileL} {
+  border:none;
+  text-align:center;
+  justify-content:center;
    }
  
 `;
@@ -250,7 +293,7 @@ const Duels = styled.div`
     grid-template-columns: 1fr;
     grid-template-rows: auto 0px auto;
     align-items: center;
-    margin:0px 0 24px 0;
+    margin:0px 0 12px 0;
      
   }
 `
@@ -630,6 +673,7 @@ export default function Contest(props) {
   const [enterContest2, setEnterContest2] = React.useState(false);
 
   const [minimize2, setMinimize2] = React.useState(true);
+  const [minimize3, setMinimize3] = React.useState(true);
 
   const [openTeam, setTeamOpen] = React.useState(false);
 
@@ -658,12 +702,12 @@ export default function Contest(props) {
   const [fantasyOrginal, setfantasyOrginal] = React.useState([]);
 
   const [wait, setWait] = React.useState(false);
-  const [custom, setCustom] = React.useState([1]);
+  const [custom, setCustom] = React.useState([1,6,6]);
 
   const [min, setMinRange] = React.useState(0);
   const [max, setMaxRange] = React.useState(0);
  
-  const [filterCustom, setCustomFilter] = React.useState(1);
+  const [filterCustom, setCustomFilter] = React.useState(0);
 
   const [, setPage] = React.useState(0);
   const [directionCustom, setCustomDirection] = React.useState(1);
@@ -672,13 +716,42 @@ export default function Contest(props) {
 
   const [openCustom, handleCustomDialog] = React.useState(false);
 
-  
+  const [contestType, setContestType] = React.useState(1);
+  const [playerIdCustom, setPlayerIdCustom] = React.useState(1);
+  const [fantasyPoints, setFantasyPoints] = React.useState(0);
+  const [playerUnderOver, setUnderOver] = React.useState(0);
+  const [customAmount, setCustomAmount] = React.useState(0);
 
+
+  const [openJoinCustom, joinDialog] = React.useState(false);
+
+  
+  
   const handleFilterCustom = (value) => {
     setCustomFilter(value)
 
   }
+
+  const handleContestType = (event) => { 
+    setContestType(event.target.value)
+  }
   
+  const handlePlayerId = (event) => { 
+    setPlayerIdCustom(event.target.value);
+  }
+
+  const handleUnderOver = (event) => { 
+    setUnderOver(event.target.value);
+  }
+
+  const handleCustomAmount = (event) => { 
+    setCustomAmount(event.target.value);
+  }
+  
+
+  const handleFantasyPoints = (event) => {
+    setFantasyPoints(event.target.value);
+  }
 
   const handleCustomDirectionChange = (dir) => {
     let fanD = custom;
@@ -826,7 +899,7 @@ export default function Contest(props) {
     api.customContest(props.match.params.matchId,0,100000,0,1).then(response => {
       
       //setCustom(response.data.data);
-      setCustom([1])
+      setCustom([1,6,6])
     })
 
     
@@ -839,63 +912,13 @@ export default function Contest(props) {
 
 
   }, []);
-
-  // const reload = () => api.contest(props.match.params.matchId, 'active').then(response => {
-    
-
-  //   response.data.data.forEach(contest => {
-  //     if (contest._id === 1) {
-  //       setMoreLess(contest.contest)
-  //     } else {
-  //       setVs(contest.contest)
-  //     }
-  //   });
-  // })
-
-  // const joinContest = (contestId, teamId, amount) => {
-    
-
-  //   if (localStorage.getItem('isLogged') === null || localStorage.getItem('isLogged') === 'false') {
-  //     setOpenLogin(true)
-  //     return
-  //   }
-
-  //   if (betAmount < 25) {
-  //     handleNotificationClick("Amount must be greater than 24")
-  //     return
-  //   }
-
-  //   if (contestType === 1) {
-
-  //   } else {
-  //     api.joinVsContest(contestId, teamId, playerIn, amount).then(response => {
-  //       reload()
-
-  //       if (response.status === 200) {
-  //         handleNotificationClick("Contest joined");
-  //         profile();
-  //         setBet(0)
-
-  //       } else if (response.status === 204) {
-  //         handleNotificationClick(response.statusText);
-  //       }
-  //       else {
-  //         handleNotificationClick(response.data.message);
-  //       }
-
-  //     }).catch(err => {
-
-  //       handleNotificationClick(err.message);
-  //     })
-  //   }
-
-  // }
+ 
 
 
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-
+    joinDialog(false)
     setBet(0);
     handleReset();
     setTeams({})
@@ -1048,7 +1071,7 @@ export default function Contest(props) {
 
 
   const view = () => moreLessArr.map(contest => (
-    <Paper key={contest._id} elevation={2} style={{
+    <Paper key={contest._id} elevation={1} style={{
  
       marginTop: 10
     }}>
@@ -1093,7 +1116,7 @@ export default function Contest(props) {
                 cursor: "pointer",
                 boxShadow: dynamicObj2[contest._id][contest._id + "playerL"] ? "0 0 1em 0 #71bc4f" : "",
                 backgroundColor: dynamicObj2[contest._id][contest._id + "playerL"] ? color.secondary.main : "#F5F6FA",
-                color: dynamicObj2[contest._id][contest._id + "playerL"] ? "white" : "black"
+                color: dynamicObj2[contest._id][contest._id + "playerL"] ? "white" : "grey"
               }}
             >
               <Typography variant="caption"  >
@@ -1123,7 +1146,7 @@ export default function Contest(props) {
                 boxShadow: dynamicObj2[contest._id][contest._id + "playerM"] ? "0 0 1em 0 #71bc4f" : "", 
                 backgroundColor: dynamicObj2[contest._id][contest._id + "playerM"] ? 
                 color.secondary.main : "#F5F6FA", 
-                color: dynamicObj2[contest._id][contest._id + "playerM"] ? "white" : "black" }}
+                color: dynamicObj2[contest._id][contest._id + "playerM"] ? "white" : "grey" }}
 
             >
               <div>
@@ -1170,7 +1193,11 @@ export default function Contest(props) {
 
             <ContestButtonContent
               onClick={() => { setcontestType(1); setcontestId(contest._id); setteamId(3); }}
-              style={{ cursor: "pointer", boxShadow: dynamicObj2[contest._id][contest._id + "playerR"] ? "0 0 1em 0 #71bc4f" : "", backgroundColor: dynamicObj2[contest._id][contest._id + "playerR"] ? color.secondary.main : "#F5F6FA", color: dynamicObj2[contest._id][contest._id + "playerR"] ? "white" : "black" }}
+              style={{ cursor: "pointer", boxShadow: dynamicObj2[contest._id][contest._id + "playerR"] ? 
+              "0 0 1em 0 #71bc4f" : "", 
+              backgroundColor: dynamicObj2[contest._id][contest._id + "playerR"] ? 
+              color.secondary.main : "#F5F6FA", color: dynamicObj2[contest._id][contest._id + "playerR"] ?
+               "white" : "grey" }}
 
             >
 
@@ -1325,8 +1352,12 @@ export default function Contest(props) {
   ))
 
   const viewCustom = () => custom.map(contest => (
+    <div>
+    
     <DuelsCustom key={"contest._id"}>
- 
+    <DuelCustomHeader>
+      Under/Over 
+    </DuelCustomHeader>
    
 
       <DuelsCustomDiv style={{padding: "6px"}} >
@@ -1383,44 +1414,28 @@ export default function Contest(props) {
             alignItems: "flex-end",
             flexDirection: "column",
             textAlign:"end",
-            padding: "3.89px 0"
+            padding: "3.89px 0",
+            color:"#E78922",
+            minWidth:100
           }}>
-            <Typography variant="caption">
-             Type(under)
+            <Typography variant="caption" style={{color:"grey"}}>
+            Challenge
             </Typography>
       
             <Typography variant="caption">
-             Points
-            </Typography>
-          </div>
-          <div style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "flex-start",
-            flexDirection: "column"
-          }}>
-            <Typography variant="caption">
- 
-            </Typography>
-
-            <Typography variant="caption">
-
-                            <span style={{ fontWeight: 600 }}>
-              
-              </span>
-
-            </Typography>
-            <Typography variant="caption">
-             
-
+             Below 25 Points
             </Typography>
           </div>
         </DuelSingleRight>
       </DuelsCustomDiv>
-      <DuelsCustomDiv >
+      <DuelsCustomDiv style={{
+           
+          justifyContent:"center",
+        }}>
         <div style={{
           padding: '2.5px',
           margin: '5.5px',
+           
         }}>
           <Avatar  variant="circle" />
 
@@ -1432,32 +1447,23 @@ export default function Contest(props) {
             alignItems: "flex-start",
             flexDirection: "column"
           }}>
-            <Typography variant="caption">
+            <Typography variant="caption"  style={{color:"grey"}}>
               "fullname"
 
             </Typography>
 
-            <Typography variant="caption">
-              <span style={{ fontWeight: 600 }}>
-                "team"
-              </span>
-                           -team22
+            <Typography variant="caption"  style={{color:"grey"}}>
+            "team"                 
 
             </Typography>
-            <Typography variant="caption">
+            <Typography variant="caption"  style={{color:"grey"}}>
             "position"
 
             </Typography>
           </div>
         </DuelsCustomDiv>
-      <DuelsCustomDiv style={{padding: "6px"}} >
-      <div style={{
-          padding: '2.5px',
-          margin: '5.5px',
-        }}>
-          {/* <Avatar src={contest.players[contest.player2].image_path} variant="circle" /> */}
-
-        </div>
+      <DuelsCustomDiv style={{padding: "5px"}} >
+       
 
 
         <DuelSingleRight >
@@ -1466,14 +1472,15 @@ export default function Contest(props) {
             alignContent: "center",
             alignItems: "flex-start",
             flexDirection: "column",
-            padding: "6.89px 0"
+            padding: "6.89px 0",
+            color:"#77BC37",
           }}>
-            <Typography variant="caption">
-             Type(over)
+            <Typography variant="caption" style={{color:"grey"}}>
+             Challenger
             </Typography>
       
             <Typography variant="caption">
-             26
+             Over 26 points
             </Typography>
           </div>
           <div style={{
@@ -1486,21 +1493,165 @@ export default function Contest(props) {
                         <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
 
                   <Button size="small" 
-                  //  onClick={() => handleCustomDialog(true)} 
+                   onClick={() => {joinDialog(true);setMinimize3(true)}} 
                   variant="contained" style={{
                     backgroundColor: '#77BC37',
                     color: 'white'
                   }}>₹25</Button>
 
                   </span>
+                  <Typography variant="caption"
+                  style={{
+                    
+                    color: '#77BC37'
+                  }}>
+                    Payout: 1.9x
+                  </Typography>
           </div>
         </DuelSingleRight>
       </DuelsCustomDiv>
      
      </DuelsCustom>
-
+     </div>
   ))
 
+  const viewCustomDuel = () => custom.map(contest => (
+    <div>
+    
+    <DuelsCustom2 key={"contest._id"}>
+      <DuelCustomHeader>
+        Player Duel 
+      </DuelCustomHeader>
+   
+
+      <DuelsCustomDiv style={{padding: "6px"}} >
+        <div style={{
+          padding: '2.5px',
+          margin: '5.5px',
+        }}>
+          <Avatar  variant="circle" />
+
+        </div>
+
+        <DuelSingleRight >
+          <div style={{
+            
+          }}>
+            <Typography variant="subtitle2">
+             Name
+            </Typography>
+      
+            <Typography variant="subtitle2">
+             Level
+            </Typography>
+          </div>
+
+        </DuelSingleRight>
+        <DuelSingleRight style={{
+             justifyContent:"flex-start",
+             textAlign:"start",
+             flexDirection:"row-reverse"
+         }}>
+                     <div style={{
+          padding: '2.5px',
+          margin: '5.5px',
+           
+        }}>
+          <Avatar  variant="circle" />
+
+        </div>
+
+        <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-end",
+            flexDirection: "column"
+          }}>
+            <Typography variant="caption"  style={{color:"grey"}}>
+              "fullname"
+
+            </Typography>
+
+            <Typography variant="caption"  style={{color:"grey"}}>
+            "team"                 
+
+            </Typography>
+            <Typography variant="caption"  style={{color:"grey"}}>
+            "position"
+
+            </Typography>
+          </div>
+        
+        </DuelSingleRight>
+      </DuelsCustomDiv>
+      <div style={{
+        display: "flex",
+        alignContent: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%"
+      }}>
+        <AntiDiagonalTrans>
+          <DiagonalTrans>
+            vs
+          </DiagonalTrans>
+        </AntiDiagonalTrans>
+
+      </div>
+      <DuelsCustomDiv style={{padding: "7px"}} >
+       
+
+
+        <DuelSingleRight >
+          <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column",
+            padding: "6.89px 0",
+            color:"#77BC37",
+          }}>
+            <Typography variant="caption" style={{color:"grey"}}>
+             Challenger
+            </Typography>
+      
+            <Typography variant="caption" 
+            // onClick={() => {selectedPlayer(true)}}
+            >
+             Select a player
+            </Typography>
+          </div>
+          <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column",
+            justifyContent:"center"
+          }}>
+                        <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
+
+                  <Button size="small" 
+                   onClick={() => {joinDialog(true);setMinimize3(true)}} 
+                  variant="contained" style={{
+                    backgroundColor: '#77BC37',
+                    color: 'white'
+                  }}>₹25</Button>
+
+                  </span>
+                  <Typography variant="caption"
+                  style={{
+                    
+                    color: '#77BC37'
+                  }}>
+                    Payout: 1.9x
+                  </Typography>
+          </div>
+        </DuelSingleRight>
+      </DuelsCustomDiv>
+     
+     </DuelsCustom2>
+     </div>
+  ))
 
   const viewFantasy = () => fantasy.map(cnt => (
     <Paper className={classes.paper} elevation={2} style={{ margin: "15px 0",borderRadius:5 }} key={cnt._id}>
@@ -2655,7 +2806,8 @@ export default function Contest(props) {
               backgroundColor:"#F9F8FC"
             }} >
                {custom !== null ? 
-               custom.length > 0 ? viewCustom() : 
+               custom.length > 0 ? 
+               filterCustom === 0 ? viewCustom() : viewCustomDuel() : 
                <div style={{
                  textAlign:"center",
                  marginTop:30
@@ -2863,6 +3015,62 @@ export default function Contest(props) {
         </BetFooter>
         </Betslip>
         ) : <div></div>}
+
+      {openJoinCustom ? (<Betslip style={
+          openJoinCustom ? minimize3 ? { transform: "translateY(0px)",display: "block", } : { transform: "translateY(79%)",display: "block", }  : { display: "none", }
+        }
+        >
+          <BetHeader onClick={() => setMinimize3(!minimize3)}>
+            Payslip
+        </BetHeader>
+          <BetInfo>
+             
+
+            <div style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              margin: "10px 0",
+
+            }}>
+
+              <div>
+                <Typography variant="caption">
+                  Multiplier
+               </Typography>
+              </div>
+              <div>
+                <Typography variant="caption" style={{ fontSize: '12px' }}>
+                  1.9x
+               </Typography>
+
+
+              </div>
+            </div>
+            <div style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between"
+            }}>
+              <Typography variant="caption">
+                Potential winnings
+
+               </Typography>
+              <div>
+                <Typography variant="caption" style={{ color: "#77BC37", fontWeight: 700 }}>
+                  {isNaN(customAmount * 1.9) ? 0 : (customAmount * 1.9).toFixed(2)}₹
+               </Typography>
+
+              </div>
+            </div>
+
+          </BetInfo>
+          <BetFooter onClick={() => { joinMatchUps(betAmount); setMinimize(!minimize3) }}>
+            Confirm {customAmount}₹
+        </BetFooter>
+        </Betslip>
+        ) : <div></div>}
+
         {value === 2 ?
           <AppBar position="fixed" className={classes.appBar}>
             <Toolbar style={{
@@ -3056,20 +3264,85 @@ export default function Contest(props) {
           </AppBar>
           <Container maxWidth="md" style={{ padding: 10 }}>
             <Paper elevation={0} style={{
-              
+              display:"flex",
+              flexDirection:"column",
+              minWidth:280
             }} >
-              <Typography>
-                Contest Type
-              </Typography>
+              <TextField
+                               style={{display:"inline-flex",marginBottom:5}}
+
+                select
+                label="Contest Type"
+                value={contestType}
+                onChange={handleContestType}
+                // helperText="Please select a Contest Type"
+              >
+                
+                  <MenuItem key={1} value={1}>
+                    Under/Over
+                  </MenuItem>
+                  <MenuItem key={2} value={2}>
+                    Player Duel
+                  </MenuItem>
+               
+              </TextField>
              
-              <Typography>
-              player
-              </Typography>
-              <Typography>
-              value
-              </Typography>
-              <Typography>
-              amount
+              <TextField
+                style={{display:"inline-flex",marginBottom:5}}
+                select
+                label="Select Player"
+                value={playerIdCustom}
+                onChange={handlePlayerId}
+                // helperText="Please select a Player"
+              >
+                
+                  <MenuItem key={"playerDi"} value={1}>
+                    Player 1 
+                  </MenuItem>
+                  <MenuItem key={"playerDi"} value={2}>
+                  Player 1 
+                  </MenuItem>
+                
+              </TextField>
+              
+              <TextField
+                style={contestType === 1 ? {display:"inline-flex"} : {display:"none"}}
+                select
+                label="Select Type"
+                value={playerUnderOver}
+                onChange={handleUnderOver}
+                // helperText="Please select type"
+              >
+                
+                  <MenuItem key={"playerDi"} value={1}>
+                    Under
+                  </MenuItem>
+                  <MenuItem key={"playerDi"} value={2}>
+                  Over
+                  </MenuItem>
+                
+              </TextField>
+              
+              <TextField
+               style={contestType === 1 ? {display:"inline-flex"} : {display:"none"}}
+                id="standard-textarea"
+                label="Fantasy Points"
+                placeholder="Fantasy Points"
+                multiline
+                value={fantasyPoints}
+                onChange={handleFantasyPoints}
+              />
+              
+              <TextField
+                id="standard-textarea"
+                label="Amount"
+                placeholder="Amount"
+                multiline
+                value={customAmount}
+                onChange={handleCustomAmount}
+              />
+              <Typography  variant="caption"  style={contestType === 2 ? {display:"inline-flex",marginTop:2.5} : {display:"none"}}>
+                  *Challenger has a handicap incase of a draw
               </Typography>
             </Paper>
           </Container>
