@@ -724,6 +724,7 @@ export default function Contest(props) {
 
 
   const [openJoinCustom, joinDialog] = React.useState(false);
+  const [playerList, setplayerList] = React.useState(null);
 
   
   
@@ -909,6 +910,13 @@ export default function Contest(props) {
       setfantasyOrginal(fff)
     })
 
+    team.teamStats(props.match.params.matchId).then(response => {
+      console.log(response.data);
+      let fff = [...response.data.players[response.data.localTeam],...response.data.players[response.data.visitorTeam]]
+       fff = _.orderBy(fff, ['fullname'], ['asc'])
+      console.log(fff);
+      setplayerList(fff)
+    })
 
 
   }, []);
@@ -3295,13 +3303,43 @@ export default function Contest(props) {
                 onChange={handlePlayerId}
                 // helperText="Please select a Player"
               >
-                
-                  <MenuItem key={"playerDi"} value={1}>
-                    Player 1 
-                  </MenuItem>
-                  <MenuItem key={"playerDi"} value={2}>
-                  Player 1 
-                  </MenuItem>
+                {playerList !== null ? playerList.map(player =>  
+                <MenuItem key={player.id} value={player.id} style={{
+ 
+                }}>
+                  <div style={{
+                    display:'flex',
+                    flexDirection:'row',
+ 
+                    width:"100%",
+                    alignContent:"center",
+                    alignItems:"center"
+                  }}>
+                    <Avatar src={player.image_path} />
+                    <div style={{
+                    display:'flex',
+                    flexDirection:'column',
+                    marginLeft:10,
+ 
+                    alignContent:"center",
+                    alignItems:"start"
+                  }}>
+
+                    
+                    <Typography variant="caption" >
+                     {player.fullname}
+                     </Typography>
+                     <Typography variant="caption" >
+                      {player.position.name}
+                      </Typography>
+                </div>
+         
+                              
+                  </div>
+                  <Divider/>
+                  </MenuItem>) : <div />}
+                 
+                   
                 
               </TextField>
               

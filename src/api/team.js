@@ -12,7 +12,7 @@ export const getAllUserTeam = (matchId) => instance.get(`/team/user/all/${matchI
   });
 
 
-export const team = (teamId) => instance.get(`/fantasyPlayer?matchId=${teamId}`,{
+export const team = (matchId) => instance.get(`/fantasyPlayer?matchId=${matchId}`,{
   auth:{
     username: "app",
     password: 'qwewqinasdoinoinacino'
@@ -22,7 +22,7 @@ export const team = (teamId) => instance.get(`/fantasyPlayer?matchId=${teamId}`,
     return (response);
   });
 
-  export const teamStats = (teamId) => instance.get(`/fantasyPlayer/team?matchId=${teamId}`,{
+  export const teamStats = (matchId) => instance.get(`/fantasyPlayer/team?matchId=${matchId}`,{
     auth:{
       username: "app",
       password: 'qwewqinasdoinoinacino'
