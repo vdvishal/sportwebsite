@@ -150,4 +150,14 @@ export const joinUnderOverContest = (data) => instance.post(`/contest/join/under
         return (response);
       });
 
- 
+
+      export const createContest = (data) => instance.post(`/contest/custom`, data, {
+        headers: {
+          'Authorization': `${Cookies.get("token")}`,
+        }
+      })
+      .then((response) => {
+        return (response);
+      });
+
+      
