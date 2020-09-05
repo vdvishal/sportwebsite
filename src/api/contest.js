@@ -160,4 +160,23 @@ export const joinUnderOverContest = (data) => instance.post(`/contest/join/under
         return (response);
       });
 
+
+      export const joinCustomContest = (data) => instance.patch(`/contest/join/custom`, data, {
+        headers: {
+          'Authorization': `${Cookies.get("token")}`,
+        }
+      })
+      .then((response) => {
+        return (response);
+      });
+
+      export const joinCustomContestDuel = (data) => instance.patch(`/contest/join/custom`, data, {
+        headers: {
+          'Authorization': `${Cookies.get("token")}`,
+        }
+      })
+      .then((response) => {
+        return (response);
+      });
+
       

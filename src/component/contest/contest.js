@@ -15,6 +15,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import _ from 'lodash';
+import InputLabel from '@material-ui/core/InputLabel';
 
 //
 import Container from '@material-ui/core/Container';
@@ -147,6 +148,9 @@ const useStyles = makeStyles({
     appBar: {
       top: 'auto',
       bottom: 0,
+    },
+    select:{
+      height:"36px"
     }
   }
 });
@@ -385,7 +389,7 @@ position: fixed;
 right: 0;
  transform: translateY(calc(100% - 10.72em));
 width: 100%;
-z-index: 2147483647;
+z-index: 123;
   @media ${device.mobileL} {
     max-width:100%;
     margin:-9px 0;
@@ -674,6 +678,7 @@ export default function Contest(props) {
 
   const [minimize2, setMinimize2] = React.useState(true);
   const [minimize3, setMinimize3] = React.useState(true);
+  const [minimize4, setMinimize4] = React.useState(true);
 
   const [openTeam, setTeamOpen] = React.useState(false);
 
@@ -718,20 +723,30 @@ export default function Contest(props) {
 
   const [contestType, setContestType] = React.useState(1);
   const [playerIdCustom, setPlayerIdCustom] = React.useState(1);
-  const [fantasyPoints, setFantasyPoints] = React.useState(null);
-  const [subType, setUnderOver] = React.useState(null);
-  const [customAmount, setCustomAmount] = React.useState(null);
+  const [fantasyPoints, setFantasyPoints] = React.useState('');
+  const [subType, setUnderOver] = React.useState('');
+  const [customAmount, setCustomAmount] = React.useState('');
 
 
   const [openJoinCustom, joinDialog] = React.useState(false);
+  const [openJoinDuelCustom, setCustomDuelDialog] = React.useState(false);
+
   const [playerList, setplayerList] = React.useState(null);
 
   const [click, setClick] = React.useState(false);
+  const [customDialogDetail, setJoinCustom] = React.useState({});
+   const [selectedPlayer, setSelectedPlayer] = React.useState('');
 
-  
+   
   const handleFilterCustom = (value) => {
     setCustomFilter(value)
     setCustom(null)
+    setCustomDuelDialog(false)
+    joinDialog(false)
+    setSelectedPlayer('')
+    if(min > max){
+      return handleNotificationClick("Min amount cannot be greater than max")
+    }
     api.customContest(props.match.params.matchId,min,max,value,1).then(response => {
        
       setCustom(response.data.data);
@@ -745,6 +760,10 @@ export default function Contest(props) {
   
   const handlePlayerId = (event) => { 
     setPlayerIdCustom(event.target.value);
+  }
+
+  const handleSelectPlayer = (event) => { 
+    setSelectedPlayer(event.target.value);
   }
 
   const handleUnderOver = (event) => { 
@@ -788,12 +807,7 @@ export default function Contest(props) {
       api.createContest(object).then(response => {
           if(response.status === 200){
             handleNotificationClick("Contest created");
-            api.customContest(props.match.params.matchId,min,max,filterCustom,1).then(response => {
-              setClick(false)
-              setCustom(response.data.data);
-              profile();
-              handleCustomDialog(false)
-            })
+            getCustom()
           }
       }).catch(err => {
         setClick(false)
@@ -803,6 +817,47 @@ export default function Contest(props) {
         
       })   
     }
+  }
+
+  const joinCustom = (contestId) => {
+    api.joinCustomContest({contestId}).then(response => {
+      if(response.status === 200){
+        getCustom();
+        setJoinCustom(false);
+        joinDialog(false)
+       return handleNotificationClick("Contest joined");
+       
+      }
+      return handleNotificationClick(response.data.message)
+    })
+  }
+
+  const getCustom = () => {
+    api.customContest(props.match.params.matchId,min,max,filterCustom,1).then(response => {
+      setClick(false)
+      setCustom(response.data.data);
+      profile();
+      handleCustomDialog(false)
+    })
+  }
+
+   
+  const joinDuelCustom = (contestId) => {
+     
+    if(selectedPlayer === ''){
+      return handleNotificationClick("Select a player")
+    }
+    api.joinCustomContestDuel({contestId,playerId:selectedPlayer}).then(response => {
+      if(response.status === 200){
+        getCustom();
+        setJoinCustom(false);
+        joinDialog(false);
+        setCustomDuelDialog(false);
+        setSelectedPlayer('')
+       return handleNotificationClick("Contest joined")
+      }
+      return handleNotificationClick(response.data.message)
+    })
   }
 
   const handleCustomDirectionChange = (dir) => {
@@ -824,6 +879,9 @@ export default function Contest(props) {
 
   const getFilteredCustom = () => {
     setCustom(null);
+    if(min > max){
+      return handleNotificationClick("Min amount cannot be greater than max")
+    }
     api.customContest(props.match.params.matchId,min,max,filterCustom,1).then(response => {     
       setCustom(response.data.data);
 
@@ -972,6 +1030,7 @@ export default function Contest(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
     joinDialog(false)
+    setCustomDuelDialog(false)
     setBet(0);
     handleReset();
     setTeams({})
@@ -1529,7 +1588,8 @@ export default function Contest(props) {
                         <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
 
                   <Button size="small" 
-                   onClick={() => {joinDialog(true);setMinimize3(true)}} 
+                   onClick={() => {joinDialog(true);setMinimize3(true);setCustomDuelDialog(false)
+                    ;setJoinCustom({contestId:contest._id,amount:contest.amount.toFixed(2)})}} 
                   variant="contained" style={{
                     backgroundColor: '#77BC37',
                     color: 'white'
@@ -1680,7 +1740,7 @@ export default function Contest(props) {
                         <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
 
                   <Button size="small" 
-                   onClick={() => {joinDialog(true);setMinimize3(true)}} 
+                   onClick={() => {setCustomDuelDialog(true);setJoinCustom({contestId:contest._id,amount:contest.amount.toFixed(2)});joinDialog(false);setMinimize4(true)}} 
                   variant="contained" style={{
                     backgroundColor: '#77BC37',
                     color: 'white'
@@ -3079,7 +3139,7 @@ export default function Contest(props) {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              margin: "10px 0",
+              margin: "0 0 10px 0",
 
             }}>
 
@@ -3107,15 +3167,128 @@ export default function Contest(props) {
                </Typography>
               <div>
                 <Typography variant="caption" style={{ color: "#77BC37", fontWeight: 700 }}>
-                  {isNaN(customAmount * 1.9) ? 0 : (customAmount * 1.9).toFixed(2)}₹
+                  {isNaN(customDialogDetail.amount) ? 0 : (customDialogDetail.amount * 1.9).toFixed(2)}₹
                </Typography>
 
               </div>
             </div>
 
           </BetInfo>
-          <BetFooter onClick={() => { joinMatchUps(betAmount); setMinimize(!minimize3) }}>
-            Confirm {customAmount}₹
+          <BetFooter onClick={() => { joinCustom(customDialogDetail.contestId); setMinimize(!minimize3) }}>
+            Confirm {customDialogDetail.amount}₹
+        </BetFooter>
+        </Betslip>
+        ) : <div></div>}
+
+{openJoinDuelCustom ? (<Betslip style={
+          openJoinDuelCustom ? minimize4 ? { transform: "translateY(0px)",display: "block", } : { transform: "translateY(79%)",display: "block", }  : { display: "none", }
+        }
+        >
+          <BetHeader onClick={() => setMinimize4(!minimize4)}>
+            Payslip
+        </BetHeader>
+          <BetInfo>
+          <InputLabel style={{margin:5,color:"#FFFFFF"}}>
+            <Typography variant="caption">
+            Select Player
+            </Typography>
+            
+          </InputLabel>
+          <Select
+          classes={{select: classes.select}}
+                style={{display:"inline-flex",
+                marginBottom:5,
+                width:"100%",
+              backgroundColor:"white"}}
+                select
+                label="Select Player"
+                value={selectedPlayer}
+                onChange={handleSelectPlayer}
+                // helperText="Please select a Player"
+              >
+                {playerList !== null ? playerList.map(player =>  
+                <MenuItem key={player.id} value={player.id} style={{
+                  zIndex:99999999
+                }}>
+                  <div style={{
+                    display:'flex',
+                    flexDirection:'row',
+ 
+                    width:"100%",
+                    alignContent:"center",
+                    alignItems:"center"
+                  }}>
+                    <Avatar src={player.image_path} />
+                    <div style={{
+                    display:'flex',
+                    flexDirection:'column',
+                    marginLeft:10,
+ 
+                    alignContent:"center",
+                    alignItems:"start"
+                  }}>
+
+                    
+                    <Typography variant="caption" >
+                     {player.fullname}
+                     </Typography>
+                     <Typography variant="caption" >
+                      {player.position.name}
+                      </Typography>
+                </div>
+         
+                              
+                  </div>
+                  <Divider/>
+                  </MenuItem>) : <div />}
+                 
+                   
+                
+              </Select>
+              
+
+
+            <div style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              margin: "0 0 10px 0",
+
+            }}>
+              
+              <div>
+                <Typography variant="caption">
+                  Multiplier
+               </Typography>
+              </div>
+              <div>
+                <Typography variant="caption" style={{ fontSize: '12px' }}>
+                  1.9x
+               </Typography>
+
+
+              </div>
+            </div>
+            <div style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between"
+            }}>
+              <Typography variant="caption">
+                Potential winnings
+
+               </Typography>
+              <div>
+                <Typography variant="caption" style={{ color: "#77BC37", fontWeight: 700 }}>
+                  {isNaN(customDialogDetail.amount) ? 0 : (customDialogDetail.amount * 1.9).toFixed(2)}₹
+               </Typography>
+
+              </div>
+            </div>
+
+          </BetInfo>
+          <BetFooter onClick={() => { joinDuelCustom(customDialogDetail.contestId); setMinimize(!minimize3) }}>
+            Confirm {customDialogDetail.amount}₹
         </BetFooter>
         </Betslip>
         ) : <div></div>}
@@ -3335,8 +3508,14 @@ export default function Contest(props) {
                   </MenuItem>
                
               </TextField>
-             
-              <TextField
+              <InputLabel style={{margin:0,color:"#A3A3A3"}}>
+            <Typography variant="caption">
+            Select Player
+            </Typography>
+            
+          </InputLabel>
+              <Select
+              classes={{select: classes.select}}
                 style={{display:"inline-flex",marginBottom:5}}
                 select
                 label="Select Player"
@@ -3382,7 +3561,7 @@ export default function Contest(props) {
                  
                    
                 
-              </TextField>
+              </Select>
               
               <TextField
                 style={contestType === 1 ? {display:"inline-flex"} : {display:"none"}}
