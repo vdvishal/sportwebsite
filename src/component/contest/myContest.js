@@ -440,12 +440,12 @@ const DuelsCustom2 = styled.div`
   @media ${device.mobileL} {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto 0px auto;
     align-items: center;
     margin:10px 0 10px 0;
-    background-color:white;
+    
      text-align:center;
-     border: 1px solid #cdcbcb;
+     
     border-radius: 5px;
  
   }
@@ -455,13 +455,50 @@ const DuelSingleRight = styled.div`
   display:flex;
   flex-direction:row;
   margin:2px;
-  align-content:"center";
+  align-content:center;
   justify-content:space-between;
   width:100%;
  
 `;
 
+const DuelSingleRight1a = styled.div`
+  display:flex;
+  flex-direction:row;
+  margin:2px;
+  align-content:center;
+  justify-content:flex-start;
+  width:100%;
+  @media ${device.mobileL} {
+    flex-direction:row-reverse;
+  }
+`;
 
+const DuelSingleRight1aNestedDiv = styled.div`
+  display: flex;
+  align-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  @media ${device.mobileL} {
+ 
+      align-items: flex-end;
+    }
+`;
+
+const DuelSingleRight2 = styled.div`
+  display:flex;
+  flex-direction:row-reverse;
+  margin:2px;
+  align-content:center;
+  justify-content:flex-start;
+  width:100%;
+  alignItems:center;
+  @media ${device.mobileL} {
+    flex-direction:row;
+  }
+`;
+
+
+ 
 const DuelCustomHeader = styled.div`
   display:none;
   font-weight:600;
@@ -483,13 +520,32 @@ border-radius:4px;
 transition: transform .2s;
 cursor:pointer;
 @media ${device.mobileL} {
-  border:none;
+  
   text-align:center;
   justify-content:center;
    }
  
 `;
 
+const DuelsCustomDiv2 = styled.div`
+display:flex;
+flex-direction:row-reverse;
+margin:2px;
+border:1px solid #cbd4df;
+background-color: #FFFFFF;
+padding:6px;
+border-radius:4px;
+transition: transform .2s;
+cursor:pointer;
+justify-content:space-between;
+@media ${device.mobileL} {
+  flex-direction:row;
+  text-align:center;
+  justify-content:center;
+   }
+ 
+`;
+ 
 const DiagonalTrans = styled.div`
 text-align: center;
 -webkit-transform: rotate(-45deg);
@@ -568,6 +624,8 @@ export default function Contest(props) {
 
   const [directionCustom, setCustomDirection] = React.useState(1);
 
+  const [customAllCon, setCustomAll] = React.useState(null);
+
   useEffect(() => {
     uState = {};
     ReactGA.pageview(props.location.pathname);
@@ -587,9 +645,10 @@ export default function Contest(props) {
         return uState[`typeB-${index2}`] = false;
       })
 
-      getCustom()
-
-
+      setCustomAll(response.data.custom)
+      let custom = _.filter(response.data.custom, ['contestType',filterCustom]);
+      setCustom(custom)
+      
 
     })
 
@@ -611,14 +670,7 @@ export default function Contest(props) {
     setContestType(event.target.value)
   }
 
-  const getCustom = () => {
-    api.customContest(props.match.params.matchId,0,500,filterCustom,1).then(response => {
-       
-      setCustom(response.data.data);
-      
-      
-    })
-  }
+ 
 
 
   const handleChange = (event, newValue) => {
@@ -637,13 +689,9 @@ export default function Contest(props) {
   const handleFilterCustom = (value) => {
     setCustomFilter(value)
     setCustom(null)
- 
- 
-    api.customContest(props.match.params.matchId,0,50000,value,1).then(response => {
-       
-      setCustom(response.data.data);
-      
-    })
+    
+    let filtered = _.filter(customAllCon, ['contestType',value])
+    setCustom(filtered)
   }
 
 
@@ -1709,10 +1757,10 @@ export default function Contest(props) {
     <div key={contest._id}>
     
     <DuelsCustom >
-    <DuelCustomHeader>
+    {/* <DuelCustomHeader>
       Under/Over 
     </DuelCustomHeader>
-   
+    */}
 
       <DuelsCustomDiv style={{padding: "6px"}} >
         <div style={{
@@ -1797,7 +1845,7 @@ export default function Contest(props) {
             </Typography>
           </div>
         </DuelsCustomDiv>
-      <DuelsCustomDiv style={{padding: "5px"}} >
+      {contest.open ? <DuelsCustomDiv style={{padding: "5px"}} >
        
 
 
@@ -1840,7 +1888,65 @@ export default function Contest(props) {
           </div>
         </DuelSingleRight>
       </DuelsCustomDiv>
-     
+:      <DuelsCustomDiv style={{padding: "6px",flexDirection:"row-reverse",justifyContent:"space-between"}} >
+            
+
+<DuelSingleRight style={{
+  justifyContent:'flex-start',
+  flexDirection:"row-reverse",
+  alignContent:"center",
+  alignItems:"center"
+}}>
+<div style={{
+              padding: '2.5px',
+              margin: '5.5px',
+              
+              
+            }}>
+              <Avatar src={contest.userInfo.player2.profilePic ? contest.userInfo.player2.profilePic : 'https'}  variant="circle" />
+
+            </div>
+  <div style={{
+    display:"flex",
+    alignContent:"center",
+    alignItems:"center"
+  }}>
+    <Typography variant="caption">
+    {contest.userInfo.player2.userName}
+    </Typography>
+ 
+  </div>
+   
+</DuelSingleRight>
+<DuelSingleRight style={{
+     justifyContent:"flex-start",
+     textAlign:"start"
+ }}>
+  <div style={{
+    display: "flex",
+    alignContent: "center",
+    alignItems: "self-end",
+    justifyContent:"center",
+    flexDirection: "column",
+    textAlign:"end",
+    padding: "3.89px 0",
+    color:"#77BC37",
+    minWidth:100
+  }}>
+    <Typography variant="caption" style={{color:"grey"}}>
+    Challenger
+    </Typography>
+
+    <Typography variant="caption">
+    {contest.info.player2}
+    </Typography>
+  </div>
+</DuelSingleRight>
+</DuelsCustomDiv>
+    
+    }
+
+
      </DuelsCustom>
      </div>
   )})
@@ -1849,9 +1955,9 @@ export default function Contest(props) {
     <div key={contest._id}>
     
     <DuelsCustom2 >
-      <DuelCustomHeader>
+      {/* <DuelCustomHeader>
         Player Duel 
-      </DuelCustomHeader>
+      </DuelCustomHeader> */}
    
 
       <DuelsCustomDiv style={{padding: "6px"}} >
@@ -1866,7 +1972,7 @@ export default function Contest(props) {
         <DuelSingleRight style={{
             textOverflow: "ellipsis",
             overflow: "hidden",
-            maxWidth: 60,
+            maxWidth: 85,
             display:"flex",
             alignContent:"center",
             alignItems:"center"
@@ -1874,7 +1980,7 @@ export default function Contest(props) {
           <div style={{
             textOverflow: "ellipsis",
             overflow: "hidden",
-            maxWidth: 60,
+            maxWidth: 85,
             display:"flex",
             alignContent:"center",
             alignItems:"center"
@@ -1941,6 +2047,7 @@ export default function Contest(props) {
         </AntiDiagonalTrans>
 
       </div>
+      {contest.open === true ?
       <DuelsCustomDiv style={{padding: "7px"}} >
        
 
@@ -1986,7 +2093,58 @@ export default function Contest(props) {
           </div>
         </DuelSingleRight>
       </DuelsCustomDiv>
-     
+      : <DuelsCustomDiv2  >
+      
+      <DuelSingleRight2 >
+        <div style={{
+                      padding: '2.5px',
+                      margin: '5.5px',
+                      
+                      
+                    }}>
+                      <Avatar src={contest.userInfo.player2.profilePic ? contest.userInfo.player2.profilePic : 'https'}  variant="circle" />
+
+                    </div>
+              <div style={{
+        display:"flex",
+        alignContent:"center",
+        alignItems:"center"
+      }}>
+        <Typography variant="caption">
+        {contest.userInfo.player2.userName}
+        </Typography>
+    
+      </div>
+      
+    </DuelSingleRight2>
+        <DuelSingleRight1a >
+       <div style={{
+        padding: '2.5px',
+        margin: '5.5px',
+         
+      }}>
+        <Avatar src={contest.player2Detail.image_path}  variant="circle" />
+
+      </div>
+
+      <DuelSingleRight1aNestedDiv>
+          <Typography variant="caption"  style={{color:"grey"}}>
+          {contest.player2Detail.firstname[0]+". "+contest.player2Detail.lastname}
+
+          </Typography>
+
+          <Typography variant="caption"  style={{color:"grey"}}>
+          {contest.player2Detail.teamInfo.code}               
+
+          </Typography>
+          <Typography variant="caption"  style={{color:"grey"}}>
+          {contest.player2Detail.position.name} 
+
+          </Typography>
+        </DuelSingleRight1aNestedDiv>
+      
+      </DuelSingleRight1a>
+    </DuelsCustomDiv2>}
      </DuelsCustom2>
      </div>
   ))
