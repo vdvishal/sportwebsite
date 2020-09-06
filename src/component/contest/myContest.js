@@ -26,7 +26,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import StarRateIcon from '@material-ui/icons/StarRate';
 
-import { Divider, IconButton, Dialog, Avatar, Toolbar,Select,MenuItem } from '@material-ui/core';
+import { Divider, IconButton, Dialog, Avatar, Toolbar, Select, MenuItem } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
@@ -34,6 +34,7 @@ import Slide from '@material-ui/core/Slide';
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import * as mqtt from 'mqtt';
 
 
 // Other modules
@@ -69,7 +70,7 @@ const multipleArr2 = [1.5, 3, 5, 11, 26, 40, 75, 125, 250, 500]
 const size = {
   mobileS: '320px',
   mobileM: '375px',
-  mobileL: '649px',
+  mobileL: '718px',
   tablet: '768px',
   laptop: '1024px',
   laptopL: '1440px',
@@ -119,7 +120,7 @@ const useStyles = makeStyles({
       alignContent: "center",
       justifyContent: "space-between",
       marginTop: 0,
-      borderRadius:"0 0px 5px 5px"
+      borderRadius: "0 0px 5px 5px"
 
     },
 
@@ -329,7 +330,7 @@ const Line = styled.div`
     top: 25px;
  
 `
- 
+
 
 const FinalValue = styled.div`
 display: flex;
@@ -405,7 +406,7 @@ const ContentDiv = styled.div`
 
 const DuelsCustom = styled.div`
   display: grid;
-  grid-template-columns: 1fr 0.5fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   margin-bottom: 0.25em;
   grid-gap: 2px;
   -webkit-align-items: end;
@@ -473,6 +474,18 @@ const DuelSingleRight1a = styled.div`
   }
 `;
 
+const DuelSingleRight1b = styled.div`
+  display:flex;
+  flex-direction:row-reverse;
+ 
+  align-content:center;
+  justify-content:flex-start;
+  width:100%;
+  @media ${device.mobileL} {
+    flex-direction:row;
+  }
+`;
+
 const DuelSingleRight1aNestedDiv = styled.div`
   display: flex;
   align-content: center;
@@ -483,6 +496,21 @@ const DuelSingleRight1aNestedDiv = styled.div`
       align-items: flex-end;
     }
 `;
+const DuelSingleRight1bNestedDiv = styled.div`
+    display: flex;
+    place-content: center;
+    align-items: self-end;
+    flex-direction: column;
+    text-align: end;
+    padding: 3.89px 0px;
+    color: rgb(119, 188, 55);
+    min-width: 100px;
+  @media ${device.mobileL} {
+ 
+      align-items: flex-end;
+    }
+`;
+
 
 const DuelSingleRight2 = styled.div`
   display:flex;
@@ -498,7 +526,7 @@ const DuelSingleRight2 = styled.div`
 `;
 
 
- 
+
 const DuelCustomHeader = styled.div`
   display:none;
   font-weight:600;
@@ -520,7 +548,7 @@ border-radius:4px;
 transition: transform .2s;
 cursor:pointer;
 @media ${device.mobileL} {
-  
+  border:none;
   text-align:center;
   justify-content:center;
    }
@@ -541,11 +569,33 @@ justify-content:space-between;
 @media ${device.mobileL} {
   flex-direction:row;
   text-align:center;
+  
   justify-content:center;
    }
  
 `;
+
+const DuelsCustomDiv2a = styled.div`
+display:flex;
+flex-direction:row-reverse;
+margin:2px;
+border:1px solid #cbd4df;
+background-color: #FFFFFF;
+padding:6px;
+border-radius:4px;
+transition: transform .2s;
+cursor:pointer;
+justify-content:space-between;
+@media ${device.mobileL} {
+  flex-direction:row;
+  text-align:center;
+  border:none;
+  justify-content:space-between;
+   }
  
+`;
+
+
 const DiagonalTrans = styled.div`
 text-align: center;
 -webkit-transform: rotate(-45deg);
@@ -574,6 +624,19 @@ background-color: #77BC37;
                     transform: rotate(45deg);
 `
 
+const PlayerStatDiv = styled.div`
+display:grid;
+grid-gap:5px;
+grid-template-columns: 1fr;
+grid-template-rows: auto;
+padding:10px;
+`
+const PlayerStatNestedDiv = styled.div`
+display:grid;
+grid-gap:2.5px;
+grid-template-columns: 1fr 1fr;
+grid-template-rows: auto;
+`
 
 
 let uState = {}
@@ -625,6 +688,9 @@ export default function Contest(props) {
   const [directionCustom, setCustomDirection] = React.useState(1);
 
   const [customAllCon, setCustomAll] = React.useState(null);
+  const [playerStats, setPlayer] = React.useState(null);
+  const [openPlayerDetail, setOpenPlayerDetail] = React.useState(false);
+
 
   useEffect(() => {
     uState = {};
@@ -646,31 +712,69 @@ export default function Contest(props) {
       })
 
       setCustomAll(response.data.custom)
-      let custom = _.filter(response.data.custom, ['contestType',filterCustom]);
+      let custom = _.filter(response.data.custom, ['contestType', filterCustom]);
       setCustom(custom)
-      
+
 
     })
 
     matchApi.match('matchId', props.match.params.matchId).then(response => {
       setMatch(response.data.match)
     })
+     
+
+    const options = {
+      // clientId uniquely identifies client
+      // choose any string you wish
+      clientId: "MQTT_CLIENT_" + new Date().getTime()
+    };
+
+    var client = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
+    client.on('connect', function () {
+      console.log('ws connected')
+    })
+
+    client.on('reconnect', function () {
+      console.log('ws connected')
+    })
+    client.subscribe(props.match.params.matchId)
+
+    client.on('message', function (topic, message) {
+      // Updates React state with message 
+      console.log(JSON.parse(message));
+      let data = JSON.parse(message)
+      setteam(data);
+      let x = data.matchDetail ? setMatch(data.matchDetail) : '';
+    });
 
     teamApi.teamStats(props.match.params.matchId).then(response => {
       console.log(response);
 
       setteam(response.data)
     })
+    return () => {
+      // HERE I WANT TO UNSUBSCRIBE WHEN THE COMPONENT UNMOUNT 
+      client.unsubscribe(props.match.params.matchId)
+    }
+
 
   }, []);
 
 
+  const getPlayer = (player) => {
+    setPlayer(null);
+    setOpenPlayerDetail(true);
+    teamApi.getPlayer(props.match.params.matchId, player).then(response => {
+      console.log(response.data)
+      setPlayer(response.data[0].player)
+    })
+  }
 
-  const handleContestType = (event) => { 
+  const handleContestType = (event) => {
     setContestType(event.target.value)
   }
 
- 
+
 
 
   const handleChange = (event, newValue) => {
@@ -685,12 +789,12 @@ export default function Contest(props) {
 
   };
 
-   
+
   const handleFilterCustom = (value) => {
     setCustomFilter(value)
     setCustom(null)
-    
-    let filtered = _.filter(customAllCon, ['contestType',value])
+
+    let filtered = _.filter(customAllCon, ['contestType', value])
     setCustom(filtered)
   }
 
@@ -700,18 +804,18 @@ export default function Contest(props) {
     if (dir === 1) {
       setCustomDirection(1);
 
- 
+
       fanD = _.orderBy(fanD, 'amount', ['asc']);
       setCustom(fanD)
     } else {
       setCustomDirection(dir);
 
- 
+
       fanD = _.orderBy(fanD, 'amount', ['desc']);
       setCustom(fanD)
     }
   }
-  
+
 
   const handleCollapse = (type) => {
     setUpdate(update + 1)
@@ -723,7 +827,7 @@ export default function Contest(props) {
 
   const PrizePoolClose = () => {
     setOpenPrizePool(false)
-
+    setOpenPlayerDetail(false)
   };
 
   // const viewVs = () => vsContest.map((contest, index) =>
@@ -891,44 +995,118 @@ export default function Contest(props) {
   const view = () => UnderOver.map((contest2, index2) => {
     return UnderOver.length !== 0 ?
 
-     (<Paper elevation={2} style={{ margin: 2.5 }} key={contest2._id} >
-      <Paper  >
-        <ContestCardheader >
+      (<Paper elevation={2} style={{ margin: 2.5 }} key={contest2._id} >
+        <Paper  >
+          <ContestCardheader >
 
-          <Typography variant="caption"
-            style={{ fontWeight: 500, fontSize: '1.05rem', color: "white" }}>
-            Entry #{index2 + 1}
-          </Typography>
-          <ExpandMoreIcon onClick={() => handleCollapse(`typeA-${index2}`)} style={!uState[`typeA-${index2}`] ? { fontWeight: 800, padding: 10, fontSize: '1.45rem', color: "white", cursor: "pointer" } : { display: "none" }} />
-          <ExpandLessIcon onClick={() => handleCollapse(`typeA-${index2}`)} style={uState[`typeA-${index2}`] ? { fontWeight: 800, padding: 10, fontSize: '1.45rem', color: "white", cursor: "pointer" } : { display: "none" }} />
-        </ContestCardheader>
-      </Paper>
-      <Collapse isOpened={uState[`typeA-${index2}`]} >
-        {Object.entries(contest2.contest).map(([, contest], indx) =>
-          <ContestType2 key={contest._id}>
+            <Typography variant="caption"
+              style={{ fontWeight: 500, fontSize: '1.05rem', color: "white" }}>
+              Entry #{index2 + 1}
+            </Typography>
+            <ExpandMoreIcon onClick={() => handleCollapse(`typeA-${index2}`)} style={!uState[`typeA-${index2}`] ? { fontWeight: 800, padding: 10, fontSize: '1.45rem', color: "white", cursor: "pointer" } : { display: "none" }} />
+            <ExpandLessIcon onClick={() => handleCollapse(`typeA-${index2}`)} style={uState[`typeA-${index2}`] ? { fontWeight: 800, padding: 10, fontSize: '1.45rem', color: "white", cursor: "pointer" } : { display: "none" }} />
+          </ContestCardheader>
+        </Paper>
+        <Collapse isOpened={uState[`typeA-${index2}`]} >
+          {Object.entries(contest2.contest).map(([, contest], indx) =>
+            <ContestType2 key={contest._id}>
+              <ContestNameArea>
+                <ContestRightNameArea>
+                  <div className="image" style={{
+
+                    padding: '16.5px',
+                    margin: '5.5px',
+
+
+                  }}>
+                    <Avatar src={contest.playerInfo.image_path} variant="circle" />
+                  </div>
+                  <div>
+                    <Typography variant="caption" style={{ fontWeight: 700 }}>
+                      {contest.playerInfo.firstname[0]}. {contest.playerInfo.lastname}
+                    </Typography>
+                    <br />
+                    <Typography variant="caption" style={{ fontWeight: 400 }}>
+                      {contest.playerInfo.team ? contest.playerInfo.team.name : ""}
+                    </Typography>
+                    <br />
+                    <Typography variant="caption" style={{ fontWeight: 400 }}>
+                      {contest.playerInfo.position ? contest.playerInfo.position.name : ""}
+                    </Typography>
+                  </div>
+
+                </ContestRightNameArea>
+              </ContestNameArea>
+
+
+              <ContestvalueArea>
+                <div style={{
+                  positon: "relative",
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+
+                  <NestedFinalDiv
+                    style={
+                      contest2['winner'] ?
+                        contest2['winner'][contest._id] === 1 ? {
+                          backgroundColor: "#77BC37",
+                          boxShadow: "0px 0px 12px 1px #77BC37",
+                          // marginLeft: "-17px"
+                        } : {
+                            backgroundColor: contest2['winner'][contest._id] === 2 ? "#F79123" : "#f58f22",
+                            boxShadow: "0px 0px 12px 1px #f58f22",
+                            // marginLeft: "-17px"
+                          } : {
+                            display: 'block',
+                          backgroundColor: "#B9B9B9",
+                          boxShadow: "0px 0px 12px 1px #B9B9B9",
+                        }}
+                  >
+                    <Typography variant="caption">
+                      {`${multipleArr2[indx]}X`}
+
+                    </Typography>
+                  </NestedFinalDiv>
+
+                  <Typography variant="caption"  >
+
+                    {/* {multipleArr2[index]}X */}
+                  </Typography>
+                </div>
+
+                <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+
+                  {
+                    contest.status === "Discarded" ?
+                      <Typography variant="caption" style={{ color: "grey", fontWeight: 700 }} >
+                        Contest cancelled
+                </Typography>
+                      :
+                      <Typography variant="caption">
+                        Gets <span style={contest2['winner'] ?
+                          contest2['winner'][contest._id] === 1 ? { color: "#77BC37", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 }} >
+                          {contest2['selectedTeam'][contest._id]['typeName']}
+                        </span>
+                      </Typography>}
+                </Typography>
+
+              </ContestvalueArea>
+            </ContestType2>
+          )}
+        </Collapse>
+        <div>
+          <ContestType2 style={{ height: 88 }}>
             <ContestNameArea>
               <ContestRightNameArea>
-                <div className="image" style={{
+                <div style={{
 
                   padding: '16.5px',
                   margin: '5.5px',
 
 
                 }}>
-                  <Avatar src={contest.playerInfo.image_path} variant="circle" />
-                </div>
-                <div>
-                  <Typography variant="caption" style={{ fontWeight: 700 }}>
-                    {contest.playerInfo.firstname[0]}. {contest.playerInfo.lastname}
-                  </Typography>
-                  <br />
-                  <Typography variant="caption" style={{ fontWeight: 400 }}>
-                    {contest.playerInfo.team ? contest.playerInfo.team.name : ""}
-                  </Typography>
-                  <br />
-                  <Typography variant="caption" style={{ fontWeight: 400 }}>
-                    {contest.playerInfo.position ? contest.playerInfo.position.name : ""}
-                  </Typography>
+
                 </div>
 
               </ContestRightNameArea>
@@ -936,174 +1114,104 @@ export default function Contest(props) {
 
 
             <ContestvalueArea>
-              <div style={{ positon: "relative" ,
-                  display: "flex",
-                  justifyContent: "center",
+              <div style={{
+                positon: "relative",
+                display: "flex",
+                justifyContent: "center",
               }}>
-            
-                  <NestedFinalDiv
-                    style={
-                      contest2['winner'] ?
-                      contest2['winner'][contest._id] === 1 ? {
-                          backgroundColor: "#77BC37",
-                          boxShadow: "0px 0px 12px 1px #77BC37",
-                          // marginLeft: "-17px"
-                        } :  {
-                            backgroundColor:  contest2['winner'][contest._id] === 2 ? "#F79123" : "#f58f22",
-                            boxShadow: "0px 0px 12px 1px #f58f22",
-                            // marginLeft: "-17px"
-                          } :  { display: 'block',
-                          backgroundColor: "#B9B9B9",
-                          boxShadow: "0px 0px 12px 1px #B9B9B9",
-                         }  }
-                  >
-                    <Typography variant="caption">
-                      {`${multipleArr2[indx]}X`}
 
-                    </Typography>
+                <FinalValue >
+                  <NestedFinalDiv style={
+                    contest2['winner'] && contest2['status'] === "Finished" ? contest2.lostContest.length === 0 ? {
+                      backgroundColor: "#77BC37",
+                      boxShadow: "0px 0px 12px 1px #77BC37",
+                    } : {
+                        backgroundColor: "#f58f22",
+                        boxShadow: "0px 0px 12px 1px #f58f22",
+                      } : {
+                        display: "block",
+                        backgroundColor: "#B9B9B9",
+                        boxShadow: "0px 0px 12px 1px #B9B9B9",
+                      }
+                  }         >
+
+                    <Typography variant="caption">
+                      {contest2.lostContest !== null && contest2.lostContest !== undefined && contest2.lostContest.length === 0 ? multipleArr2[Object.keys(contest2.wonContest).length - 1] : ''}X
+
+                  </Typography>
+
                   </NestedFinalDiv>
-           
+
+                </FinalValue>
                 <Typography variant="caption"  >
 
                   {/* {multipleArr2[index]}X */}
                 </Typography>
               </div>
 
-              <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-
-                {
-                  contest.status === "Discarded" ?
-                    <Typography variant="caption" style={{ color: "grey", fontWeight: 700 }} >
-                      Contest cancelled
-                </Typography>
-                    :
-                    <Typography variant="caption">
-                      Gets <span style={contest2['winner'] ?
-                        contest2['winner'][contest._id] === 1 ? { color: "#77BC37", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 }} >
-                        {contest2['selectedTeam'][contest._id]['typeName']}
-                      </span>
-                    </Typography>}
-              </Typography>
-
-            </ContestvalueArea>
-          </ContestType2>
-        )}
-      </Collapse>
-      <div>
-        <ContestType2 style={{ height: 88 }}>
-          <ContestNameArea>
-            <ContestRightNameArea>
-              <div style={{
-
-                padding: '16.5px',
-                margin: '5.5px',
 
 
-              }}>
-
-              </div>
-
-            </ContestRightNameArea>
-          </ContestNameArea>
-
-
-          <ContestvalueArea>
-            <div style={{ positon: "relative" ,
-                  display: "flex",
-                  justifyContent: "center",
-              }}>
-
-              <FinalValue >
-                <NestedFinalDiv style={
-                  contest2['winner'] && contest2['status'] === "Finished" ? contest2.lostContest.length === 0 ? {
-                    backgroundColor: "#77BC37",
-                    boxShadow: "0px 0px 12px 1px #77BC37",
-                  } : {
-                      backgroundColor: "#f58f22",
-                      boxShadow: "0px 0px 12px 1px #f58f22",
-                    } : { display: "block",
-                    backgroundColor: "#B9B9B9",
-                    boxShadow: "0px 0px 12px 1px #B9B9B9",
-                   }
-                }         >
-
-                  <Typography variant="caption">
-                    {  contest2.lostContest !== null  &&  contest2.lostContest !== undefined && contest2.lostContest.length === 0 ? multipleArr2[Object.keys(contest2.wonContest).length - 1]:''}X
-
-                  </Typography>
-
-                </NestedFinalDiv>
-
-              </FinalValue>
-              <Typography variant="caption"  >
-
-                {/* {multipleArr2[index]}X */}
-              </Typography>
-            </div>
-
-
-
-            {/* <Typography variant="caption" style={{padding:"0 10px",textAlign:"end"}} >
+              {/* <Typography variant="caption" style={{padding:"0 10px",textAlign:"end"}} >
             Payout: <span style={{color:"#77BC37",fontWeight:700}} >
             ₹{multipleArr2[contest2.contest.length - 1]*contest2.amount}
               </span>
           </Typography> */}
 
 
-            {contest2['winner'] && contest2['status'] === "Finished" ?  
-            contest2.wonContest.length !== 0 && contest2.lostContest.length === 0 ?
+              {contest2['winner'] && contest2['status'] === "Finished" ?
+                contest2.wonContest.length !== 0 && contest2.lostContest.length === 0 ?
 
-              <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#77BC37", fontWeight: 500,  }} >
-                  You won
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                    <span style={{ color: "#77BC37", fontWeight: 500, }} >
+                      You won
               ₹{multipleArr2[Object.keys(contest2.wonContest).length - 1] * contest2.amount}
-                </span>
-              </Typography>
-               : 
-              contest2.wonContest.length === 0 && contest2.lostContest.length === 0 
-              ? 
-                <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#77BC37", fontWeight: 500,  }} >
-                 Refund 
-              ₹{contest2.amount}
-                </span>
-              </Typography>
-              :
-              <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#F79123", fontWeight: 500 }} >
-                  You lost {contest2.lostContest.length} contest
-              </span>
-              </Typography>
-              : 
-              contest2['status'] === "Aban." ?  
-                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }}>
-                      Refund due to match abandoned
-                    </Typography> 
-              :
-              
-              <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                 <Typography variant="caption">
-                    Entry: 
-                    <span style={{ color: "#77BC37", fontWeight: 500 }} >
-               
-               ₹{contest2.amount}
-             </span>
+                    </span>
                   </Typography>
-                  <br/>
+                  :
+                  contest2.wonContest.length === 0 && contest2.lostContest.length === 0
+                    ?
+                    <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                      <span style={{ color: "#77BC37", fontWeight: 500, }} >
+                        Refund
+              ₹{contest2.amount}
+                      </span>
+                    </Typography>
+                    :
+                    <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                      <span style={{ color: "#F79123", fontWeight: 500 }} >
+                        You lost {contest2.lostContest.length} contest
+              </span>
+                    </Typography>
+                :
+                contest2['status'] === "Aban." ?
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }}>
+                    Refund due to match abandoned
+                    </Typography>
+                  :
+
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                    <Typography variant="caption">
+                      Entry:
+                    <span style={{ color: "#77BC37", fontWeight: 500 }} >
+
+                        ₹{contest2.amount}
+                      </span>
+                    </Typography>
+                    <br />
                 Payout: <span style={{ color: "#77BC37", fontWeight: 500 }} >
-                {contest2.lostContest !== null && contest2.lostContest.length > 0 ? 
-                     "You lost " + contest2.lostContest.length + " contest"
-                  : 
-                  contest2.wonContest !== null && contest2.wonContest.length > 0 ?  
-                  "₹"+ contest2.wonContest.length > 0 ? 
-                  multipleArr2[contest2.wonContest.length - 1] * contest2.amount : 0 : 0}
-                  
-                </span>
-              </Typography>}
-          </ContestvalueArea>
-        </ContestType2>
-      </div>
-    </Paper>) : <div>No contest Joined</div>
+                      {contest2.lostContest !== null && contest2.lostContest.length > 0 ?
+                        "You lost " + contest2.lostContest.length + " contest"
+                        :
+                        contest2.wonContest !== null && contest2.wonContest.length > 0 ?
+                          "₹" + contest2.wonContest.length > 0 ?
+                            multipleArr2[contest2.wonContest.length - 1] * contest2.amount : 0 : 0}
+
+                    </span>
+                  </Typography>}
+            </ContestvalueArea>
+          </ContestType2>
+        </div>
+      </Paper>) : <div>No contest Joined</div>
   })
 
 
@@ -1131,21 +1239,21 @@ export default function Contest(props) {
 
 
                 }}>
-                                          <Avatar src={contest2['selectedTeam'][contest._id]['playerDetails'].image_path} variant="circle" />
+                  <Avatar src={contest2['selectedTeam'][contest._id]['playerDetails'].image_path} variant="circle" />
 
                 </div>
                 <div>
-                {
-                     contest.handicap === contest2['selectedTeam'][contest._id]['playerDetails'].id ?
-                    <Typography variant="caption" style={{ fontWeight: 700 }}>
-                    
-                    {contest2['selectedTeam'][contest._id]['playerDetails'].firstname[0]}. {contest2['selectedTeam'][contest._id]['playerDetails'].lastname}
-                    <StarRateIcon style={{fontSize: "1.25em",color:"#F58F22"}} />
-                  </Typography>
-                  : <Typography variant="caption" style={{ fontWeight: 700 }}>
-                    
-                    {contest2['selectedTeam'][contest._id]['playerDetails'].firstname[0]}. {contest2['selectedTeam'][contest._id]['playerDetails'].lastname}
-                </Typography> }
+                  {
+                    contest.handicap === contest2['selectedTeam'][contest._id]['playerDetails'].id ?
+                      <Typography variant="caption" style={{ fontWeight: 700 }}>
+
+                        {contest2['selectedTeam'][contest._id]['playerDetails'].firstname[0]}. {contest2['selectedTeam'][contest._id]['playerDetails'].lastname}
+                        <StarRateIcon style={{ fontSize: "1.25em", color: "#F58F22" }} />
+                      </Typography>
+                      : <Typography variant="caption" style={{ fontWeight: 700 }}>
+
+                        {contest2['selectedTeam'][contest._id]['playerDetails'].firstname[0]}. {contest2['selectedTeam'][contest._id]['playerDetails'].lastname}
+                      </Typography>}
                   <br />
                   <Typography variant="caption" style={{ fontWeight: 400 }}>
                     {contest2['selectedTeam'][contest._id]['playerDetails'].team ? contest2['selectedTeam'][contest._id]['playerDetails'].team.name : ""}
@@ -1161,36 +1269,38 @@ export default function Contest(props) {
 
 
             <ContestvalueArea>
-              <div style={{ positon: "relative" ,
-                  display: "flex",
-                  justifyContent: "center",
+              <div style={{
+                positon: "relative",
+                display: "flex",
+                justifyContent: "center",
               }}>
-        
 
 
 
-                  <NestedFinalDiv
-                    style={
-                      contest2['winner'] ?
-                        contest2['winner'][contest._id] === 1 ? {
-                          backgroundColor: "#77BC37",
-                          boxShadow: "0px 0px 12px 1px #77BC37",
-                           
+
+                <NestedFinalDiv
+                  style={
+                    contest2['winner'] ?
+                      contest2['winner'][contest._id] === 1 ? {
+                        backgroundColor: "#77BC37",
+                        boxShadow: "0px 0px 12px 1px #77BC37",
+
+                      } : {
+                          backgroundColor: "#f58f22",
+                          boxShadow: "0px 0px 12px 1px #f58f22",
+
                         } : {
-                            backgroundColor: "#f58f22",
-                            boxShadow: "0px 0px 12px 1px #f58f22",
-                 
-                          } : { display: "block",
-                          backgroundColor: "#B9B9B9",
-                          boxShadow: "0px 0px 12px 1px #B9B9B9",
-                         }}
-                  >
-                    <Typography variant="caption">
-                      {`${multipleArr[index]}X`}
+                          display: "block",
+                        backgroundColor: "#B9B9B9",
+                        boxShadow: "0px 0px 12px 1px #B9B9B9",
+                      }}
+                >
+                  <Typography variant="caption">
+                    {`${multipleArr[index]}X`}
 
-                    </Typography>
-                  </NestedFinalDiv>
- 
+                  </Typography>
+                </NestedFinalDiv>
+
                 <Typography variant="caption"  >
 
                   {/* {multipleArr2[index]}X */}
@@ -1199,45 +1309,45 @@ export default function Contest(props) {
 
               <div
                 style={{
-                  
-                  display:"flex",
-                  flexDirection:"row-reverse",
-                  alignItems:"center",
+
+                  display: "flex",
+                  flexDirection: "row-reverse",
+                  alignItems: "center",
 
                 }}
               >
-              <div className="image" style={{
+                <div className="image" style={{
 
-                // padding: '16.5px',
-                // margin: '5.5px',
+                  // padding: '16.5px',
+                  // margin: '5.5px',
 
 
                 }}>
-                 { contest.players[contest.player1].id !== contest2['selectedTeam'][contest._id]['playerDetails'].id ? 
+                  {contest.players[contest.player1].id !== contest2['selectedTeam'][contest._id]['playerDetails'].id ?
                     <Avatar src={contest.players[contest.player1].image_path} variant="circle" />
                     : <Avatar src={contest.players[contest.player2].image_path} variant="circle" />}
                 </div>
                 <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
 
-                {
-                  contest.status === "Discarded" ?
-                    <Typography variant="caption" style={{ color: "grey", fontWeight: 700 }} >
-                      Contest cancelled
+                  {
+                    contest.status === "Discarded" ?
+                      <Typography variant="caption" style={{ color: "grey", fontWeight: 700 }} >
+                        Contest cancelled
                 </Typography>
-                    :
-                    <Typography variant="caption">
-                      Collects more points than <span style={{ color: "#E78922", fontWeight: 700 }} >{
-                        contest.players[contest.player1].id !== contest2['selectedTeam'][contest._id]['playerDetails'].id ?
-                          `${contest.players[contest.player1].firstname[0]}. ${contest.players[contest.player1].lastname}` :
-                          `${contest.players[contest.player2].firstname[0]}. ${contest.players[contest.player2].lastname}`
-                      }</span></Typography>}
-                <br />
-                
+                      :
+                      <Typography variant="caption">
+                        Collects more points than <span style={{ color: "#E78922", fontWeight: 700 }} >{
+                          contest.players[contest.player1].id !== contest2['selectedTeam'][contest._id]['playerDetails'].id ?
+                            `${contest.players[contest.player1].firstname[0]}. ${contest.players[contest.player1].lastname}` :
+                            `${contest.players[contest.player2].firstname[0]}. ${contest.players[contest.player2].lastname}`
+                        }</span></Typography>}
+                  <br />
 
-              </Typography>
-           
+
+                </Typography>
+
               </div>
-               </ContestvalueArea>
+            </ContestvalueArea>
           </ContestType2>
         )}
       </Collapse>
@@ -1273,8 +1383,8 @@ export default function Contest(props) {
                     } : { display: "block" }
                 }         >
                   <Typography variant="caption">
- 
-                  {  contest2.lostContest !== null  &&  contest2.lostContest !== undefined && contest2.lostContest.length === 0 ? multipleArr[Object.keys(contest2.wonContest).length - 1]:''}X
+
+                    {contest2.lostContest !== null && contest2.lostContest !== undefined && contest2.lostContest.length === 0 ? multipleArr[Object.keys(contest2.wonContest).length - 1] : ''}X
 
                   </Typography>
 
@@ -1289,52 +1399,52 @@ export default function Contest(props) {
 
 
 
-            {contest2['winner'] && contest2['status'] === "Finished" ?  
-            
-              contest2.lostContest.length === 0  && contest2.wonContest.length !== 0 ?
+            {contest2['winner'] && contest2['status'] === "Finished" ?
 
-              <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#77BC37", fontWeight: 500,  }} >
-                  You won
+              contest2.lostContest.length === 0 && contest2.wonContest.length !== 0 ?
+
+                <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                  <span style={{ color: "#77BC37", fontWeight: 500, }} >
+                    You won
                 ₹{multipleArr[Object.keys(contest2.wonContest).length - 1] * contest2.amount}
-                </span>
-              </Typography>
-
-              : contest2.lostContest.length === 0  && contest2.wonContest.length === 0 ?
-              <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#77BC37", fontWeight: 500,  }} >
-                  Refunded
-                ₹{contest2.amount}
-                </span>
-              </Typography> :
-              <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <span style={{ color: "#f58f22", fontWeight: 500 }} >
-                  You lost {contest2.lostContest.length} contest
-             </span>
-              </Typography>
-
-
-              : contest2['status'] === "Aban." ?  
-                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }}>
-                      Refund due to match abandoned
-                    </Typography>
-              : <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
-                <Typography variant="caption">
-                    Entry: 
-                    <span style={{ color: "#77BC37", fontWeight: 500 }} >
-               
-                   ₹{contest2.amount}
                   </span>
                 </Typography>
-                  <br/>
+
+                : contest2.lostContest.length === 0 && contest2.wonContest.length === 0 ?
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                    <span style={{ color: "#77BC37", fontWeight: 500, }} >
+                      Refunded
+                ₹{contest2.amount}
+                    </span>
+                  </Typography> :
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                    <span style={{ color: "#f58f22", fontWeight: 500 }} >
+                      You lost {contest2.lostContest.length} contest
+             </span>
+                  </Typography>
+
+
+              : contest2['status'] === "Aban." ?
+                <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }}>
+                  Refund due to match abandoned
+                    </Typography>
+                : <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                  <Typography variant="caption">
+                    Entry:
+                    <span style={{ color: "#77BC37", fontWeight: 500 }} >
+
+                      ₹{contest2.amount}
+                    </span>
+                  </Typography>
+                  <br />
                 Payout: <span style={{ color: "#77BC37", fontWeight: 500 }} >
-                  {contest2.lostContest !== null && contest2.lostContest.length > 0 ? 
-                     "You lost " + contest2.lostContest.length + " contest"
-                  : contest2.wonContest !== null && contest2.wonContest.length > 0 ?
-                   "₹"+ Object.keys(contest2.wonContest).length > 0 ? 
-                  multipleArr[Object.keys(contest2.wonContest).length - 1] * contest2.amount : 0 : 0 }
-                </span>
-              </Typography>}
+                    {contest2.lostContest !== null && contest2.lostContest.length > 0 ?
+                      "You lost " + contest2.lostContest.length + " contest"
+                      : contest2.wonContest !== null && contest2.wonContest.length > 0 ?
+                        "₹" + Object.keys(contest2.wonContest).length > 0 ?
+                          multipleArr[Object.keys(contest2.wonContest).length - 1] * contest2.amount : 0 : 0}
+                  </span>
+                </Typography>}
           </ContestvalueArea>
         </ContestType2>
       </div>
@@ -1343,7 +1453,7 @@ export default function Contest(props) {
 
 
   const viewFantasy = () => fantasy.map(cnt => (
-    <Paper className={classes.paper} elevation={2} style={{ margin: "15px 0",borderRadius:5 }} key={cnt.contestDetails._id}>
+    <Paper className={classes.paper} elevation={2} style={{ margin: "15px 0", borderRadius: 5 }} key={cnt.contestDetails._id}>
       <div className={classes.gridCard}>
         <div className={classes.gridCardContent}>
           {/* <Link to = {{pathname:`/contest/details/${cnt.contestDetails._id}`,
@@ -1398,11 +1508,11 @@ export default function Contest(props) {
       </div>
       {
         match && new Date(match.starting_at).getTime() > Date.now() ?
-        <div className={classes.progress}>
-        <ColorLinearProgress style={{ borderRadius: 0 }} variant="determinate" value={(cnt.contestDetails.totalJoined / cnt.contestDetails.totalSpots) * 100} />
-      </div> :
-      <div />
-      
+          <div className={classes.progress}>
+            <ColorLinearProgress style={{ borderRadius: 0 }} variant="determinate" value={(cnt.contestDetails.totalJoined / cnt.contestDetails.totalSpots) * 100} />
+          </div> :
+          <div />
+
       }
       <div className={classes.gridCard} style={{ backgroundColor: "white" }}>
         <div className={classes.gridCardContent}>
@@ -1414,11 +1524,11 @@ export default function Contest(props) {
                 color: "#ef8c22"
               }}>
                 {
-        match && new Date(match.starting_at).getTime() > Date.now() ?
-        
-          cnt.contestDetails.totalSpots - cnt.contestDetails.totalJoined === 0 ?
-                  "Contest Full" : cnt.contestDetails.totalSpots - cnt.contestDetails.totalJoined + " spots left"
-                  : cnt.contestDetails.totalJoined + " joined"
+                  match && new Date(match.starting_at).getTime() > Date.now() ?
+
+                    cnt.contestDetails.totalSpots - cnt.contestDetails.totalJoined === 0 ?
+                      "Contest Full" : cnt.contestDetails.totalSpots - cnt.contestDetails.totalJoined + " spots left"
+                    : cnt.contestDetails.totalJoined + " joined"
                 }
 
               </Typography>
@@ -1476,7 +1586,7 @@ export default function Contest(props) {
 
 
   const statslocalTeam = () => teamStats.players[teamStats.localTeam].map((players) => {
-    return <div  key={players.id} style={players.battingScoreCard ? { display: "block" } : { display: "none" }}>
+    return <div key={players.id} style={players.battingScoreCard ? { display: "block" } : { display: "none" }}>
       <StatDiv>
         <ContentDiv>
           <Typography variant="caption">
@@ -1485,7 +1595,7 @@ export default function Contest(props) {
         </ContentDiv>
         <ContentDiv>
           <Typography variant="caption">
-          {players.battingScoreCard ? players.battingScoreCard.ball : "Did not bat"}
+            {players.battingScoreCard ? players.battingScoreCard.ball : "Did not bat"}
           </Typography>
         </ContentDiv>
         <ContentDiv>
@@ -1510,7 +1620,7 @@ export default function Contest(props) {
         </ContentDiv>
         <ContentDiv>
           <Typography variant="caption">
-            {players.catchStump ? players.catchStump: 0}
+            {players.catchStump ? players.catchStump : 0}
           </Typography>
         </ContentDiv>
         <ContentDiv>
@@ -1531,7 +1641,7 @@ export default function Contest(props) {
             {players.fullname}
           </Typography>
         </ContentDiv>
-        
+
 
         <ContentDiv>
           <Typography variant="caption">
@@ -1565,13 +1675,13 @@ export default function Contest(props) {
         </ContentDiv>
         <ContentDiv>
           <Typography variant="caption">
-            {players.catchStump ? players.catchStump: 0}
+            {players.catchStump ? players.catchStump : 0}
           </Typography>
         </ContentDiv>
         <ContentDiv style={{
-          
+
           textAlign: "center"
-          }}>
+        }}>
           <Typography variant="caption" >
             {players.points ? players.points : 0}
           </Typography>
@@ -1589,7 +1699,7 @@ export default function Contest(props) {
             {players.fullname}
           </Typography>
         </ContentDiv>
-        
+
 
         <ContentDiv>
           <Typography variant="caption">
@@ -1598,9 +1708,9 @@ export default function Contest(props) {
 
         </ContentDiv>
         <ContentDiv style={{
-          
+
           textAlign: "center"
-          }}>
+        }}>
           <Typography variant="caption" >
             {players.points ? players.points : 0}
           </Typography>
@@ -1613,57 +1723,57 @@ export default function Contest(props) {
 
   const statsVisitorTeam = () => teamStats.players[teamStats.visitorTeam].map((players) => {
     return <div key={players.id} style={players.battingScoreCard ? { display: "block" } : { display: "none" }}>
-    <StatDiv>
-      <ContentDiv>
-        <Typography variant="caption">
-          {players.fullname}
-        </Typography>
-      </ContentDiv>
-      <ContentDiv>
+      <StatDiv>
+        <ContentDiv>
           <Typography variant="caption">
-          {players.battingScoreCard ? players.battingScoreCard.ball : "Did not bat"}
+            {players.fullname}
           </Typography>
         </ContentDiv>
-      <ContentDiv>
-        <Typography variant="caption">
-          {players.battingScoreCard ? players.battingScoreCard.score : "Did not bat"}
-        </Typography>
-      </ContentDiv>
-      <ContentDiv>
-        <Typography variant="caption">
-          {players.battingScoreCard ? players.battingScoreCard.four_x : "Did not bat"}
-        </Typography>
-      </ContentDiv>
-      <ContentDiv>
-        <Typography variant="caption">
-          {players.battingScoreCard ? players.battingScoreCard.six_x : "Did not bat"}
-        </Typography>
-      </ContentDiv>
-      <ContentDiv>
-        <Typography variant="caption">
-          {players.battingScoreCard ? players.battingScoreCard.rate : "Did not bat"}
-        </Typography>
-      </ContentDiv>
-      <ContentDiv>
+        <ContentDiv>
           <Typography variant="caption">
-            {players.catchStump ? players.catchStump: 0}
+            {players.battingScoreCard ? players.battingScoreCard.ball : "Did not bat"}
           </Typography>
         </ContentDiv>
-      <ContentDiv  style={{
-        
-        textAlign: "center"
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.battingScoreCard ? players.battingScoreCard.score : "Did not bat"}
+          </Typography>
+        </ContentDiv>
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.battingScoreCard ? players.battingScoreCard.four_x : "Did not bat"}
+          </Typography>
+        </ContentDiv>
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.battingScoreCard ? players.battingScoreCard.six_x : "Did not bat"}
+          </Typography>
+        </ContentDiv>
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.battingScoreCard ? players.battingScoreCard.rate : "Did not bat"}
+          </Typography>
+        </ContentDiv>
+        <ContentDiv>
+          <Typography variant="caption">
+            {players.catchStump ? players.catchStump : 0}
+          </Typography>
+        </ContentDiv>
+        <ContentDiv style={{
+
+          textAlign: "center"
         }}>
-        <Typography variant="caption" >
-          {players.points ? players.points : 0}
-        </Typography>
-      </ContentDiv>
-    </StatDiv>
-    <Divider />
-  </div>
-})
+          <Typography variant="caption" >
+            {players.points ? players.points : 0}
+          </Typography>
+        </ContentDiv>
+      </StatDiv>
+      <Divider />
+    </div>
+  })
 
   const statsVisitorTeamBowler = () => teamStats.players[teamStats.visitorTeam].map((players) => {
-    return <div  key={players.id + "v"} style={players.bowlingScoreCard ? { display: "block" } : { display: "none" }}>
+    return <div key={players.id + "v"} style={players.bowlingScoreCard ? { display: "block" } : { display: "none" }}>
       <StatBowlerDiv>
         <ContentDiv>
           <Typography variant="caption">
@@ -1703,13 +1813,13 @@ export default function Contest(props) {
         </ContentDiv>
         <ContentDiv>
           <Typography variant="caption">
-            {players.catchStump ? players.catchStump: 0}
+            {players.catchStump ? players.catchStump : 0}
           </Typography>
         </ContentDiv>
         <ContentDiv style={{
-          
+
           textAlign: "center"
-          }}>
+        }}>
           <Typography variant="caption">
             {players.points ? players.points : 0}
           </Typography>
@@ -1728,7 +1838,7 @@ export default function Contest(props) {
             {players.fullname}
           </Typography>
         </ContentDiv>
-        
+
 
         <ContentDiv>
           <Typography variant="caption">
@@ -1737,9 +1847,9 @@ export default function Contest(props) {
 
         </ContentDiv>
         <ContentDiv style={{
-          
+
           textAlign: "center"
-          }}>
+        }}>
           <Typography variant="caption" >
             {players.points ? players.points : 0}
           </Typography>
@@ -1752,401 +1862,422 @@ export default function Contest(props) {
 
 
   const viewCustom = () => custom.map(contest => {
-     
-    return(
-    <div key={contest._id}>
-    
-    <DuelsCustom >
-    {/* <DuelCustomHeader>
-      Under/Over 
-    </DuelCustomHeader>
-    */}
 
-      <DuelsCustomDiv style={{padding: "6px"}} >
-        <div style={{
-          padding: '2.5px',
-          margin: '5.5px',
-        }}>
-          <Avatar src={contest.userInfo.player1.profilePic ? contest.userInfo.player1.profilePic : 'https'}  variant="circle" />
+    return (
+      <div key={contest._id}>
 
-        </div>
+        <DuelsCustom >
+ 
 
-        <DuelSingleRight >
-          <div style={{
-            display:"flex",
-            alignContent:"center",
-            alignItems:"center"
-          }}>
-            <Typography variant="caption">
-            {contest.userInfo.player1.userName}
-            </Typography>
-      
-            {/* <Typography variant="subtitle2">
-             Level
-            </Typography> */}
-          </div>
-           
-        </DuelSingleRight>
-        <DuelSingleRight style={{
-             justifyContent:"flex-end",
-             textAlign:"end"
-         }}>
-          <div style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "flex-end",
-            flexDirection: "column",
-            textAlign:"end",
-            padding: "3.89px 0",
-            color:"#E78922",
-            minWidth:100
-          }}>
-            <Typography variant="caption" style={{color:"grey"}}>
-            Challenge
-            </Typography>
-      
-            <Typography variant="caption">
-            {contest.info.player1}
-            </Typography>
-          </div>
-        </DuelSingleRight>
-      </DuelsCustomDiv>
-      <DuelsCustomDiv style={{
-           
-          justifyContent:"center",
-        }}>
-        <div style={{
-          padding: '2.5px',
-          margin: '5.5px',
-           
-        }}>
-          <Avatar src={contest.playerDetail.image_path} variant="circle" />
-
-        </div>
-
-        <div style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "flex-start",
-            flexDirection: "column"
-          }}>
-            <Typography variant="caption"  style={{color: "grey",
-              }}>
-            {contest.playerDetail.firstname[0]+". "+contest.playerDetail.lastname}
-            </Typography>
-
-            <Typography variant="caption"  style={{color:"grey"}}>
-            {contest.playerDetail.teamInfo.code}                 
-
-            </Typography>
-            <Typography variant="caption"  style={{color:"grey"}}>
-            {contest.playerDetail.position.name}
-
-            </Typography>
-          </div>
-        </DuelsCustomDiv>
-      {contest.open ? <DuelsCustomDiv style={{padding: "5px"}} >
-       
-
-
-        <DuelSingleRight >
-          <div style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "flex-start",
-            flexDirection: "column",
-            padding: "6.89px 0",
-            color:"#77BC37",
-          }}>
-            <Typography variant="caption" style={{color:"grey"}}>
-             Challenger
-            </Typography>
-      
-            <Typography variant="caption">
-            {contest.info.player2}
-            </Typography>
-          </div>
-          <div style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "flex-start",
-            flexDirection: "column",
-            justifyContent:"center"
-          }}>
-                        <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
-
-                 
-
-                  </span>
-                  <Typography variant="caption"
-                  style={{
-                    
-                    color: '#77BC37'
-                  }}>
-                    Payout: 1.9x
-                  </Typography>
-          </div>
-        </DuelSingleRight>
-      </DuelsCustomDiv>
-:      <DuelsCustomDiv style={{padding: "6px",flexDirection:"row-reverse",justifyContent:"space-between"}} >
-            
-
-<DuelSingleRight style={{
-  justifyContent:'flex-start',
-  flexDirection:"row-reverse",
-  alignContent:"center",
-  alignItems:"center"
-}}>
-<div style={{
+          <DuelsCustomDiv style={{ padding: "6px" }} >
+            <div style={{
               padding: '2.5px',
               margin: '5.5px',
-              
-              
             }}>
-              <Avatar src={contest.userInfo.player2.profilePic ? contest.userInfo.player2.profilePic : 'https'}  variant="circle" />
+              <Avatar src={contest.userInfo.player1.profilePic ? contest.userInfo.player1.profilePic : 'https'} variant="circle" />
 
             </div>
-  <div style={{
-    display:"flex",
-    alignContent:"center",
-    alignItems:"center"
-  }}>
-    <Typography variant="caption">
-    {contest.userInfo.player2.userName}
-    </Typography>
+
+            <DuelSingleRight >
+              <div style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center"
+              }}>
+                <Typography variant="caption">
+                  {contest.userInfo.player1.userName}
+                </Typography>
+
+                {/* <Typography variant="subtitle2">
+             Level
+            </Typography> */}
+              </div>
+
+            </DuelSingleRight>
+            <DuelSingleRight style={{
+              justifyContent: "flex-end",
+              textAlign: "end"
+            }}>
+              <div style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "flex-end",
+                flexDirection: "column",
+                textAlign: "end",
+                padding: "3.89px 0",
+                color: "#E78922",
+                minWidth: 100
+              }}>
+                <Typography variant="caption" style={{ color: "grey" }}>
+                  Challenge
+            </Typography>
+
+                <Typography variant="caption">
+                  {contest.info.player1}
+                </Typography>
+              </div>
+            </DuelSingleRight>
+      
+          </DuelsCustomDiv>
+         
+          <DuelsCustomDiv
+            onClick={() => getPlayer(contest.playerDetail.id)}
+            style={{
+
+              justifyContent: "space-between",
+            }}>
+              <div
+               style={{
+                display:"flex",
+                flexDirection:"row",
+                justifyContent: "flex-start",
+              }}
+              >
+
+            <div style={{
+              padding: '2.5px',
+              margin: '5.5px',
+
+            }}>
+              <Avatar src={contest.playerDetail.image_path} variant="circle" />
+
+            </div>
+
+            <div style={{
+              display: "flex",
+              alignContent: "center",
+              alignItems: "flex-start",
+              flexDirection: "column"
+            }}>
+              <Typography variant="caption" style={{
+                color: "grey",
+              }}>
+                {contest.playerDetail.firstname[0] + ". " + contest.playerDetail.lastname}
+              </Typography>
+
+              <Typography variant="caption" style={{ color: "grey" }}>
+                {contest.playerDetail.teamInfo.code}
+
+              </Typography>
+              <Typography variant="caption" style={{ color: "grey" }}>
+                {contest.playerDetail.position.name}
+
+              </Typography>
+            </div>
+            </div>
+              <div style={{
+              display: "flex",
+              alignContent: "center",
+              alignItems: "flex-end",
+              flexDirection: "column",
+              justifyContent:"center"
+            }}>
+              <Typography variant="caption" style={{
+                color: "grey",
+              }}>
+                Prize Pool
+              </Typography>
+              <Typography variant="caption" style={{
+                color: "grey",
+              }}>
+               ₹{contest.totalAmount}
+              </Typography>
+                
+              </div>
+
+          </DuelsCustomDiv>
+         
+          {contest.open ? 
+          <DuelsCustomDiv style={{ padding: "5px" }} >
+
+
+
+            <DuelSingleRight >
+              <div style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "flex-start",
+                flexDirection: "column",
+                padding: "6.89px 0",
+                color: "#77BC37",
+              }}>
+                <Typography variant="caption" style={{ color: "grey" }}>
+                  Challenger
+            </Typography>
+
+                <Typography variant="caption">
+                  {contest.info.player2}
+                </Typography>
+              </div>
+              <div style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "flex-start",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}>
+                <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
+
+
+
+                </span>
+                <Typography variant="caption"
+                  style={{
+
+                    color: '#77BC37'
+                  }}>
+                  Payout: 1.9x
+                  </Typography>
+              </div>
+            </DuelSingleRight>
+          </DuelsCustomDiv>
+            : 
+            <DuelsCustomDiv2a style={{ padding: "6px",}} >
+
  
-  </div>
-   
-</DuelSingleRight>
-<DuelSingleRight style={{
-     justifyContent:"flex-start",
-     textAlign:"start"
- }}>
-  <div style={{
-    display: "flex",
-    alignContent: "center",
-    alignItems: "self-end",
-    justifyContent:"center",
-    flexDirection: "column",
-    textAlign:"end",
-    padding: "3.89px 0",
-    color:"#77BC37",
-    minWidth:100
-  }}>
-    <Typography variant="caption" style={{color:"grey"}}>
-    Challenger
-    </Typography>
-
-    <Typography variant="caption">
-    {contest.info.player2}
-    </Typography>
-  </div>
-</DuelSingleRight>
-</DuelsCustomDiv>
-    
-    }
+              <DuelSingleRight1b   >
+                <div style={{
+                  padding: '2.5px',
+                  margin: '5.5px',
 
 
-     </DuelsCustom>
-     </div>
-  )})
+                }}>
+                  <Avatar src={contest.userInfo.player2.profilePic ? contest.userInfo.player2.profilePic : 'https'} variant="circle" />
+
+                </div>
+                <div style={{
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center"
+                }}>
+                  <Typography variant="caption">
+                    {contest.userInfo.player2.userName}
+                  </Typography>
+
+
+                </div>
+
+              </DuelSingleRight1b>
+ 
+                <DuelSingleRight1bNestedDiv>
+                  <Typography variant="caption" style={{ color: "grey" }}>
+                    Challenger
+                    </Typography>
+
+                  <Typography variant="caption">
+                    {contest.info.player2}
+                  </Typography>
+                </DuelSingleRight1bNestedDiv>
+               
+            </DuelsCustomDiv2a>
+
+          }
+
+
+        </DuelsCustom>
+      </div>
+    )
+  })
 
   const viewCustomDuel = () => custom.map(contest => (
     <div key={contest._id}>
-    
-    <DuelsCustom2 >
-      {/* <DuelCustomHeader>
+
+      <DuelsCustom2 >
+        {/* <DuelCustomHeader>
         Player Duel 
       </DuelCustomHeader> */}
-   
 
-      <DuelsCustomDiv style={{padding: "6px"}} >
-        <div style={{
-          padding: '2.5px',
-          margin: '5.5px',
-        }}>
-          <Avatar  variant="circle" />
 
-        </div>
-
-        <DuelSingleRight style={{
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            maxWidth: 85,
-            display:"flex",
-            alignContent:"center",
-            alignItems:"center"
-          }}>
+        <DuelsCustomDiv style={{ padding: "6px" }} >
           <div style={{
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            maxWidth: 85,
-            display:"flex",
-            alignContent:"center",
-            alignItems:"center"
+            padding: '2.5px',
+            margin: '5.5px',
           }}>
-            <Typography variant="caption">
-             {contest.userInfo.player1.userName}
-            </Typography>
-      
-            {/* <Typography variant="subtitle2">
-             Level
-            </Typography> */}
+            <Avatar variant="circle" />
+
           </div>
 
-        </DuelSingleRight>
-        <DuelSingleRight style={{
-             justifyContent:"flex-start",
-             textAlign:"start",
-             flexDirection:"row-reverse"
-         }}>
-                     <div style={{
-          padding: '2.5px',
-          margin: '5.5px',
-           
-        }}>
-          <Avatar src={contest.player1Detail.image_path}  variant="circle" />
-
-        </div>
-
-        <div style={{
+          <DuelSingleRight style={{
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            maxWidth: 85,
             display: "flex",
             alignContent: "center",
-            alignItems: "flex-end",
-            flexDirection: "column",
-            textAlign:"end"
+            alignItems: "center"
           }}>
-            <Typography variant="caption"  style={{color:"grey"}}>
-            {contest.player1Detail.firstname[0]+". "+contest.player1Detail.lastname}
+            <div style={{
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              maxWidth: 85,
+              display: "flex",
+              flexDirection: "column",
+              alignContent: "center",
 
-            </Typography>
+            }}>
+              <Typography variant="caption">
+                {contest.userInfo.player1.userName}
+              </Typography>
 
-            <Typography variant="caption"  style={{color:"grey"}}>
-            {contest.player1Detail.teamInfo.code}               
+              <Typography variant="caption" style={{ color: "#77BC37" }}>
+                Prize Pool: {contest.totalAmount}
+              </Typography>
+            </div>
 
-            </Typography>
-            <Typography variant="caption"  style={{color:"grey"}}>
-            {contest.player1Detail.position.name} 
+          </DuelSingleRight>
+          <DuelSingleRight
 
-            </Typography>
-          </div>
-        
-        </DuelSingleRight>
-      </DuelsCustomDiv>
-      <div style={{
-        display: "flex",
-        alignContent: "center",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%"
-      }}>
-        <AntiDiagonalTrans>
-          <DiagonalTrans>
-            vs
+            style={{
+              justifyContent: "flex-start",
+              textAlign: "start",
+              flexDirection: "row-reverse"
+            }}>
+            <div style={{
+              padding: '2.5px',
+              margin: '5.5px',
+
+            }}>
+              <Avatar src={contest.player1Detail.image_path} variant="circle" />
+
+            </div>
+
+            <div style={{
+              display: "flex",
+              alignContent: "center",
+              alignItems: "flex-end",
+              flexDirection: "column",
+              textAlign: "end"
+            }}>
+              <Typography variant="caption" style={{ color: "grey" }}>
+                {contest.player1Detail.firstname[0] + ". " + contest.player1Detail.lastname}
+
+              </Typography>
+
+              <Typography variant="caption" style={{ color: "grey" }}>
+                {contest.player1Detail.teamInfo.code}
+
+              </Typography>
+              <Typography variant="caption" style={{ color: "grey" }}>
+                {contest.player1Detail.position.name}
+
+              </Typography>
+            </div>
+
+          </DuelSingleRight>
+        </DuelsCustomDiv>
+        <div style={{
+          display: "flex",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%"
+        }}>
+          <AntiDiagonalTrans>
+            <DiagonalTrans>
+              vs
           </DiagonalTrans>
-        </AntiDiagonalTrans>
+          </AntiDiagonalTrans>
 
-      </div>
-      {contest.open === true ?
-      <DuelsCustomDiv style={{padding: "7px"}} >
-       
+        </div>
+        {contest.open === true ?
+          <DuelsCustomDiv style={{ padding: "7px" }} >
 
 
-        <DuelSingleRight >
-          <div style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "flex-start",
-            flexDirection: "column",
-            padding: "6.89px 0",
-            color:"#77BC37",
-          }}>
-            <Typography variant="caption" style={{color:"grey"}}>
-             Challenger
+
+            <DuelSingleRight >
+              <div style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "flex-start",
+                flexDirection: "column",
+                padding: "6.89px 0",
+                color: "#77BC37",
+              }}>
+                <Typography variant="caption" style={{ color: "grey" }}>
+                  Challenger
             </Typography>
-      
-            <Typography variant="caption" 
-            // onClick={() => {selectedPlayer(true)}}
-            >
-             Select a player
+
+                <Typography variant="caption"
+                // onClick={() => {selectedPlayer(true)}}
+                >
+                  Select a player
             </Typography>
-          </div>
-          <div style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "flex-start",
-            flexDirection: "column",
-            justifyContent:"center"
-          }}>
-                        <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
+              </div>
+              <div style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "flex-start",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}>
+                <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
 
-   
 
-                  </span>
-                  <Typography variant="caption"
+
+                </span>
+                <Typography variant="caption"
                   style={{
-                    
+
                     color: '#77BC37'
                   }}>
-                    Payout: 1.9x
+                  Payout: 1.9x
                   </Typography>
-          </div>
-        </DuelSingleRight>
-      </DuelsCustomDiv>
-      : <DuelsCustomDiv2  >
-      
-      <DuelSingleRight2 >
-        <div style={{
-                      padding: '2.5px',
-                      margin: '5.5px',
-                      
-                      
-                    }}>
-                      <Avatar src={contest.userInfo.player2.profilePic ? contest.userInfo.player2.profilePic : 'https'}  variant="circle" />
+              </div>
+            </DuelSingleRight>
+          </DuelsCustomDiv>
+          : <DuelsCustomDiv2  >
 
-                    </div>
+            <DuelSingleRight2 >
               <div style={{
-        display:"flex",
-        alignContent:"center",
-        alignItems:"center"
-      }}>
-        <Typography variant="caption">
-        {contest.userInfo.player2.userName}
-        </Typography>
-    
-      </div>
-      
-    </DuelSingleRight2>
-        <DuelSingleRight1a >
-       <div style={{
-        padding: '2.5px',
-        margin: '5.5px',
-         
-      }}>
-        <Avatar src={contest.player2Detail.image_path}  variant="circle" />
+                padding: '2.5px',
+                margin: '5.5px',
 
-      </div>
 
-      <DuelSingleRight1aNestedDiv>
-          <Typography variant="caption"  style={{color:"grey"}}>
-          {contest.player2Detail.firstname[0]+". "+contest.player2Detail.lastname}
+              }}>
+                <Avatar src={contest.userInfo.player2.profilePic ? contest.userInfo.player2.profilePic : 'https'} variant="circle" />
 
-          </Typography>
+              </div>
+              <div style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center"
+              }}>
+                <Typography variant="caption">
+                  {contest.userInfo.player2.userName}
+                </Typography>
 
-          <Typography variant="caption"  style={{color:"grey"}}>
-          {contest.player2Detail.teamInfo.code}               
+              </div>
 
-          </Typography>
-          <Typography variant="caption"  style={{color:"grey"}}>
-          {contest.player2Detail.position.name} 
+            </DuelSingleRight2>
+            <DuelSingleRight1a >
+              <div style={{
+                padding: '2.5px',
+                margin: '5.5px',
 
-          </Typography>
-        </DuelSingleRight1aNestedDiv>
-      
-      </DuelSingleRight1a>
-    </DuelsCustomDiv2>}
-     </DuelsCustom2>
-     </div>
+              }}>
+                <Avatar src={contest.player2Detail.image_path} variant="circle" />
+
+              </div>
+
+              <DuelSingleRight1aNestedDiv>
+                <Typography variant="caption" style={{ color: "grey" }}>
+                  {contest.player2Detail.firstname[0] + ". " + contest.player2Detail.lastname}
+
+                </Typography>
+
+                <Typography variant="caption" style={{ color: "grey" }}>
+                  {contest.player2Detail.teamInfo.code}
+
+                </Typography>
+                <Typography variant="caption" style={{ color: "grey" }}>
+                  {contest.player2Detail.position.name}
+
+                </Typography>
+              </DuelSingleRight1aNestedDiv>
+
+            </DuelSingleRight1a>
+          </DuelsCustomDiv2>}
+      </DuelsCustom2>
+    </div>
   ))
 
   /**
@@ -2156,7 +2287,7 @@ export default function Contest(props) {
     match !== null ? (
       <Container style={{ position: "relative", marginTop: 5, padding: 5 }} maxWidth='md'>
 
-        <Paper  elevation={3}>
+        <Paper elevation={3}>
           <ContestMainHeader>
             <div style={{ width: "100%" }}>
               <Typography variant="caption" style={{
@@ -2196,51 +2327,51 @@ export default function Contest(props) {
 
                 </div>
                 <div
-                      style={{
-                        display: "flex",
-                        flexDirection: 'row',
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        margin: "3.5px 14px",
-                        width:"100%"
-                      }}
-                    >
-                        <div style={{
-                        
-                        textAlign: "start"
-                      }}>
-                        <Typography variant="caption" style={{
-                        fontWeight: 600,
-                        textAlign: "start",
-                        
-                      }}>
-                        {match.localteam.name}
-                      </Typography>
-                        {
-                          match.scoreboards ?
-                          match.scoreboards.map((inn) => {
-                            if(match.localteam.id === inn.team_id && inn.total !== 0){
-                              return(<div key={match.localteam.id}>
-                                  <div>
-                              <Typography variant="caption">
-                                {inn.total}/{inn.wickets}
-                              </Typography>
+                  style={{
+                    display: "flex",
+                    flexDirection: 'row',
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    margin: "3.5px 14px",
+                    width: "100%"
+                  }}
+                >
+                  <div style={{
+
+                    textAlign: "start"
+                  }}>
+                    <Typography variant="caption" style={{
+                      fontWeight: 600,
+                      textAlign: "start",
+
+                    }}>
+                      {match.localteam.name}
+                    </Typography>
+                    {
+                      match.scoreboards ?
+                        match.scoreboards.map((inn) => {
+                          if (match.localteam.id === inn.team_id && inn.total !== 0) {
+                            return (<div key={match.localteam.id}>
+                              <div>
+                                <Typography variant="caption">
+                                  {inn.total}/{inn.wickets}
+                                </Typography>
                               </div>
                               <div>
-                              <Typography variant="caption">
-                                {inn.overs} overs
+                                <Typography variant="caption">
+                                  {inn.overs} overs
                               </Typography>
                               </div>
-                              </div>)
-                            } 
-                          }) : <div />
-                        }
-                        </div>
+                            </div>)
+                          }
+                        }) : <div />
+                    }
+                  </div>
 
-                        <div >
-                         
-                          <div
+                  <div >
+
+                    <div
                       style={{
                         display: "flex",
                         flexDirection: 'row',
@@ -2248,63 +2379,63 @@ export default function Contest(props) {
                         alignItems: "center",
                         justifyContent: "space-between",
                         // marginBottom: "3.5px",
-                        margin:10
+                        margin: 10
                       }}
                     >
-                       {!match.isLive ? match.status === "Finished" ?
-                       <Typography variant={"caption"}>{match.note}</Typography>  : 
-                       match.status === "Aban." || match.status === "Cancl." ?  <Typography variant={"caption"}>Match Abandoned: {match.note}</Typography> 
-                       
-                       : <Typography variant={"caption"}>
-                       
-                      <Countdown 
-                      date={match.starting_at ? match.starting_at : match.starting_at} 
-                      daysInHours={false} />
-  
-                      </Typography>
-                      :  <Typography variant={"caption"}>{match.note}</Typography>
+                      {!match.isLive ? match.status === "Finished" ?
+                        <Typography variant={"caption"}>{match.note}</Typography> :
+                        match.status === "Aban." || match.status === "Cancl." ? <Typography variant={"caption"}>Match Abandoned: {match.note}</Typography>
+
+                          : <Typography variant={"caption"}>
+
+                            <Countdown
+                              date={match.starting_at ? match.starting_at : match.starting_at}
+                              daysInHours={false} />
+
+                          </Typography>
+                        : <Typography variant={"caption"}>{match.note}</Typography>
                       }
                     </div>
-                    
-                         
-                        </div>
-                        <div style={{
-                        fontWeight: 600,
-                        textAlign: "end"
-                      }}>
-                        <Typography variant="caption" style={{
-                        fontWeight: 600,
-                        textAlign: "end"
-                      }}>
-                        {match.visitorteam.name}
-                      </Typography>
-                        {  match.scoreboards ? 
-                          match.scoreboards.map(inn => {
-                            if(match.visitorteam.id === inn.team_id && inn.total !== 0){
-                              return(<div key={match.localteam.id} style={{
-                              textAlign: "end"
-                            }}>
- 
-                                  <div>
+
+
+                  </div>
+                  <div style={{
+                    fontWeight: 600,
+                    textAlign: "end"
+                  }}>
+                    <Typography variant="caption" style={{
+                      fontWeight: 600,
+                      textAlign: "end"
+                    }}>
+                      {match.visitorteam.name}
+                    </Typography>
+                    {match.scoreboards ?
+                      match.scoreboards.map(inn => {
+                        if (match.visitorteam.id === inn.team_id && inn.total !== 0) {
+                          return (<div key={match.localteam.id} style={{
+                            textAlign: "end"
+                          }}>
+
+                            <div>
                               <Typography variant="caption">
                                 {inn.total}/{inn.wickets}
                               </Typography>
-                              </div>
-                              <div>
+                            </div>
+                            <div>
                               <Typography variant="caption">
                                 {inn.overs} overs
                               </Typography>
-                              </div>
-                              </div>)
-                            } 
-                          }) : <div />
-                                             
+                            </div>
+                          </div>)
                         }
+                      }) : <div />
 
-                        </div>
-  
-                    </div>
-  
+                    }
+
+                  </div>
+
+                </div>
+
                 <div
                   style={{
                     display: "flex",
@@ -2343,9 +2474,9 @@ export default function Contest(props) {
 
           </ContestMainHeader>
         </Paper>
-        <Paper  style={{
-          borderRadius:"5px",
-          marginTop:10
+        <Paper style={{
+          borderRadius: "5px",
+          marginTop: 10
         }}>
           <Tabs
             value={value}
@@ -2396,13 +2527,17 @@ export default function Contest(props) {
 
 
             {UnderOver !== null ? UnderOver.length > 0 ? view()
-             : <Typography >No contest joined</Typography> :
-             <CircularProgress style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%"
-            }} disableShrink />
-             }
+              :  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+              <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                Join Contest
+             </Typography>
+            </div> :
+              <CircularProgress style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%"
+              }} disableShrink />
+            }
           </div>
         </div>
 
@@ -2431,12 +2566,16 @@ export default function Contest(props) {
               </div>
             </Paper>
 
-            {matchUps !== null ? matchUps.length > 0 ? viewCombo() : <Typography >No contest joined</Typography> :
-             <CircularProgress style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%"
-            }} disableShrink />}
+            {matchUps !== null ? matchUps.length > 0 ? viewCombo() :  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                    Join Contest
+                 </Typography>
+                </div> :
+              <CircularProgress style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%"
+              }} disableShrink />}
 
           </Container>
 
@@ -2458,15 +2597,15 @@ export default function Contest(props) {
           </Container>
 
         </div>
-        
-        <div style={value === 3 ? { display: 'block',   position: "relative", marginTop: '10px' } : { display: 'none' }}>
-          <Paper elevation={0} style={{  backgroundColor:"#F9F8FC", }}>
+
+        <div style={value === 3 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
+          <Paper elevation={0} style={{ backgroundColor: "#F9F8FC", }}>
             <Paper elevation={0} style={{
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
               padding: "10px",
-              position:"sticky",
+              position: "sticky",
             }}>
               <div elevation={0} style={{
                 textAlign: 'start',
@@ -2486,7 +2625,7 @@ export default function Contest(props) {
 
                 </Select>
               </div>
-  
+
               <div elevation={0} style={{
                 textAlign: 'end',
 
@@ -2499,7 +2638,7 @@ export default function Contest(props) {
                   id="demo-simple-select"
                   value={directionCustom}
                   onChange={(event) => handleCustomDirectionChange(event.target.value)}
-                >    
+                >
                   <MenuItem value={1}>Asc</MenuItem>
                   <MenuItem value={-1}>Dsc</MenuItem>
                 </Select>
@@ -2508,26 +2647,26 @@ export default function Contest(props) {
 
 
             </Paper>
- 
+
             <Paper elevation={0} style={{
               marginBottom: 60,
-              backgroundColor:"#F9F8FC"
+              backgroundColor: "#F9F8FC"
             }} >
-               {custom !== null ? 
-               custom.length > 0 ? 
-               filterCustom === 5 ? viewCustom() : viewCustomDuel() : 
-               <div style={{
-                 textAlign:"center",
-                 marginTop:30
-               }}>
-                 <Typography variant="caption" >Create a Duel.</Typography> 
-               </div>
-               :
-               <CircularProgress style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%"
-      }} disableShrink />}
+              {custom !== null ?
+                custom.length > 0 ?
+                  filterCustom === 5 ? viewCustom() : viewCustomDuel() :
+                  <div style={{
+                    textAlign: "center",
+                    marginTop: 30
+                  }}>
+                    <Typography variant="caption" >Create a Duel.</Typography>
+                  </div>
+                :
+                <CircularProgress style={{
+                  position: "fixed",
+                  top: "50%",
+                  left: "50%"
+                }} disableShrink />}
             </Paper>
           </Paper>
 
@@ -2551,511 +2690,511 @@ export default function Contest(props) {
                 <Tab label={Object.entries(teamStats).length > 0 ? teamStats.matchDetail.visitorteam.code : ''} />
 
               </Tabs>
-            <StatsContainerDiv style={value2 === 0 ? { position: "relative"} : { display: 'none' }}>
-            {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
+              <StatsContainerDiv style={value2 === 0 ? { position: "relative" } : { display: 'none' }}>
+                {Object.entries(teamStats).length > 0 ? <div style={{ width: "100%", textAlign: "center", margin: 25 }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", }} >
                     BATTING
                  </Typography>
-                </div> : <div/>}  
+                </div> : <div />}
                 <Divider />
-              <StatDiv style={{backgroundColor:"#E4E5E6"}} >
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    BAT
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                   B
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    R
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    4s
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    6s
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    SR
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    Catch/Stump
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv  style={{
- 
-                textAlign: "center"
-                }}>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    FP
-          </Typography>
-
-                </HeaderDiv>
-              </StatDiv>
-              {Object.entries(teamStats).length > 0 ? statslocalTeam() :
-                <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
-                    Stats will be updated soon
-                 </Typography>
-                </div>}
-
-                {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
-                  BOWLING
-                 </Typography>
-                </div> : <div/>} 
-                <Divider />                 
-              <StatBowlerDiv style={{backgroundColor:"#E4E5E6"}} >
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    BOWL
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    O
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    M
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    R
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    W
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    ECON
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    Catch/Stump
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv style={{
- 
-                textAlign: "center"
-                }}>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    FP
-          </Typography>
-
-                </HeaderDiv>
-              </StatBowlerDiv>
-              <Divider />
-              {Object.entries(teamStats).length > 0 ? statslocalTeamBowler() :
-                <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
-                    Stats will be updated soon
-                 </Typography>
-                </div>}
-                
-                <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
-                  FIELDING
-                 </Typography>
-                </div>
-                <Divider />
-                <StatFieldDiv style={{backgroundColor:"#E4E5E6"}}>
-
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    FIELD
-          </Typography>
-
-                </HeaderDiv>
-             
-                 
- 
-                 
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    Catch/Stump
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    FP
-          </Typography>
-
-                </HeaderDiv>
-                 
-              </StatFieldDiv>
-              <Divider />
-              {Object.entries(teamStats).length > 0 ? statslocalTeamField() :
-                <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
-                    Stats will be updated soon
-                 </Typography>
-                </div>}
-
-                
-
-            </StatsContainerDiv>
-
-            <StatsContainerDiv style={value2 === 1 ? { position: "relative"} : { display: 'none' }}>
-            {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
-                  BATTING
-                 </Typography>
-                </div> : <div/>}  
-                <Divider />
-              <StatDiv style={{backgroundColor:"#E4E5E6"}} >
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    BAT
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    B
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    R
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    4s
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    6s
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    SR
-          </Typography>
-
-                </HeaderDiv >
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    Catch/Stump
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv style={{
- 
-                    textAlign: "center"
-                  }}>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5",
-                    textAlign: "center"
-                  }}>
-                    FP
-          </Typography>
-
-                </HeaderDiv>
-              </StatDiv>
-              {Object.entries(teamStats).length > 0 ? statsVisitorTeam() :
-                <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
-                    Stats will be updated soon
-                 </Typography>
-                </div>}
-
-                {Object.entries(teamStats).length > 0 ?  <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
-                  BOWLING
-                 </Typography>
-                </div> : <div/>} 
-                <Divider />                 
-              <StatBowlerDiv style={{backgroundColor:"#E4E5E6"}} >
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    BOWL
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    O
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    M
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    R
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    W
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    ECON
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    Catch/Stump
-          </Typography>
-
-                </HeaderDiv>
-                <HeaderDiv style={{
- 
-                textAlign: "center"
-                }}>
+                <StatDiv style={{ backgroundColor: "#E4E5E6" }} >
+                  <HeaderDiv>
                     <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    FP
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      BAT
           </Typography>
 
-                </HeaderDiv>
-              </StatBowlerDiv>
-              <Divider />
-              {Object.entries(teamStats).length > 0 ? statsVisitorTeamBowler() :
-                <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
-                    Stats will be updated soon
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      B
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      R
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      4s
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      6s
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      SR
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Catch/Stump
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv style={{
+
+                    textAlign: "center"
+                  }}>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      FP
+          </Typography>
+
+                  </HeaderDiv>
+                </StatDiv>
+                {Object.entries(teamStats).length > 0 ? statslocalTeam() :
+                  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+                    <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                      Stats will be updated soon
                  </Typography>
-                </div>}
-                <div style={{ width: "100%", textAlign: "center",  margin:25 }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center",  }} >
-                  FIELDING
+                  </div>}
+
+                {Object.entries(teamStats).length > 0 ? <div style={{ width: "100%", textAlign: "center", margin: 25 }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", }} >
+                    BOWLING
+                 </Typography>
+                </div> : <div />}
+                <Divider />
+                <StatBowlerDiv style={{ backgroundColor: "#E4E5E6" }} >
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      BOWL
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      O
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      M
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      R
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      W
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      ECON
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Catch/Stump
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv style={{
+
+                    textAlign: "center"
+                  }}>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      FP
+          </Typography>
+
+                  </HeaderDiv>
+                </StatBowlerDiv>
+                <Divider />
+                {Object.entries(teamStats).length > 0 ? statslocalTeamBowler() :
+                  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+                    <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                      Stats will be updated soon
+                 </Typography>
+                  </div>}
+
+                <div style={{ width: "100%", textAlign: "center", margin: 25 }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", }} >
+                    FIELDING
                  </Typography>
                 </div>
                 <Divider />
-                <StatFieldDiv style={{backgroundColor:"#E4E5E6"}} >
+                <StatFieldDiv style={{ backgroundColor: "#E4E5E6" }}>
 
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    FIELD
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      FIELD
           </Typography>
 
-                </HeaderDiv>
-             
-                 
- 
-                 
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    Catch/Stump
+                  </HeaderDiv>
+
+
+
+
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Catch/Stump
           </Typography>
 
-                </HeaderDiv>
-                <HeaderDiv>
-                  <Typography variant="caption" style={{
-                    fontSize: "0.85rem",
-                    fontWeight: "750",
-                    lineHeight: "1.5"
-                  }}>
-                    FP
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      FP
           </Typography>
 
-                </HeaderDiv>
-                 
-              </StatFieldDiv>
-              <Divider />
-              {Object.entries(teamStats).length > 0 ? statsVisitorTeamField() :
-                <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
-                    Stats will be updated soon
+                  </HeaderDiv>
+
+                </StatFieldDiv>
+                <Divider />
+                {Object.entries(teamStats).length > 0 ? statslocalTeamField() :
+                  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+                    <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                      Stats will be updated soon
                  </Typography>
-                </div>}
+                  </div>}
 
-            </StatsContainerDiv>
+
+
+              </StatsContainerDiv>
+
+              <StatsContainerDiv style={value2 === 1 ? { position: "relative" } : { display: 'none' }}>
+                {Object.entries(teamStats).length > 0 ? <div style={{ width: "100%", textAlign: "center", margin: 25 }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", }} >
+                    BATTING
+                 </Typography>
+                </div> : <div />}
+                <Divider />
+                <StatDiv style={{ backgroundColor: "#E4E5E6" }} >
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      BAT
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      B
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      R
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      4s
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      6s
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      SR
+          </Typography>
+
+                  </HeaderDiv >
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Catch/Stump
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv style={{
+
+                    textAlign: "center"
+                  }}>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5",
+                      textAlign: "center"
+                    }}>
+                      FP
+          </Typography>
+
+                  </HeaderDiv>
+                </StatDiv>
+                {Object.entries(teamStats).length > 0 ? statsVisitorTeam() :
+                  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+                    <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                      Stats will be updated soon
+                 </Typography>
+                  </div>}
+
+                {Object.entries(teamStats).length > 0 ? <div style={{ width: "100%", textAlign: "center", margin: 25 }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", }} >
+                    BOWLING
+                 </Typography>
+                </div> : <div />}
+                <Divider />
+                <StatBowlerDiv style={{ backgroundColor: "#E4E5E6" }} >
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      BOWL
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      O
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      M
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      R
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      W
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      ECON
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Catch/Stump
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv style={{
+
+                    textAlign: "center"
+                  }}>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      FP
+          </Typography>
+
+                  </HeaderDiv>
+                </StatBowlerDiv>
+                <Divider />
+                {Object.entries(teamStats).length > 0 ? statsVisitorTeamBowler() :
+                  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+                    <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                      Stats will be updated soon
+                 </Typography>
+                  </div>}
+                <div style={{ width: "100%", textAlign: "center", margin: 25 }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", }} >
+                    FIELDING
+                 </Typography>
+                </div>
+                <Divider />
+                <StatFieldDiv style={{ backgroundColor: "#E4E5E6" }} >
+
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      FIELD
+          </Typography>
+
+                  </HeaderDiv>
+
+
+
+
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Catch/Stump
+          </Typography>
+
+                  </HeaderDiv>
+                  <HeaderDiv>
+                    <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      FP
+          </Typography>
+
+                  </HeaderDiv>
+
+                </StatFieldDiv>
+                <Divider />
+                {Object.entries(teamStats).length > 0 ? statsVisitorTeamField() :
+                  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
+                    <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                      Stats will be updated soon
+                 </Typography>
+                  </div>}
+
+              </StatsContainerDiv>
 
             </Paper>
           </Container>
@@ -3070,7 +3209,8 @@ export default function Contest(props) {
               <IconButton edge="start" style={{ color: "white" }} onClick={PrizePoolClose} aria-label="close">
                 <CloseIcon />
               </IconButton>
-              <Typography variant="caption" style={{ color: "white" }} className={classes.title}>
+              <Typography variant="caption" style={{ color: "white",fontSize:"1rem",
+                        fontWeight:500, }} className={classes.title}>
                 Prize Breakdown
             </Typography>
             </Toolbar>
@@ -3107,6 +3247,243 @@ export default function Contest(props) {
             </Paper>
           </Container>
 
+
+        </Dialog>
+
+        <Dialog fullScreen={fullScreen} open={openPlayerDetail} onClose={PrizePoolClose}>
+        <AppBar color="secondary" position={"relative"} className={classes.appBar}>
+            <Toolbar>
+              <IconButton edge="start" style={{ color: "white" }} onClick={PrizePoolClose} aria-label="close">
+                <CloseIcon />
+              </IconButton>
+              <Typography variant="caption" style={{ color: "white", fontSize:"1rem",
+                        fontWeight:500, }} className={classes.title}>
+               Player Details
+            </Typography>
+            </Toolbar>
+          </AppBar>
+          <Paper elevation={0}>
+            {playerStats !== null ? Object.keys(playerStats).length > 0 ?
+              <PlayerStatDiv>
+                  <PlayerStatNestedDiv style={{
+                    gridTemplateColumns: "auto 1fr"
+                  }}>
+                    <Avatar src={playerStats.image_path} style={{
+                      width: 45,
+                      height: 45
+                    }}></Avatar>
+                    <Typography variant="caption" style={{
+                      textAlign:"start",
+                      alignItems:"center",
+                      display:"flex",
+                      fontWeight:700,
+                      fontSize:"1rem"
+                    }}>
+                      {playerStats.fullname}
+                    </Typography>
+                  </PlayerStatNestedDiv>
+
+                  <PlayerStatNestedDiv style={{
+                    gridTemplateColumns: "auto 1fr"
+                  }}>
+                    <Avatar src={playerStats.teamDetails.image_path} style={{
+                      width: 45
+                    }}></Avatar>
+                    <Typography variant="caption" style={{
+                      textAlign:"start",
+                      alignItems:"center",
+                      display:"flex"
+                    }}>
+                      {playerStats.teamDetails.code}
+                    </Typography>
+                  </PlayerStatNestedDiv>
+
+
+                  <PlayerStatNestedDiv  >
+                  <Typography variant="caption">
+                    Batting style
+                  </Typography>
+                    <Typography variant="caption" style={{
+                       
+                    }}>
+                    {playerStats.battingstyle ? playerStats.battingstyle.split('-')[0][0].toUpperCase() + playerStats.battingstyle.split('-').join(' ').slice(1) : "-"}
+                    </Typography>
+                  </PlayerStatNestedDiv>
+                  <PlayerStatNestedDiv  >
+                  <Typography variant="caption">
+                    Bowling style 
+                  </Typography>
+                    <Typography variant="caption" style={{
+                
+                    }}>
+                    {playerStats.bowlingstyle ? playerStats.bowlingstyle.split('-')[0][0].toUpperCase() + playerStats.bowlingstyle.split('-').join(' ').slice(1) : "-"}
+                    </Typography>
+                  </PlayerStatNestedDiv>
+
+                  <PlayerStatNestedDiv  >
+                  <Typography variant="caption">
+                    Positon role
+                  </Typography>
+                    <Typography variant="caption" style={{
+                       
+                    }}>
+                    {playerStats.position.name}
+                    </Typography>
+                  </PlayerStatNestedDiv>
+
+                  <Divider />
+
+                  {playerStats.battingScoreCard ?
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography variant="caption" style={{
+                        fontSize:"1rem",
+                        fontWeight:500,
+                         
+                      }}>
+                        Batting Scorecard
+                      </Typography>
+                      <Divider />
+                      <PlayerStatNestedDiv style={{
+                         marginTop:"5px"
+                      }}>
+                        <Typography variant="caption">
+                          Ball
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.battingScoreCard.ball}
+                        </Typography>
+                        <Typography variant="caption">
+                          Score
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.battingScoreCard.score}
+                        </Typography>
+                        <Typography variant="caption">
+                          Fours
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.battingScoreCard.four_x}
+                        </Typography>
+                        <Typography variant="caption">
+                          Sixes
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.battingScoreCard.six_x}
+                        </Typography>
+                        <Typography variant="caption">
+                          Strike Rate
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.battingScoreCard.rate}
+                        </Typography>
+                      </PlayerStatNestedDiv>
+                    </div>
+
+
+                    : <div />
+                  }
+
+                  {playerStats.bowlingScoreCard ?
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography variant="caption" style={{
+                        fontSize:"1rem",
+                        fontWeight:500,
+                        
+                      }}>
+                        Bowling Scorecard
+                      </Typography>
+                      <Divider />
+                      <PlayerStatNestedDiv style={{
+                         marginTop:"5px"
+                      }}>
+                        <Typography variant="caption">
+                          Overs
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.bowlingScoreCard.overs}
+                        </Typography>
+                        <Typography variant="caption">
+                          Runs
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.bowlingScoreCard.runs}
+                        </Typography>
+                        <Typography variant="caption">
+                          Wickets
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.bowlingScoreCard.wickets}
+                        </Typography>
+                        <Typography variant="caption">
+                          Medians
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.bowlingScoreCard.medians}
+                        </Typography>
+                        <Typography variant="caption">
+                          Wide
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.bowlingScoreCard.wide}
+                        </Typography>
+                        <Typography variant="caption">
+                          No ball
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.bowlingScoreCard.noball}
+                        </Typography>
+                        <Typography variant="caption">
+                          Economy
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.bowlingScoreCard.rate}
+                        </Typography>
+                      </PlayerStatNestedDiv>
+                    </div>
+
+                    : <div />
+                  }
+                   <Divider />
+                  <PlayerStatNestedDiv>
+                    <Typography variant="caption">
+                      Credit
+                     </Typography>
+                    <Typography variant="caption">
+                      {playerStats.credit || 0}
+                    </Typography>
+                  </PlayerStatNestedDiv>
+                  <PlayerStatNestedDiv>
+                    <Typography variant="caption">
+                      Points
+                     </Typography>
+                    <Typography variant="caption">
+                      {playerStats.points || 0}
+                    </Typography>
+                  </PlayerStatNestedDiv>
+                 
+              </PlayerStatDiv>
+              :
+              <Typography >
+                Player details not available
+                 </Typography>
+              :
+              <CircularProgress style={{
+                position: "fixed",
+                top: "60%",
+                left: "50%",
+                color:"white"
+              }} disableShrink />}
+          </Paper>
 
         </Dialog>
 

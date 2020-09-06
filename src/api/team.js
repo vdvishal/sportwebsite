@@ -31,8 +31,16 @@ export const team = (matchId) => instance.get(`/fantasyPlayer?matchId=${matchId}
   .then((response) => {
     return (response);
   });
-
   
+  export const getPlayer = (matchId,playerId) => instance.get(`/fantasyPlayer/${matchId}/${playerId}`,{
+    auth:{
+      username: "app",
+      password: 'qwewqinasdoinoinacino'
+    },
+  })
+  .then((response) => {
+    return (response);
+  });
 
 export const userTeam = (data) => instance.post(`/team/user/`, data, {
   headers: {
