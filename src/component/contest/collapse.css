@@ -1,3 +1,13 @@
 .ReactCollapse--collapse {
     transition: height 500ms;
   }
+
+.textAlign{
+  
+}
+
+@media (max-width: 718px) {
+  .textAlign{
+    text-align: start;
+  }
+}

@@ -42,7 +42,9 @@ background-color: #262C33;min-height: 175px;color: white;
 `
 
 export default function Footer(props) {
-    return (<div>
+    return (<div style={{
+        marginTop:20
+    }}>
           <TopContainer>
                 <div className="footer">
                 <div style={{padding:10,margin:5,textAlign:"center"}}>

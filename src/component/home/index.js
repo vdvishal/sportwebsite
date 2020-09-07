@@ -13,7 +13,7 @@ import CloseOutlined from '@material-ui/icons/CloseOutlined';
 
 import { Link } from "react-router-dom";
 
-import * as publicIp from "public-ip";
+// import * as publicIp from "public-ip";
 
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -112,7 +112,7 @@ export default function HomePage(props) {
                     Cookies.set('guestToken', response.data.token);
                     localStorage.setItem('isLogged', false);
                     localStorage.setItem('_ftoken', "guest");
-
+                    localStorage.setItem('sid',"guest");
                 }
             })
         }
@@ -123,7 +123,7 @@ export default function HomePage(props) {
 
             setWallet(data.wallet.balance)
             setBonus(data.wallet.bonus)
-
+            localStorage.setItem('sid',data._id);
         }).catch(error => {
             if (error && error.response && error.response.status === 403) {
                 ref.refresh().then(response => {
@@ -220,8 +220,8 @@ export default function HomePage(props) {
             setType('info')
             return
         }
-        let ip = await publicIp.v4()
-        await api.login({ email: email, password: password,ip:ip }).then(response => {
+ 
+        await api.login({ email: email, password: password}).then(response => {
             if (response && response.status === 200) {
                 console.log(window.location.pathname)
                 if(window.location.pathname === '/register'){
@@ -386,6 +386,7 @@ export default function HomePage(props) {
             localStorage.removeItem('token');
             localStorage.setItem('isLogged', false);
             Cookies.set('token', "");
+            localStorage.removeItem('sid');
             history.push('/');
             window.location.reload(true);
         }).catch()

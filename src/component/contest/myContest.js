@@ -343,6 +343,10 @@ const NestedFinalDiv = styled.div`
   color: white;
   text-align: center;
   padding: 3.5px;
+  display:flex;
+  align-items:center;
+  align-content:center;
+  justify-content:center;
   background-color: rgb(185 185 185);
   border-radius: 50%; 
   box-shadow: 0px 0px 8px 1px rgb(185 185 185);
@@ -471,6 +475,7 @@ const DuelSingleRight1a = styled.div`
   width:100%;
   @media ${device.mobileL} {
     flex-direction:row-reverse;
+    text-align: start;
   }
 `;
 
@@ -483,8 +488,20 @@ const DuelSingleRight1b = styled.div`
   width:100%;
   @media ${device.mobileL} {
     flex-direction:row;
+    text-align: start;
   }
 `;
+
+const DuelSingleRight1bSub = styled.div`
+display: flex;
+    place-content: center;
+    text-align: end;
+    flex-direction: column;
+    @media ${device.mobileL} {
+       
+      text-align: start;
+    }
+`
 
 const DuelSingleRight1aNestedDiv = styled.div`
   display: flex;
@@ -525,6 +542,26 @@ const DuelSingleRight2 = styled.div`
   }
 `;
 
+const DuelSingleRight2sub = styled.div`
+display: flex;
+    place-content: center;
+    align-items: flex-end;
+    flex-direction: column;
+  @media ${device.mobileL} {
+    align-items: flex-start;
+  }
+`;
+
+const DuelSingleRight1sub = styled.div`
+text-overflow: ellipsis;
+overflow: hidden;
+max-width: 100px;
+display: flex;
+flex-direction: column;
+align-content: center;
+justify-content:center;
+`;
+
 
 
 const DuelCustomHeader = styled.div`
@@ -546,7 +583,7 @@ background-color: #FFFFFF;
 padding:5px;
 border-radius:4px;
 transition: transform .2s;
-cursor:pointer;
+
 @media ${device.mobileL} {
   border:none;
   text-align:center;
@@ -564,7 +601,7 @@ background-color: #FFFFFF;
 padding:6px;
 border-radius:4px;
 transition: transform .2s;
-cursor:pointer;
+ 
 justify-content:space-between;
 @media ${device.mobileL} {
   flex-direction:row;
@@ -584,7 +621,7 @@ background-color: #FFFFFF;
 padding:6px;
 border-radius:4px;
 transition: transform .2s;
-cursor:pointer;
+ 
 justify-content:space-between;
 @media ${device.mobileL} {
   flex-direction:row;
@@ -1011,7 +1048,12 @@ export default function Contest(props) {
           {Object.entries(contest2.contest).map(([, contest], indx) =>
             <ContestType2 key={contest._id}>
               <ContestNameArea>
-                <ContestRightNameArea>
+                <ContestRightNameArea
+                style={{
+                  cursor:"pointer"
+                }}
+                   onClick={() => getPlayer(contest.playerInfo.id)}
+                >
                   <div className="image" style={{
 
                     padding: '16.5px',
@@ -1058,7 +1100,7 @@ export default function Contest(props) {
                             boxShadow: "0px 0px 12px 1px #f58f22",
                             // marginLeft: "-17px"
                           } : {
-                            display: 'block',
+                            display: 'flex',
                           backgroundColor: "#B9B9B9",
                           boxShadow: "0px 0px 12px 1px #B9B9B9",
                         }}
@@ -1129,7 +1171,7 @@ export default function Contest(props) {
                         backgroundColor: "#f58f22",
                         boxShadow: "0px 0px 12px 1px #f58f22",
                       } : {
-                        display: "block",
+                        display: "flex",
                         backgroundColor: "#B9B9B9",
                         boxShadow: "0px 0px 12px 1px #B9B9B9",
                       }
@@ -1230,9 +1272,15 @@ export default function Contest(props) {
       <Collapse isOpened={uState[`typeB-${index2}`]} >
         {Object.entries(contest2.contest).map(([, contest], index) =>
           <ContestType2 key={contest._id}>
-            <ContestNameArea>
+            <ContestNameArea
+             onClick={() => getPlayer(contest2['selectedTeam'][contest._id]['playerDetails'].id)}
+              style={{
+                cursor:"pointer"
+              }}
+            >
               <ContestRightNameArea>
-                <div className="image" style={{
+                <div className="image"
+                 style={{
 
                   padding: '16.5px',
                   margin: '5.5px',
@@ -1290,7 +1338,7 @@ export default function Contest(props) {
                           boxShadow: "0px 0px 12px 1px #f58f22",
 
                         } : {
-                          display: "block",
+                          display: "flex",
                         backgroundColor: "#B9B9B9",
                         boxShadow: "0px 0px 12px 1px #B9B9B9",
                       }}
@@ -1313,8 +1361,16 @@ export default function Contest(props) {
                   display: "flex",
                   flexDirection: "row-reverse",
                   alignItems: "center",
+                  cursor:"pointer"
 
                 }}
+
+                onClick={() => getPlayer(
+                  contest.players[contest.player1].id !== contest2['selectedTeam'][contest._id]['playerDetails'].id ?
+                  contest.players[contest.player1].id :
+                  contest.players[contest.player2].id
+                )}
+ 
               >
                 <div className="image" style={{
 
@@ -1380,7 +1436,7 @@ export default function Contest(props) {
                   } : {
                       backgroundColor: "#f58f22",
                       boxShadow: "0px 0px 12px 1px #f58f22",
-                    } : { display: "block" }
+                    } : { display: "flex" }
                 }         >
                   <Typography variant="caption">
 
@@ -1615,7 +1671,7 @@ export default function Contest(props) {
         </ContentDiv>
         <ContentDiv>
           <Typography variant="caption">
-            {players.battingScoreCard ? players.battingScoreCard.rate : "Did not bat"}
+            {players.battingScoreCard ? (100*players.battingScoreCard.score/players.battingScoreCard.ball).toFixed(2) : "Did not bat"}
           </Typography>
         </ContentDiv>
         <ContentDiv>
@@ -1669,7 +1725,7 @@ export default function Contest(props) {
         </ContentDiv>
         <ContentDiv>
           <Typography variant="caption">
-            {players.bowlingScoreCard ? players.bowlingScoreCard.rate : "Did not bat"}
+            {players.bowlingScoreCard ? (players.bowlingScoreCard.runs/players.bowlingScoreCard.overs).toFixed(2) : "Did not bat"}
           </Typography>
 
         </ContentDiv>
@@ -1751,7 +1807,7 @@ export default function Contest(props) {
         </ContentDiv>
         <ContentDiv>
           <Typography variant="caption">
-            {players.battingScoreCard ? players.battingScoreCard.rate : "Did not bat"}
+            {players.battingScoreCard ? (100*players.battingScoreCard.score/players.battingScoreCard.ball).toFixed(2) : "Did not bat"}
           </Typography>
         </ContentDiv>
         <ContentDiv>
@@ -1807,7 +1863,7 @@ export default function Contest(props) {
         </ContentDiv>
         <ContentDiv>
           <Typography variant="caption">
-            {players.bowlingScoreCard ? players.bowlingScoreCard.rate : "Did not bat"}
+            {players.bowlingScoreCard ? (players.bowlingScoreCard.runs/players.bowlingScoreCard.overs).toFixed(2) : "Did not bat"}
           </Typography>
 
         </ContentDiv>
@@ -1881,16 +1937,49 @@ export default function Contest(props) {
             <DuelSingleRight >
               <div style={{
                 display: "flex",
+                flexDirection:"column",
                 alignContent: "center",
-                alignItems: "center"
+                 textAlign:"start",
+                justifyContent: "center"
               }}>
                 <Typography variant="caption">
                   {contest.userInfo.player1.userName}
                 </Typography>
 
-                {/* <Typography variant="subtitle2">
-             Level
-            </Typography> */}
+                { contest.status === "Discarded" ? 
+                              <Typography variant="caption" style={{ color: "#F38E22" }}>
+                               Contest Cancelled!
+                            </Typography>
+              :
+               
+                contest.winner &&  contest.status !== "Discarded" ? 
+                
+                 contest.winner === contest.users.player1 ? 
+                <Typography variant="caption" style={{ color: "#77BC37" }}>
+                 {
+                   contest.users.player1 === localStorage.getItem('sid') ? 
+                      "You won ₹" + contest.totalAmount
+                      :
+                      "Winner ₹" + contest.totalAmount
+                 } 
+                </Typography> 
+                : 
+              <Typography variant="caption" style={{ color: "red" }}>
+                 {
+                   contest.users.player1 === localStorage.getItem('sid') ? 
+                      "You lost, try again in next match"
+                      :
+                      "Duel lost"
+                 } 
+              </Typography>
+
+             
+                :
+                <Typography variant="caption" style={{ color: "grey" }}>
+                 
+
+              </Typography>
+              }
               </div>
 
             </DuelSingleRight>
@@ -1923,7 +2012,7 @@ export default function Contest(props) {
           <DuelsCustomDiv
             onClick={() => getPlayer(contest.playerDetail.id)}
             style={{
-
+              cursor:"pointer",
               justifyContent: "space-between",
             }}>
               <div
@@ -1959,10 +2048,19 @@ export default function Contest(props) {
                 {contest.playerDetail.teamInfo.code}
 
               </Typography>
-              <Typography variant="caption" style={{ color: "grey" }}>
+              {
+                contest.winner ? 
+                <Typography variant="caption" style={{ color: "grey" }}>
+                {contest.playerPoints} points
+
+              </Typography>
+                :
+                <Typography variant="caption" style={{ color: "grey" }}>
                 {contest.playerDetail.position.name}
 
               </Typography>
+              }
+              
             </div>
             </div>
               <div style={{
@@ -2045,17 +2143,44 @@ export default function Contest(props) {
                   <Avatar src={contest.userInfo.player2.profilePic ? contest.userInfo.player2.profilePic : 'https'} variant="circle" />
 
                 </div>
-                <div style={{
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center"
-                }}>
+                <DuelSingleRight1bSub >
                   <Typography variant="caption">
                     {contest.userInfo.player2.userName}
                   </Typography>
+                  { contest.status === "Discarded" ? 
+                              <Typography variant="caption" style={{ color: "#F38E22" }}>
+                               Contest Cancelled!
+                            </Typography>
+              :
+                contest.winner ? 
+                
+                 contest.winner === contest.users.player2 ? 
+                <Typography variant="caption" style={{ color: "#77BC37" }}>
+                 {
+                   contest.users.player2 === localStorage.getItem('sid') ? 
+                      "You won ₹" + contest.totalAmount
+                      :
+                      "Winner ₹" + contest.totalAmount
+                 } 
+                </Typography> 
+                : 
+              <Typography variant="caption" style={{ color: "red" }}>
+                 {
+                   contest.users.player2 === localStorage.getItem('sid') ? 
+                      "You lost, try again in next match"
+                      :
+                      "Duel lost"
+                 } 
+              </Typography>
 
+             
+                :
+                <Typography variant="caption" style={{ color: "grey" }}>
+                 
 
-                </div>
+              </Typography>
+              }
+                </DuelSingleRight1bSub>
 
               </DuelSingleRight1b>
  
@@ -2088,49 +2213,60 @@ export default function Contest(props) {
       </DuelCustomHeader> */}
 
 
-        <DuelsCustomDiv style={{ padding: "6px" }} >
+        <DuelsCustomDiv style={{ padding: "6px",border:"1px solid #cbd4df" }} >
           <div style={{
             padding: '2.5px',
             margin: '5.5px',
           }}>
-            <Avatar variant="circle" />
+            <Avatar src={contest.userInfo.player1.profilePic ? contest.userInfo.player1.profilePic : 'https'} variant="circle" />
 
           </div>
 
-          <DuelSingleRight style={{
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            maxWidth: 85,
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center"
-          }}>
-            <div style={{
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              maxWidth: 85,
-              display: "flex",
-              flexDirection: "column",
-              alignContent: "center",
-
-            }}>
-              <Typography variant="caption">
+          <DuelSingleRight  >
+            <DuelSingleRight1sub  >
+              <Typography variant="caption" className="textAlign">
                 {contest.userInfo.player1.userName}
               </Typography>
 
-              <Typography variant="caption" style={{ color: "#77BC37" }}>
-                Prize Pool: {contest.totalAmount}
+              { contest.status === "Discarded" ? 
+                              <Typography variant="caption" className="textAlign" style={{ color: "#F38E22" }}>
+                               Contest Cancelled!
+                            </Typography>
+              : contest.winner && contest.status !== "Discarded" ? contest.users.player1 === contest.winner ? 
+              
+                contest.users.player1 === localStorage.getItem('sid') ? 
+
+              
+                <Typography variant="caption" className="textAlign" style={{ color: "#77BC37" }}>
+                  You won ₹{contest.totalAmount}
+                </Typography>
+                :
+                <Typography variant="caption" className="textAlign" style={{ color: "#77BC37" }}>
+                Winner ₹{contest.totalAmount}
               </Typography>
-            </div>
+                : 
+                    <Typography variant="caption" className="textAlign" style={{ color: "red" }}>
+                        Duel lost!
+                  </Typography>
+                :
+                <Typography variant="caption" className="textAlign" style={{ color: "#77BC37" }}>
+                Prize Pool ₹{contest.totalAmount}
+              </Typography>
+              }
+            </DuelSingleRight1sub>
 
           </DuelSingleRight>
           <DuelSingleRight
+            onClick={() => getPlayer(contest.player1Detail.id)}
 
             style={{
+              cursor:"pointer",
               justifyContent: "flex-start",
               textAlign: "start",
               flexDirection: "row-reverse"
-            }}>
+            }}
+ 
+            >
             <div style={{
               padding: '2.5px',
               margin: '5.5px',
@@ -2151,15 +2287,23 @@ export default function Contest(props) {
                 {contest.player1Detail.firstname[0] + ". " + contest.player1Detail.lastname}
 
               </Typography>
-
+              
               <Typography variant="caption" style={{ color: "grey" }}>
                 {contest.player1Detail.teamInfo.code}
 
               </Typography>
+              {
+                 contest.winner ? 
+                 <Typography variant="caption" style={{ color: "grey" }}>
+                  {contest.player1Points} points
+ 
+               </Typography>
+                 :
               <Typography variant="caption" style={{ color: "grey" }}>
                 {contest.player1Detail.position.name}
 
               </Typography>
+              }
             </div>
 
           </DuelSingleRight>
@@ -2236,19 +2380,44 @@ export default function Contest(props) {
                 <Avatar src={contest.userInfo.player2.profilePic ? contest.userInfo.player2.profilePic : 'https'} variant="circle" />
 
               </div>
-              <div style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center"
-              }}>
-                <Typography variant="caption">
+              <DuelSingleRight2sub  >
+                <Typography variant="caption" className="textAlign" >
                   {contest.userInfo.player2.userName}
                 </Typography>
+                { contest.status === "Discarded" ? 
+                              <Typography variant="caption" className="textAlign"  style={{ color: "#F38E22" }}>
+                               Contest Cancelled!
+                            </Typography>
+              : contest.winner ? contest.users.player2 === contest.winner ? 
+              
+              contest.users.player2 === localStorage.getItem('sid') ? 
 
-              </div>
+            
+              <Typography variant="caption" className="textAlign"  style={{ color: "#77BC37" }}>
+                You won ₹{contest.totalAmount}
+              </Typography>
+              :
+              <Typography variant="caption" className="textAlign"  style={{ color: "#77BC37" }}>
+              Winner ₹{contest.totalAmount}
+            </Typography>
+              : 
+                  <Typography variant="caption" className="textAlign"  style={{ color: "red" }}>
+                      Duel lost!
+                </Typography>
+              :
+              <Typography variant="caption" className="textAlign"  style={{ color: "#77BC37" }}>
+              Prize Pool ₹{contest.totalAmount}
+            </Typography>
+            }
+              </DuelSingleRight2sub>
 
             </DuelSingleRight2>
-            <DuelSingleRight1a >
+            <DuelSingleRight1a
+                          onClick={() => getPlayer(contest.player2Detail.id)}
+              style={{
+                cursor:"pointer"
+              }}
+            >
               <div style={{
                 padding: '2.5px',
                 margin: '5.5px',
@@ -2268,10 +2437,18 @@ export default function Contest(props) {
                   {contest.player2Detail.teamInfo.code}
 
                 </Typography>
-                <Typography variant="caption" style={{ color: "grey" }}>
-                  {contest.player2Detail.position.name}
+                {
+                 contest.winner ? 
+                 <Typography variant="caption" style={{ color: "grey" }}>
+                  {contest.player2Points} points
+ 
+               </Typography>
+                 :
+              <Typography variant="caption" style={{ color: "grey" }}>
+                {contest.player2Detail.position.name}
 
-                </Typography>
+              </Typography>
+              }
               </DuelSingleRight1aNestedDiv>
 
             </DuelSingleRight1a>
@@ -2890,7 +3067,7 @@ export default function Contest(props) {
 
                 <div style={{ width: "100%", textAlign: "center", margin: 25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", }} >
-                    FIELDING
+                    OTHERS
                  </Typography>
                 </div>
                 <Divider />
@@ -3144,7 +3321,7 @@ export default function Contest(props) {
                   </div>}
                 <div style={{ width: "100%", textAlign: "center", margin: 25 }}>
                   <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", }} >
-                    FIELDING
+                    OTHERS
                  </Typography>
                 </div>
                 <Divider />
@@ -3262,7 +3439,9 @@ export default function Contest(props) {
             </Typography>
             </Toolbar>
           </AppBar>
-          <Paper elevation={0}>
+          <Paper elevation={0} style={{
+            minWidth: 285
+          }}>
             {playerStats !== null ? Object.keys(playerStats).length > 0 ?
               <PlayerStatDiv>
                   <PlayerStatNestedDiv style={{
@@ -3331,9 +3510,12 @@ export default function Contest(props) {
                     </Typography>
                   </PlayerStatNestedDiv>
 
-                  <Divider />
+                  
 
                   {playerStats.battingScoreCard ?
+                   <div>
+                   <Divider />
+
                     <div
                       style={{
                         display: "flex",
@@ -3383,12 +3565,17 @@ export default function Contest(props) {
                         </Typography>
                       </PlayerStatNestedDiv>
                     </div>
-
+                    </div>
 
                     : <div />
                   }
 
+                  
+
                   {playerStats.bowlingScoreCard ?
+                  <div>
+                                      <Divider />
+
                     <div
                       style={{
                         display: "flex",
@@ -3446,11 +3633,11 @@ export default function Contest(props) {
                           Economy
                         </Typography>
                         <Typography variant="caption">
-                          {playerStats.bowlingScoreCard.rate}
+                          {(playerStats.bowlingScoreCard.runs/playerStats.bowlingScoreCard.overs).toFixed(2)}
                         </Typography>
                       </PlayerStatNestedDiv>
                     </div>
-
+                    </div>
                     : <div />
                   }
                    <Divider />
