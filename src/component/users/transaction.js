@@ -7,6 +7,7 @@ import * as pg from '../../api/pg'
  
 import { Container, Paper, Typography, Divider } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Pagination from '@material-ui/lab/Pagination';
 
 import styled from 'styled-components'
 
@@ -22,17 +23,33 @@ const Div = styled.div`
 
 
 export default function Transaction() {
-    const [transaction, setTransaction] = React.useState(undefined);
- 
+    const [transaction, setTransaction] = React.useState(null);
+    const [pages, setPage] = React.useState(1);
+
+    
 
     useEffect(() => {
-        pg.transaction(0).then(response => {            
-            setTransaction(response.data)
+        pg.transaction(1).then(response => {            
+            setTransaction(response.data.data);
+            setPage(response.data.page)
         }).catch(error => {
             console.log(error);
  
         })
     },[])
+
+    const getPageCustom = (event,page) => {
+        
+        setTransaction(null)
+        pg.transaction(page).then(response => {            
+            setTransaction(response.data.data);
+            
+        }).catch(error => {
+            setTransaction([])
+            console.log(error);
+ 
+        })
+    }
 
 
     const viewList = () => transaction.map(orders => 
@@ -61,8 +78,17 @@ export default function Transaction() {
      )
 
     return (
-        transaction ? transaction.length > 0 ? <Container maxWidth="md" >
-            
+       
+         <Container maxWidth="md" style={{
+            minHeight:"80vh",
+            display:"flex",
+            flexDirection:"column",
+                            justifyContent:"space-between",
+                            alignContent:"center"
+        }} >
+            <div>
+
+           
             <Paper square elevation={0}>
                 <Div>
                     <Typography style={{fontWeight:700,padding:10,fontSize:15}} variant="caption" >
@@ -77,13 +103,9 @@ export default function Transaction() {
                         </Typography>
                 </Div>    
             </Paper>
-            <Paper square>
+            <Paper square >
                  
-                    {viewList()}
-              
-            </Paper> 
-        </Container>
-        :  <div style={{
+                    { transaction !== null ? transaction.length > 0 ? viewList() :  <div style={{
             display:"flex",
             justifyContent:"center",
             padding:10,
@@ -97,6 +119,31 @@ export default function Transaction() {
                     position: "fixed",
                     top: "50%",
                     left: "50%"
-                }} disableShrink />
+                }} disableShrink />}
+
+
+            </Paper> 
+            
+            </div>
+            <div
+            style={{
+                marginTop:15,
+              width: "100%",
+              textAlign: "center",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              
+            }}>
+            <Pagination 
+             onChange={getPageCustom}
+            
+             count={pages} color="secondary"  />
+                </div>
+              
+        
+        </Container>
+        
     )
 }

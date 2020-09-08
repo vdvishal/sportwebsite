@@ -146,6 +146,9 @@ export default function Profile() {
         let object = {}
         switch (typeNum) {
             case 1:
+                if(value.length > 8){
+                   return handleNotificationClick("Choose a username less than 8 characters")
+                }
                 object = {
                     userName: value
                 }

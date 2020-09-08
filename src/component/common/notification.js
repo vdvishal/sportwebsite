@@ -40,7 +40,7 @@ const Notification = (props) => {
                    onClose={props.close}
                    // message={props.message}
            >
-               <Alert onClose={props.close} severity={props.type} >
+               <Alert onClose={props.close} style={{backgroundColor:"#77BC37"}} >
                {props.message}
                </Alert>
            </Snackbar>

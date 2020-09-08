@@ -27,7 +27,8 @@ import Button from '@material-ui/core/Button';
  
 import EditIcon from '@material-ui/icons/Edit';
 
-import { Divider, IconButton, Dialog,TextField, Avatar,Slider, Input, Toolbar, Badge } from '@material-ui/core';
+import { Divider, IconButton, Dialog,TextField, Avatar, Input, Toolbar, Badge } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
 
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
@@ -150,8 +151,12 @@ const useStyles = makeStyles({
       bottom: 0,
     },
     select:{
-      height:"36px"
-    }
+     height:"51px"
+    },
+    selectType2:{
+       
+     },
+    
   }
 });
 
@@ -708,13 +713,20 @@ export default function Contest(props) {
 
   const [wait, setWait] = React.useState(false);
   const [custom, setCustom] = React.useState(null);
+ 
 
   const [min, setMinRange] = React.useState(0);
   const [max, setMaxRange] = React.useState(10000000);
  
+  const [playerFilter, setPlayerFilter] = React.useState("all");
+ 
+ 
   const [filterCustom, setCustomFilter] = React.useState(5);
 
-  const [, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(1);
+  const [activePage, setActivePage] = React.useState(1);
+
+  
   const [directionCustom, setCustomDirection] = React.useState(1);
 
   const [, setCustomDirectionValue] = React.useState(1);
@@ -739,19 +751,61 @@ export default function Contest(props) {
 
    
   const handleFilterCustom = (value) => {
-    setCustomFilter(value)
-    setCustom(null)
-    setCustomDuelDialog(false)
-    joinDialog(false)
-    setSelectedPlayer('')
-    if(min > max){
+    
+    if(parseFloat(min) >parseFloat(max)){
       return handleNotificationClick("Min amount cannot be greater than max")
     }
-    api.customContest(props.match.params.matchId,min,max,value,1).then(response => {
+    setCustom(null)
+    setCustomFilter(value)
+    
+    setCustomDuelDialog(false)
+    joinDialog(false)
+    setPage(page)
+    setActivePage(page)
+    setSelectedPlayer('')
+    api.customContest(props.match.params.matchId,min,max,value,1,playerFilter).then(response => {
        
       setCustom(response.data.data);
+      setPage(response.data.pages)
       
+      setActivePage(1)
     })
+  }
+
+  const handlePlayerFilter = (value) => {
+    setPlayerFilter(value.target.value);
+
+    if(parseFloat(min) >parseFloat(max)){
+      return handleNotificationClick("Min amount cannot be greater than max")
+    }
+    setCustom(null);
+    api.customContest(props.match.params.matchId,min,max,filterCustom,1,value.target.value).then(response => {
+       
+      setCustom(response.data.data);
+      setPage(response.data.pages)
+      setActivePage(1)
+      let fil = response.data.data.filter(player => {
+        if(player.playerDetail){
+          return player.playerDetail.id === value.target.value
+
+        }
+        
+        if(player.player1Detail){
+          return player.player1Detail.id === value.target.value
+
+        }
+      
+      })
+      setCustom(fil)
+    })
+ 
+
+     
+
+     
+ 
+
+ 
   }
 
   const handleContestType = (event) => { 
@@ -780,6 +834,10 @@ export default function Contest(props) {
   }
 
   const createDuel = () => {
+    if (localStorage.getItem('isLogged') === null || localStorage.getItem('isLogged') === 'false') {
+      setOpenLogin(true)
+      return
+    }
       let object;
        if(!click){
          setClick(true)
@@ -820,10 +878,15 @@ export default function Contest(props) {
   }
 
   const joinCustom = (contestId) => {
+    if (localStorage.getItem('isLogged') === null || localStorage.getItem('isLogged') === 'false') {
+      setOpenLogin(true)
+      return
+    }
+
     api.joinCustomContest({contestId}).then(response => {
       if(response.status === 200){
         getCustom();
-        setJoinCustom(false);
+ 
         joinDialog(false)
        return handleNotificationClick("Contest joined");
        
@@ -833,24 +896,32 @@ export default function Contest(props) {
   }
 
   const getCustom = () => {
-    api.customContest(props.match.params.matchId,min,max,filterCustom,1).then(response => {
+    api.customContest(props.match.params.matchId,min,max,filterCustom,1,playerFilter).then(response => {
       setClick(false)
       setCustom(response.data.data);
+      
+
       profile();
+      setPage(response.data.pages)
+      setActivePage(1)
       handleCustomDialog(false)
     })
   }
 
    
   const joinDuelCustom = (contestId) => {
-     
+    if (localStorage.getItem('isLogged') === null || localStorage.getItem('isLogged') === 'false') {
+      setOpenLogin(true)
+      return
+    }
+
     if(selectedPlayer === ''){
       return handleNotificationClick("Select a player")
     }
     api.joinCustomContestDuel({contestId,playerId:selectedPlayer}).then(response => {
       if(response.status === 200){
         getCustom();
-        setJoinCustom(false);
+       
         joinDialog(false);
         setCustomDuelDialog(false);
         setSelectedPlayer('')
@@ -868,6 +939,7 @@ export default function Contest(props) {
       setCustomDirectionValue('asc');
       fanD = _.orderBy(fanD, 'amount', ['asc']);
       setCustom(fanD)
+      
     } else {
       setCustomDirection(dir);
 
@@ -878,26 +950,33 @@ export default function Contest(props) {
   }
 
   const getFilteredCustom = () => {
-    setCustom(null);
-    if(min > max){
-      return handleNotificationClick("Min amount cannot be greater than max")
-    }
-    api.customContest(props.match.params.matchId,min,max,filterCustom,1).then(response => {     
-      setCustom(response.data.data);
+ 
 
+    if(parseFloat(min) >parseFloat(max)){
+      return handleNotificationClick("Min amount cannot be greater than max")
+    } 
+    setCustom(null);
+    api.customContest(props.match.params.matchId,min,max,filterCustom,1,playerFilter).then(response => {     
+      setCustom(response.data.data);
+      
+
+      setPage(response.data.pages)
+      setActivePage(1)
     })
   }
-
-  const getPageCustom = (page) => {
-    setPage(page)
-    api.customContest(props.match.params.matchId,min,max,0,page).then(response => {
-      let ff = response.data.data;
-      if(filterCustom !== 0 ){
-        ff = _.filter(response.data.data, ['contestType', filterCustom]);
-      }
-      
+ 
+  const getPageCustom = (event, page) => {
+    if(parseFloat(min) >parseFloat(max)){
+      return handleNotificationClick("Min amount cannot be greater than max")
+    } 
+     console.log(page);
+     setCustom(null);
+    api.customContest(props.match.params.matchId,min,max,filterCustom,page,playerFilter).then(response => {
+      let ff = response.data.data;   
       setCustom(ff);
+      
 
+      
     })
   }
 
@@ -999,11 +1078,12 @@ export default function Contest(props) {
 
     })
 
-    api.customContest(props.match.params.matchId,min,max,5,1).then(response => {
+    api.customContest(props.match.params.matchId,min,max,5,1,"all").then(response => {
       console.log(response.data.data);
       
       setCustom(response.data.data);
-      
+      setPage(response.data.pages);
+
     })
 
     
@@ -1589,7 +1669,7 @@ export default function Contest(props) {
 
                   <Button size="small" 
                    onClick={() => {joinDialog(true);setMinimize3(true);setCustomDuelDialog(false)
-                    ;setJoinCustom({contestId:contest._id,amount:contest.amount.toFixed(2)})}} 
+                    ;setJoinCustom({contestId:contest._id,amount:contest.amount.toFixed(2),playerDetail:contest.playerDetail,contestInfo:contest})}} 
                   variant="contained" style={{
                     backgroundColor: '#77BC37',
                     color: 'white'
@@ -1624,15 +1704,14 @@ export default function Contest(props) {
         <div style={{
           padding: '2.5px',
           margin: '5.5px',
-        }}>
-          <Avatar  variant="circle" />
-
+        }}>   
+<Avatar src={contest.userInfo.player1.profilePic ? contest.userInfo.player1.profilePic : 'https'}  variant="circle" />
         </div>
 
         <DuelSingleRight style={{
             textOverflow: "ellipsis",
             overflow: "hidden",
-            maxWidth: 60,
+            
             display:"flex",
             alignContent:"center",
             alignItems:"center"
@@ -1640,7 +1719,7 @@ export default function Contest(props) {
           <div style={{
             textOverflow: "ellipsis",
             overflow: "hidden",
-            maxWidth: 60,
+    
             display:"flex",
             alignContent:"center",
             alignItems:"center"
@@ -1719,9 +1798,17 @@ export default function Contest(props) {
             flexDirection: "column",
             padding: "6.89px 0",
             color:"#77BC37",
-          }}>
-            <Typography variant="caption" style={{color:"grey"}}>
+          }}
+          onClick={() => {setCustomDuelDialog(true);setJoinCustom({contestId:contest._id,amount:contest.amount.toFixed(2),player1Detail:contest.player1Detail});joinDialog(false);setMinimize4(true)}} 
+          >
+            <Typography variant="caption" style={{color:"grey",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",}}>
              Challenger
+
+             <StarRateIcon style={ {color:"#f79123" }} />
+
             </Typography>
       
             <Typography variant="caption" 
@@ -1740,7 +1827,7 @@ export default function Contest(props) {
                         <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
 
                   <Button size="small" 
-                   onClick={() => {setCustomDuelDialog(true);setJoinCustom({contestId:contest._id,amount:contest.amount.toFixed(2)});joinDialog(false);setMinimize4(true)}} 
+                   onClick={() => {setCustomDuelDialog(true);setJoinCustom({contestId:contest._id,amount:contest.amount.toFixed(2),player1Detail:contest.player1Detail});joinDialog(false);setMinimize4(true)}} 
                   variant="contained" style={{
                     backgroundColor: '#77BC37',
                     color: 'white'
@@ -2767,10 +2854,16 @@ export default function Contest(props) {
                   value={sortTypeValue}
                   onChange={(event) => handleSortType(event.target.value)}
                 >
-                  <MenuItem value={1}>Prize Pool</MenuItem>
-                  <MenuItem value={2}>Entry</MenuItem>
+                  <MenuItem value={1}><Typography variant="caption"   >
+                  Prize Pool
+                    </Typography></MenuItem>
+                  <MenuItem value={2}><Typography variant="caption"   >
+                  Entry
+                    </Typography></MenuItem>
                   {/* <MenuItem value={3}>Winners</MenuItem> */}
-                  <MenuItem value={4}>Spots</MenuItem>
+                  <MenuItem value={4}><Typography variant="caption"   >
+                  Spots
+                    </Typography></MenuItem>
                 </Select>
               </div>
               <div elevation={0} style={{
@@ -2786,12 +2879,29 @@ export default function Contest(props) {
                   value={filter}
                   onChange={(event) => handleSortType(5, event.target.value)}
                 >
-                  <MenuItem value={0}>All Contest</MenuItem>
-                  <MenuItem value={1}>Mega Contest</MenuItem>
-                  <MenuItem value={2}>Head to head</MenuItem>
-                  <MenuItem value={3}>2X Pay</MenuItem>
-                  <MenuItem value={4}>3 way</MenuItem>
-                  <MenuItem value={5}>4 way</MenuItem>
+                  <MenuItem value={0}>
+                    <Typography variant="caption"   >
+                     All Contest
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem value={1}>
+                      <Typography variant="caption"   >
+                      Mega Contest
+                    </Typography>
+                   </MenuItem>
+                  <MenuItem value={2}>
+                  <Typography variant="caption"   >
+                  Head to head
+                    </Typography></MenuItem>
+                  <MenuItem value={3}><Typography variant="caption"   >
+                  2X Pay
+                    </Typography></MenuItem>
+                  <MenuItem value={4}><Typography variant="caption"   >
+                  3 way
+                    </Typography></MenuItem>
+                  <MenuItem value={5}><Typography variant="caption"   >
+                  4 way
+                    </Typography></MenuItem>
                 </Select>
               </div>
               <div elevation={0} style={{
@@ -2807,8 +2917,13 @@ export default function Contest(props) {
                   value={directionValue}
                   onChange={(event) => handleDirectionChange(event.target.value)}
                 >
-                  <MenuItem value={1}>Asc</MenuItem>
-                  <MenuItem value={-1}>Dsc</MenuItem>
+                  <MenuItem value={1}><Typography variant="caption"   >
+                     Asc
+                     </Typography>
+                     </MenuItem>
+                  <MenuItem value={-1}><Typography variant="caption"   >
+                     Desc
+                     </Typography></MenuItem>
                 </Select>
               </div>
 
@@ -2826,7 +2941,7 @@ export default function Contest(props) {
 
         </div>
 
-        <div style={value === 3 ? { display: 'block',   position: "relative", marginTop: '10px' } : { display: 'none' }}>
+        <div style={value === 3 ? { display: 'flex',flexDirection:"column",justifyContent: "space-between",minHeight: "80vh",   position: "relative", marginTop: '10px' } : { display: 'none' }}>
           <Paper elevation={0} style={{  backgroundColor:"#F9F8FC", }}>
             <Paper elevation={0} style={{
               display: "flex",
@@ -2835,6 +2950,13 @@ export default function Contest(props) {
               padding: "10px",
               position:"sticky",
             }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                 
+                }}
+              >
               <div elevation={0} style={{
                 textAlign: 'start',
 
@@ -2848,14 +2970,22 @@ export default function Contest(props) {
                   value={filterCustom}
                   onChange={(event) => handleFilterCustom(event.target.value)}
                 >
-                  <MenuItem value={5}>Under/Over</MenuItem>
-                  <MenuItem value={6}>Duel</MenuItem>
+                  <MenuItem value={5}>
+                  <Typography variant="caption"   >
+                     Under/Over
+                     </Typography>
+                     </MenuItem>
+                  <MenuItem value={6}>
+                  <Typography variant="caption"   >
+                     Duel
+                     </Typography>
+                  </MenuItem>
 
                 </Select>
               </div>
-  
-              <div elevation={0} style={{
-                textAlign: 'end',
+
+                <div elevation={0} style={{
+                textAlign: 'start',
 
               }}>
                 <Typography variant="caption" style={{ marginRight: 5 }}>
@@ -2867,12 +2997,93 @@ export default function Contest(props) {
                   value={directionCustom}
                   onChange={(event) => handleCustomDirectionChange(event.target.value)}
                 >    
-                  <MenuItem value={1}>Asc</MenuItem>
-                  <MenuItem value={-1}>Dsc</MenuItem>
+                  <MenuItem value={1}>
+                  <Typography variant="caption"   >
+                     Asc
+                     </Typography>
+                  </MenuItem>
+                  <MenuItem value={-1}><Typography variant="caption"   >
+                     Desc
+                     </Typography></MenuItem>
                 </Select>
               </div>
 
 
+                </div>
+
+  
+              <div elevation={0} style={{
+                textAlign: 'start',
+                minWidth:"150px",
+                display:"flex",
+                flexDirection:"row",
+                flexWrap:"wrap",
+                alignItems:"center",
+                justifyContent:"flex-end"
+              }}>
+                <Typography variant="caption" style={{ marginRight: 5 }}>
+                  Select Player
+              </Typography>
+              <Select
+              classes={{select: playerFilter === "all" ? classes.selectType2 : classes.select}}
+                style={{display:"inline-flex",marginBottom:5}}
+                select
+                label="Select Player"
+                value={playerFilter}
+                onChange={handlePlayerFilter}
+                // helperText="Please select a Player"
+              ><MenuItem key={"all"} value={"all"}  >
+                   <Typography variant="caption" style={{
+                     marginLeft:15
+                   }} >
+                         Show all players
+                     </Typography>
+                 
+                </MenuItem>
+                {playerList !== null ? playerList.map(player =>  
+                <MenuItem key={player.id} value={player.id} >
+                  <div style={{
+                    display:'flex',
+                    flexDirection:'row',
+ 
+                    width:"100%",
+                    alignContent:"center",
+                    alignItems:"center"
+                  }}>
+                    <Avatar src={player.image_path} />
+                    <div style={{
+                    display:'flex',
+                    flexDirection:'column',
+                    marginLeft:10,
+ 
+                    alignContent:"center",
+                    alignItems:"start"
+                  }}>
+
+                    
+                    <Typography variant="caption" >
+                     {player.fullname}
+                     </Typography>
+                     <Typography variant="caption" >
+                     {player.teamDetails.code}
+                     </Typography>
+                     <Typography variant="caption" >
+                     {player.position.name}
+                     </Typography>
+ 
+                </div>
+         
+                              
+                  </div>
+                  <Divider/>
+                  </MenuItem>) : <div />}
+                 
+                   
+                
+              </Select>
+              </div>
+              
+              
 
             </Paper>
             <Paper elevation={0} style={{
@@ -2887,10 +3098,15 @@ export default function Contest(props) {
 
               }}>
  
-                   <Input type="text" placeholder="₹Min" style={{ width: '50px',marginRight:5 }} onChange={(e) => setMinRange((e.target.value))} />
+                  <Input type="text" placeholder="₹Min" style={{ width: '50px',marginRight:5 }} onChange={(e) => setMinRange((e.target.value))} />
 
                
                   <Input type="text" placeholder="₹Max" style={{ width: '50px',marginRight:5 }} onChange={(e) => setMaxRange((e.target.value))} />
+{/* 
+                  <Input type="text" placeholder="Min FP" style={{ width: '50px',marginRight:5 }} onChange={(e) => setMinFPRange((e.target.value))} />
+
+               
+                  <Input type="text" placeholder="Max FP" style={{ width: '50px',marginRight:5 }} onChange={(e) => setMaxFPRange((e.target.value))} /> */}
 
                   <Button variant={"outlined"} size="small" onClick={getFilteredCustom} >
                     Filter
@@ -2929,9 +3145,25 @@ export default function Contest(props) {
           top: "50%",
           left: "50%"
       }} disableShrink />}
+            
             </Paper>
-          </Paper>
+         </Paper>
+         <div
+            style={{
+              alignSelf:"flex-end",
+              width: "100%",
+              textAlign: "center",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              
+            }}>
 
+            
+            <Pagination onChange={getPageCustom} defaultPage={activePage} count={page} color="secondary"  />
+            </div>
+         
         </div>
 
  
@@ -3126,14 +3358,78 @@ export default function Contest(props) {
         ) : <div></div>}
 
       {openJoinCustom ? (<Betslip style={
-          openJoinCustom ? minimize3 ? { transform: "translateY(0px)",display: "block", } : { transform: "translateY(79%)",display: "block", }  : { display: "none", }
+          openJoinCustom ? minimize3 ? { transform: "translateY(0px)",display: "block", } : { transform: "translateY(83%)",display: "block", }  : { display: "none", }
         }
         >
           <BetHeader onClick={() => setMinimize3(!minimize3)}>
             Payslip
         </BetHeader>
           <BetInfo>
-             
+          <InputLabel style={{margin:5,color:"#FFFFFF"}}>
+            <Typography variant="caption">
+            Selected 
+            </Typography>
+            
+          </InputLabel>
+          <DuelSingleRight style={{
+             justifyContent:"flex-start",
+             textAlign:"start",
+             border: "1px solid #1C2127",
+             borderRadius: "4PX",
+             width:"100%",
+             backgroundColor:"#1C2127",
+         }}>
+                     <div style={{
+          padding: '2.5px',
+          margin: '5.5px',
+           
+        }}>
+          <Avatar src={customDialogDetail.playerDetail.image_path}  variant="circle" />
+
+        </div>
+        <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent:"space-between",
+            width:"100%",
+            padding:5
+          }}>
+        <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column",
+            textAlign:"end",
+
+          }}>
+            <Typography variant="caption"  style={{color:"#FFFFFF"}}>
+            {customDialogDetail.playerDetail.fullname}
+            
+
+            </Typography>
+
+            <Typography variant="caption"  style={{color:"#FFFFFF"}}>
+            {customDialogDetail.playerDetail.teamInfo.code}               
+
+            </Typography>
+            <Typography variant="caption"  style={{color:"#FFFFFF"}}>
+            {customDialogDetail.playerDetail.position.name} 
+
+            </Typography>
+            
+          </div>
+        <div>
+        <Typography variant="caption"  style={{color:"#77BC37",fontWeight:600}}>
+            {customDialogDetail.contestInfo.player2 === 1 ?  `Under ${customDialogDetail.contestInfo.value + 1} points`
+                                                          : `Over ${customDialogDetail.contestInfo.value + 1} points`} 
+
+            </Typography>
+        </div>
+        </div>
+        </DuelSingleRight>
+
 
             <div style={{
               display: "flex",
@@ -3180,14 +3476,66 @@ export default function Contest(props) {
         </Betslip>
         ) : <div></div>}
 
-{openJoinDuelCustom ? (<Betslip style={
-          openJoinDuelCustom ? minimize4 ? { transform: "translateY(0px)",display: "block", } : { transform: "translateY(79%)",display: "block", }  : { display: "none", }
+      {openJoinDuelCustom ? (<Betslip style={
+          openJoinDuelCustom ? minimize4 ? { transform: "translateY(0px)",display: "block", } : { transform: "translateY(87%)",display: "block", }  : { display: "none", }
         }
         >
           <BetHeader onClick={() => setMinimize4(!minimize4)}>
             Payslip
         </BetHeader>
           <BetInfo>
+          <InputLabel style={{margin:5,color:"#FFFFFF"}}>
+            <Typography variant="caption">
+            Your Opponent
+            </Typography>
+            
+          </InputLabel>
+          <div style={{
+            display:"flex",
+            flexDirection:"row",
+             justifyContent:"flex-start",
+             textAlign:"start",
+             border: "1px solid #1C2127",
+             borderRadius: "4PX",
+             margin:"2px",
+             backgroundColor:"#1C2127",
+             alignContent:"center",
+         }}>
+                     <div style={{
+          padding: '2.5px',
+          margin: '5.5px',
+           
+        }}>
+          <Avatar src={customDialogDetail.player1Detail.image_path}  variant="circle" />
+
+        </div>
+
+        <div style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "flex-start",
+            flexDirection: "column",
+            textAlign:"end",
+
+          }}>
+            <Typography variant="caption"  style={{color:"#FFFFFF"}}>
+            {customDialogDetail.player1Detail.fullname}
+            
+
+            </Typography>
+
+            <Typography variant="caption"  style={{color:"#FFFFFF"}}>
+            {customDialogDetail.player1Detail.teamInfo.code}               
+
+            </Typography>
+            <Typography variant="caption"  style={{color:"#FFFFFF"}}>
+            {customDialogDetail.player1Detail.position.name} 
+
+            </Typography>
+          </div>
+        
+        </div>
+
           <InputLabel style={{margin:5,color:"#FFFFFF"}}>
             <Typography variant="caption">
             Select Player
@@ -3234,6 +3582,9 @@ export default function Contest(props) {
                      </Typography>
                      <Typography variant="caption" >
                       {player.position.name}
+                      </Typography>
+                      <Typography variant="caption" >
+                      {player.teamDetails.code}
                       </Typography>
                 </div>
          
@@ -3473,7 +3824,7 @@ export default function Contest(props) {
 
         </Dialog>
   
-        <Dialog fullScreen={fullScreen} open={openCustom} onClose={handleTeamClose} TransitionComponent={Transition}>
+        <Dialog fullScreen={fullScreen} open={openCustom} onClose={handleTeamClose}  >
           <AppBar color="secondary" position={"relative"} className={classes.appBar}>
             <Toolbar>
               <IconButton edge="start" style={{ color: "white",padding:"12px 6px" }} onClick={handleTeamClose} aria-label="close">
@@ -3548,6 +3899,9 @@ export default function Contest(props) {
                     
                     <Typography variant="caption" >
                      {player.fullname}
+                     </Typography>
+                     <Typography variant="caption" >
+                     {player.teamDetails.code}
                      </Typography>
                      <Typography variant="caption" >
                       {player.position.name}
