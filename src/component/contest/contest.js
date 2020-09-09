@@ -784,20 +784,8 @@ export default function Contest(props) {
       setCustom(response.data.data);
       setPage(response.data.pages)
       setActivePage(1)
-      let fil = response.data.data.filter(player => {
-        if(player.playerDetail){
-          return player.playerDetail.id === value.target.value
-
-        }
-        
-        if(player.player1Detail){
-          return player.player1Detail.id === value.target.value
-
-        }
-      
-      })
-      setCustom(fil)
-    })
+ 
+     })
  
 
      

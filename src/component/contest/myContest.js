@@ -2078,7 +2078,7 @@ export default function Contest(props) {
               <Typography variant="caption" style={{
                 color: "grey",
               }}>
-               ₹{contest.totalAmount}
+               ₹{contest.totalAmount.toFixed(2)}
               </Typography>
                 
               </div>
@@ -2343,7 +2343,7 @@ export default function Contest(props) {
                 <Typography variant="caption"
                 // onClick={() => {selectedPlayer(true)}}
                 >
-                  Select a player
+                  No challenger yet
             </Typography>
               </div>
               <div style={{

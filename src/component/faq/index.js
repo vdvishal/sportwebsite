@@ -4,8 +4,9 @@ import ReactGA from 'react-ga';
 import { useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
 import Drawer from '@material-ui/core/Drawer';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles,useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Container from '@material-ui/core/Container';
 import AppBar from '@material-ui/core/AppBar';
@@ -19,7 +20,7 @@ import ListItem from '@material-ui/core/ListItem';
 // import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { Paper,  Typography } from '@material-ui/core';
+import { Paper,  Typography, Divider } from '@material-ui/core';
 // import ArrowRightAltSharpIcon from '@material-ui/icons/ArrowRightAltSharp';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -30,6 +31,16 @@ import * as payslip from '../../image/comboExampleMoney.png'
 
 import * as combo2 from '../../image/underExampleMoney.png' 
 import * as payslip2 from '../../image/underExampleMoney2.png' 
+
+import * as step1 from '../../image/customStep1.png' 
+import * as step2 from '../../image/customStep2.png' 
+import * as step3 from '../../image/customStep3.png' 
+
+import * as step4 from '../../image/customStep4.png' 
+import * as step5 from '../../image/customStep5.png' 
+
+import * as step4a from '../../image/customStep4a.png' 
+import * as step5a from '../../image/customStep5a.png' 
 
 const drawerWidth = 240;
 
@@ -94,15 +105,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FAQ() {
 
-    
+
 
     const classes = useStyles();
-    // const theme = useTheme();
+    const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
     const [index, setIndexOpen] = React.useState(0);
 
     const history = useHistory()
+    const check = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
 
@@ -172,9 +184,7 @@ export default function FAQ() {
                         <h3><strong>
                             WELCOME TO FANTASY JUTSU
                             </strong></h3>
-                       <Typography variant="caption"  >
-                            We are here to help!
-          </Typography>
+                       
                        
                         
                         <Paper style={index === 0 ? {
@@ -225,7 +235,7 @@ export default function FAQ() {
 
             Here, players are faced against each other and winner of each face off is selected based on
             the player who collects the most fantasy points during a given match.
-            Simply select a minimum of two correct winning player and win cash prizes.
+            Simply select a minimum of three correct winning player and win cash prizes.
             <a onClick={() => toggle(2)} style={{color:"blue",cursor:"pointer"}}> Click here</a>
             
             
@@ -248,6 +258,32 @@ export default function FAQ() {
             
             The fantasy points are based on standard rules.
            </Typography>
+           <br/>
+            <Typography variant="caption"  >
+            The fantasy points are based on standard rules.
+           </Typography>
+                            
+                            <h3><strong>
+                            4. Custom Duels
+                                </strong></h3>
+                           
+                           <Typography variant="caption"  >
+                            This is a user vs user mode. There are two sub types: 
+ 
+                                
+                            <br/>
+                            a. Under/Over
+                            <br/>
+                            b. Duels
+                            <br/>
+
+                            *Payouts are always 1.9 times the joining fee
+                            <br/>
+                            <a onClick={() => toggle(4)} style={{color:"blue",cursor:"pointer"}}> More Info</a>
+                            <br/>
+            The fantasy points are based on standard rules.
+           </Typography>
+           
                         </Paper>
 
                         <Paper style={index === 1 ? {
@@ -598,9 +634,113 @@ export default function FAQ() {
                         </Paper>
 
 
+                        <Paper style={index === 4 ? {
+                            display: "block",
+                            padding: 20,
+                        } : {
+                                display: "none",
+                            }}
+
+                        >
+
+
+                            <h3><strong>
+                                Custom Duels
+                                </strong></h3>
+                           
+                                <h5><strong>
+                                Creating Duels
+                                </strong></h5>
+                           
+                            <div style={{maxWidth:"970px"}}>
+                                <img src={step1} style={{maxWidth:"100%"}} alt="combo"/>
+                            </div>
+                            <br/>
+
+                            <Typography variant="caption"  >
+                               a. Under/Over Duels
+                            </Typography>
+                        <div style={{maxWidth:"970px"}}>
+                                <img src={step2} alt="combo" style={{maxWidth:"100%"}}/>
+                            </div>
+                            <br/>
+                            <Typography variant="caption"  >
+                               b. Player Duels 
+                             </Typography>
+                            <div style={{maxWidth:"970px"}}>
+                                <img src={step3} alt="combo" style={{maxWidth:"100%"}}/>
+                            </div>
+                            <br/>
+                            
+                         
+                 
+                            <hr/>
+                            <h5><strong>
+                                Joining Duels
+                                </strong></h5>
+                           
+                                <Typography variant="caption"  >
+                               a. Under/Over Duels
+                            </Typography>
+ 
+                            <br/>
+                             <Typography variant="caption"  >
+                               i. Click here
+                             </Typography>
+                            <div style={{maxWidth:"970px"}}>
+                                <img src={step4a} alt="combo" style={{maxWidth:"100%"}}/>
+                            </div>
+                            <Typography variant="caption"  >
+                               ii. Confirm
+                             </Typography>
+                            <div style={{maxWidth:"970px"}}>
+                                <img src={step5a} alt="combo" style={{maxWidth:"100%"}}/>
+                            </div>
+                            <hr/>
+                            <Typography variant="caption"  >
+                               b. Player Duels 
+                             </Typography>
+                             <br/>
+                             <Typography variant="caption"  >
+                               i. Click here
+                             </Typography>
+                            <div style={{maxWidth:"970px"}}>
+                                <img src={step4} alt="combo" style={{maxWidth:"100%"}}/>
+                            </div>
+                            <Typography variant="caption"  >
+                               ii. Select a player and Confirm
+                             </Typography>
+                            <div style={{maxWidth:"970px"}}>
+                                <img src={step5} alt="combo" style={{maxWidth:"100%"}}/>
+                            </div>
+
+                            <hr />
+                            <h5><strong>
+                               *Payout is always 1.9 times
+                            </strong>
+                            </h5>
+                            <h5><strong>
+                            *The user who joins your duel has a handicap i.e incase of a tie between two player, the challenger wins the duel.
+
+                            </strong>
+                            </h5>
+                            <h5><strong>
+                            *Player with star mark indicates a handicap
+                            </strong>
+                            </h5>
+                            <h5><strong>
+                            *The handicap is only applicable in player duels.
+                            </strong>
+                            </h5>
+                             
+
+                        </Paper>
+
+
+
 
                             <Paper
-                                style={index === 4 ? {
+                                style={index === 5 ? {
                                     display: "block",
                                     padding: 20,
                                 } : {
@@ -623,7 +763,7 @@ export default function FAQ() {
                             </Paper>
 
                             <Paper
-                                style={index === 5 ? {
+                                style={index === 6 ? {
                                     display: "block",
                                     padding: 20,
                                 } : {
@@ -644,7 +784,7 @@ export default function FAQ() {
                             </Paper>
 
                             <Paper
-                                style={index === 6 ? {
+                                style={index === 7 ? {
                                     display: "block",
                                     padding: 20,
                                 } : {
@@ -674,7 +814,7 @@ export default function FAQ() {
                             </Paper>
 
                             <Paper
-                                style={index === 7 ? {
+                                style={index === 8 ? {
                                     display: "block",
                                     padding: 20,
                                 } : {
@@ -708,7 +848,7 @@ export default function FAQ() {
                     </div>
                     <Drawer
                         className={classes.drawer}
-                         variant="temporary"
+                         variant= {check ? "temporary" : "permanent" }
                         anchor="right"
                         open={open}
                         classes={{
@@ -724,7 +864,7 @@ export default function FAQ() {
                        
                         <List>
                             {['Get Started', 'Under/Over', 'Combo Duels',
-                                'Fantasy 11', 'Account','Verification', 'Deposit and Withdrawals', 'Bonuses and Promotions'].map((text, index) => (
+                                'Fantasy 11','Custom Duels', 'Account','Verification', 'Deposit and Withdrawals', 'Bonuses and Promotions'].map((text, index) => (
                                     <ListItem button key={text} onClick={() => toggle(index)}>
                                         <ListItemText primary={text} style={{ fontWeight: 600 }}  />
                                     </ListItem>

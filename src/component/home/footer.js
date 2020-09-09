@@ -125,16 +125,13 @@ export default function Footer(props) {
         fontSize: "1.5em",
         fontWeight: 500
       }}>
-        Fantasy Jutsu 2020
+
       </div>
 
       <div>
         The operator of this website is <br/>
         Nodestack Private Limited,&nbsp;<br/>
-        14/1,6thCross &nbsp;<br/>
-        CBI road,&nbsp;<br/>
-        Ganganagar, Bangalore 560032,&nbsp;
-        <br/>Karnataka, India.
+        Karnataka, India.
       </div>
     </div>
   </TopContainer2>

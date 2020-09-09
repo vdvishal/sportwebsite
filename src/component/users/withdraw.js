@@ -156,20 +156,26 @@ export default function Profile() {
     }
 
     const setAmount = (amount) => {
+ 
         let amt = parseFloat(amount);
 
 
 
-        if (isNaN(amt)) {
+        if (isNaN(amt) && amount !== '') {
             return handleNotificationClick("Amount must be a number")
         }
 
-        if (amt > bank.wallet.withdrawal) {
+        if (amt > bank.wallet.withdrawal  && amount !== '') {
             return handleNotificationClick("Amount must be less than the avail withdrawable amount.")
         }
 
         if(bank.bank !== undefined && bank.bank.reject !== true){
-            setWithdraw(amt);
+            if (amount !== '') {
+                setWithdraw(amt);
+            }else{
+                setWithdraw(0);
+            }
+            
         }else{
             return handleNotificationClick("Submit your account details to proceed.")
         }
@@ -185,53 +191,90 @@ export default function Profile() {
 
     return (
         Object.entries(bank).length > 0 ?
-         <Container maxWidth="md" style={{
-            marginTop:45
+         <Container maxWidth={'sm'} style={{
+            marginTop:35
         }}>
             <Notification message={message} open={openNotification} close={handleNotificationClose} />
-
+            <h5 style={{color:"grey"}}>
+                Banking
+            </h5>
             {bank.bank !== undefined && bank.bank.reject !== true? <Paper>
                 <Div>
-                    <div>
-                        <Typography variant="caption">
+                <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                             Bank
-                            </Typography>
+                          
                     </div>
-                    <div>
-                        <Typography variant="caption">
+                    <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                             {bank.bank.bankName}
-                            </Typography>
+                           
                     </div>
                 </Div>
                 <Div>
-                    <div>
-                        <Typography variant="caption">
+                <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                             Account Number
-                            </Typography>
+                            
                     </div>
-                    <div>
-                        <Typography variant="caption">
+                    <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}> 
                         {bank.bank.accNumber}
-                            </Typography>
+                            
                     </div>
                 </Div>
                 <Div>
-                    <div>
-                        <Typography variant="caption">
+                <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                             IFSC
-                            </Typography>
+                           
                     </div>
-                    <div>
-                        <Typography variant="caption">
+                    <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                         {bank.bank.IFSC}
-                            </Typography>
+                            
                     </div>
                 </Div>
                 <Div>
-                    <div>
-                        <Typography variant="caption">
+                <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                             Verified
-                            </Typography>
+              
                     </div>
                     <div>
                         <Typography variant="caption">
@@ -338,15 +381,25 @@ export default function Profile() {
                     </div>
                 </Paper>
             }
+
+            <h5 style={{color:"grey"}}>
+                Withdraw
+            </h5>
             <Paper style={{
                 padding: 10,
                 marginTop: 10
             }}>
                 <Div>
-                    <div>
-                        <Typography variant="caption">
-                            Withdrawable
-                            </Typography>
+                    
+                <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
+                                    Withdrawable
+                        
                     </div>
                     <div>
                         <Typography variant="caption">
@@ -359,10 +412,16 @@ export default function Profile() {
                     </div>
                 </Div>
                 <Div>
-                    <div>
-                        <Typography variant="caption">
+                <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
+                         
                             Withdraw Amount
-                            </Typography>
+                 
                     </div>
                     <div>
                         <TextField

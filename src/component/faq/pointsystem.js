@@ -250,7 +250,7 @@ export default function PointSystem() {
                 </div>
                 <div>
                 <Typography variant="caption">
-                    +12
+                    +6
                     </Typography>
                 </div>
             </Div>
@@ -264,7 +264,7 @@ export default function PointSystem() {
                 </div>
                 <div>
                 <Typography variant="caption">
-                    +12
+                    +6
                     </Typography>
                 </div>
             </Div>
@@ -278,7 +278,7 @@ export default function PointSystem() {
                 </div>
                 <div>
                 <Typography variant="caption">
-                    +12
+                    +6
                     </Typography>
                 </div>
             </Div>
@@ -635,7 +635,7 @@ export default function PointSystem() {
                 </div>
                 <div>
                 <Typography variant="caption">
-                    +12
+                    +6
                     </Typography>
                 </div>
             </Div>
@@ -649,7 +649,7 @@ export default function PointSystem() {
                 </div>
                 <div>
                 <Typography variant="caption">
-                    +12
+                    +6
                     </Typography>
                 </div>
             </Div>
@@ -663,7 +663,7 @@ export default function PointSystem() {
                 </div>
                 <div>
                 <Typography variant="caption">
-                    +12
+                    +6
                     </Typography>
                 </div>
             </Div>
@@ -1019,7 +1019,7 @@ export default function PointSystem() {
                 </div>
                 <div>
                 <Typography variant="caption">
-                    +12
+                    +3
                     </Typography>
                 </div>
             </Div>
@@ -1033,7 +1033,7 @@ export default function PointSystem() {
                 </div>
                 <div>
                 <Typography variant="caption">
-                    +12
+                    +3
                     </Typography>
                 </div>
             </Div>
@@ -1047,7 +1047,7 @@ export default function PointSystem() {
                 </div>
                 <div>
                 <Typography variant="caption">
-                    +12
+                    +3
                     </Typography>
                 </div>
             </Div>

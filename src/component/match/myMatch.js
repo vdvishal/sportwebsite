@@ -596,7 +596,7 @@ export default function MyMatch(props) {
           Join a match!
         </Container> : resp === 200 ?
         <div>
-           <Container style={{ position: "relative", marginTop: 10, padding: 0 }} maxWidth='md'>
+           <Container style={{ position: "relative", marginTop: 2, padding: 0 }} maxWidth='md'>
           <Paper elevation={3} style={{
            
             
