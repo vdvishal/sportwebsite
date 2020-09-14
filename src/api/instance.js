@@ -34,23 +34,15 @@ instance.interceptors.response.use(response => {
 
   } 
 
-   if(error && error.response && error.response.status === 401 && localStorage.getItem("isLogged") === "true"){
+  //  if(error && error.response && error.response.status === 401 && localStorage.getItem("isLogged") === "true"){
  
-    localStorage.setItem("isLogged",false); 
+  //   localStorage.setItem("isLogged",false); 
 
 
-    window.location.replace('/');
+  //   window.location.replace('/');
 
-  } 
-
-   if(error && error.response && error.response.status === 500 && localStorage.getItem("isLogged") === "true"){
+  // } 
  
-    localStorage.setItem("isLogged",false); 
-
-
-    
-
-  } 
   return Promise.reject(error);
 
 })

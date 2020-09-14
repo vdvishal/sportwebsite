@@ -33,9 +33,9 @@ export const contest = (matchId,sort) => instance.get(`/contest/${matchId}?sort=
     return (response);
   });
 
-  export const customContest = (matchId,min,max,contestType,page,playerId) => 
+  export const customContest = (matchId,min,max,contestType,page,playerId,sort) => 
         instance
-        .get(`/contest/custom/${matchId}?min=${min}&max=${max}&contestType=${contestType}&playerId=${playerId}&page=${page}`,{
+        .get(`/contest/custom/${matchId}?min=${min}&max=${max}&contestType=${contestType}&playerId=${playerId}&page=${page}&sort=${sort}`,{
     auth:{
       username: "app",
       password: 'qwewqinasdoinoinacino'

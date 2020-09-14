@@ -354,7 +354,7 @@ export default function Profile() {
                             </Typography>
                             <br />
                             <Typography variant="caption">
-                                *Your name should match with pan card.
+                                *Your name should match with pan card
                             </Typography>
                         </div>
 

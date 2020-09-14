@@ -217,7 +217,7 @@ export default function FAQ() {
 
 
             Here, a wide range of players with fantasy points outcome are given in match.
-            Simply select a minimum of two correct player outcomes and win cash prizes.
+            Simply select a minimum of two correct outcomes for the selected players and win cash prizes.
             <a onClick={() => toggle(1)} style={{color:"blue",cursor:"pointer"}}> Click here</a>
             </Typography>
             <br/>
@@ -407,7 +407,13 @@ export default function FAQ() {
                                      </table>
 
                             </Paper>
- 
+
+                            <hr />
+                            <h5><strong>
+                               *If a match has a D/L method is applied, then all under/over contest will be cancelled and refunded
+                            </strong>
+                            </h5>
+                            
                         </Paper>
                         <Paper style={index === 2 ? {
                             display: "block",
@@ -730,6 +736,14 @@ export default function FAQ() {
                             </h5>
                             <h5><strong>
                             *The handicap is only applicable in player duels.
+                            </strong>
+                            </h5>
+                            <h5><strong>
+                            *Duels are cancelled when one of the selected players are not playing and amount is refunded
+                            </strong>
+                            </h5>
+                            <h5><strong>
+                            *Incase no user joins your duel, the amount will be refunded after match is over.
                             </strong>
                             </h5>
                              

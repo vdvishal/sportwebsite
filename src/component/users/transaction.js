@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactGA from 'react-ga';
 
- import { useEffect } from 'react';
- 
+ import { useEffect,useContext } from 'react';
+ import { TransactContext } from '../home';
+
 import * as pg from '../../api/pg'
  
 import { Container, Paper, Typography, Divider } from '@material-ui/core';
@@ -12,29 +13,38 @@ import Pagination from '@material-ui/lab/Pagination';
 import styled from 'styled-components'
 
  
+// const Div = styled.div`
+//   display: grid;
+//   grid-template-columns: 1fr 1fr  1fr;
+//    grid-gap: 2px;
+//   align-items: center;
+//     text-align:center;
+//     width:100%
+// `
 const Div = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr  1fr;
+  grid-template-columns: 1fr 1fr;
    grid-gap: 2px;
+   padding:10px;
   align-items: center;
-    text-align:center;
-    width:100%
+    text-align:start;
+   
 `
-
 
 export default function Transaction() {
     const [transaction, setTransaction] = React.useState(null);
     const [pages, setPage] = React.useState(1);
 
-    
+    const [, setMsgCount] = useContext(TransactContext)
+
 
     useEffect(() => {
         pg.transaction(1).then(response => {            
             setTransaction(response.data.data);
             setPage(response.data.page)
+            setMsgCount(0)
         }).catch(error => {
             console.log(error);
- 
         })
     },[])
 
@@ -52,34 +62,65 @@ export default function Transaction() {
     }
 
 
-    const viewList = () => transaction.map(orders => 
-             <Paper square elevation={0} key={orders._id}>
-                    <Div>
-                        <Typography style={{padding:2.5,fontSize:12}} variant="caption" >
-                            {new Date(orders.createdAt).toLocaleString()}
-                        </Typography>
-                        <Typography style={{padding:2.5,fontSize:10}} variant="caption" >
-                            {orders.orderId && orders.status === 'paid' ? `Deposit: ${orders.orderId}` : orders.orderId }
-                        </Typography>
+    // const viewList = () => transaction.map(orders => 
+    //          <Paper square elevation={0} key={orders._id}>
+    //                 <Div>
+    //                     <Typography style={{padding:2.5, }} variant="caption" >
+    //                         {new Date(orders.createdAt).toLocaleString()}
+    //                     </Typography>
+    //                     <Typography style={{padding:2.5,fontSize:10}} variant="caption" >
+    //                         {orders.orderId && orders.status === 'paid' ? `Deposit: ${orders.orderId}` : orders.orderId }
+    //                     </Typography>
  
-                        <Typography style={{padding:2.5,
-                            fontSize:15,
+    //                     <Typography style={{padding:2.5,
+    //                         fontSize:15,
+    //                         display:"flex",
+    //                         justifyContent:"center",
+    //                         alignContent:"center"
+    //                     }} 
+    //                     variant="caption" >
+    //                     {orders.status === 'paid' || orders.status === 'bonus' || orders.status === 'contest_credit' ? <span style={{color:"#77BC37"}}>+{(orders.amount/100).toFixed(2)} INR</span>: <span style={{color:"red"}}>-{(orders.amount/100).toFixed(2)} INR</span>}
+    //                       {/* {orders.status === 'paid' ?   <ImportExportIcon color="secondary" />    : <ImportExportIcon style={{color:"red"}} />} */}
+    //                     </Typography>
+    //             </Div>
+    //             <Divider />
+    //         </Paper>
+    //  )
+
+    const viewList = () => transaction.map(orders => 
+        <Paper elevation={0} style={{marginTop:10, borderRadius:2.5}}   key={orders._id}>
+               <Div>
+                   <Typography style={{padding:1.5,color:"grey",fontWeight:500 }} variant="caption" >
+                       {new Date(orders.createdAt).toLocaleString()}
+                   </Typography>
+                   <Typography style={{padding:2.5, }} variant="caption" >
+                        
+                   </Typography>
+                    
+                   <Typography style={{padding:2.5,color:"grey",fontWeight:400 }} variant="caption" >
+                   {orders.orderId && orders.status === 'paid' ? `Deposit: ${orders.orderId}` : orders.orderId }
+                   </Typography>
+                      <Typography style={{padding:2.5,
+                             
                             display:"flex",
-                            justifyContent:"center",
-                            alignContent:"center"
+                            justifyContent:"flex-end",
+                            alignContent:"flex-end",
+                            fontWeight:500
                         }} 
                         variant="caption" >
                         {orders.status === 'paid' || orders.status === 'bonus' || orders.status === 'contest_credit' ? <span style={{color:"#77BC37"}}>+{(orders.amount/100).toFixed(2)} INR</span>: <span style={{color:"red"}}>-{(orders.amount/100).toFixed(2)} INR</span>}
                           {/* {orders.status === 'paid' ?   <ImportExportIcon color="secondary" />    : <ImportExportIcon style={{color:"red"}} />} */}
                         </Typography>
-                </Div>
-                <Divider />
-            </Paper>
-     )
+
+                    
+           </Div>
+            
+       </Paper>
+)
 
     return (
        
-         <Container maxWidth="md" style={{
+         <Container maxWidth="sm" style={{
             minHeight:"80vh",
             display:"flex",
             flexDirection:"column",
@@ -88,22 +129,18 @@ export default function Transaction() {
         }} >
             <div>
 
-           
-            <Paper square elevation={0}>
+         
+            <Paper elevation={0}>
                 <Div>
                     <Typography style={{fontWeight:700,padding:10,fontSize:15}} variant="caption" >
-                            Date
-                        </Typography>
-                        <Typography style={{fontWeight:700,padding:10,fontSize:15}} variant="caption" >
-                            Type
-                        </Typography>
- 
-                        <Typography style={{fontWeight:700,padding:10,fontSize:15}} variant="caption" >
-                            Amount
+                            My updates
                         </Typography>
                 </Div>    
-            </Paper>
-            <Paper square >
+            </Paper>  
+            <Paper elevation={0}  style={{
+            backgroundColor:"#f9f8fc"
+ 
+        }}>
                  
                     { transaction !== null ? transaction.length > 0 ? viewList() :  <div style={{
             display:"flex",
@@ -134,11 +171,11 @@ export default function Transaction() {
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
-              
+              color:"white"
             }}>
             <Pagination 
              onChange={getPageCustom}
-            
+ 
              count={pages} color="secondary"  />
                 </div>
               

@@ -14,6 +14,8 @@ import Container from '@material-ui/core/Container';
 // API
 import * as api from '../../api/match';
 import * as color from '../../json/color.json'
+import * as colorTheme from '../../json/colorPallete.json'
+
 
 import { Paper, Divider, Typography, Avatar } from '@material-ui/core';
 
@@ -52,7 +54,6 @@ const SDiv = styled.div`
 transition: transform .2s;
 cursor:pointer;
 min-width:760px;
- 
 @media ${device.hdiv} {
    min-width:260px;
 
@@ -86,6 +87,8 @@ const HDiv = styled.div`
 
  
 let dynamicObj = {}
+
+ 
 
 
 export default function Match(props) {
@@ -133,17 +136,19 @@ export default function Match(props) {
  
     key={match._id}
   >
-    <SDiv>
-      <Paper elevation={1}
-        style={{
+    <SDiv >
+      <Paper className="dark" elevation={1}
+          
+          style={{
           height: 'auto',
           padding: 10,
           margin: "10px 0",
  
-          color: color.card.color,
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #cbd4df"
+          // color: "theme" !== 1 ? colorTheme.dark.text:colorTheme.light.text,
+          // backgroundColor: "theme" !== 1 ? colorTheme.dark.cardBackground:colorTheme.light.cardBackground,
+        
         }}
+        className="dark"
       >
         <Link to={{
           pathname: `/contest/${match.id}`,
@@ -156,11 +161,12 @@ export default function Match(props) {
           }}
         >
           <Paper elevation={0}
+          
             style={{
               height: 25,
               fontSize: '0.75rem',
-              color: color.card.color,
-              backgroundColor: "#FFFFFF"
+              // color: "theme" !== 1 ? colorTheme.dark.text:colorTheme.light.text,
+              // backgroundColor: "theme" !== 1 ? colorTheme.dark.cardBackground:colorTheme.light.cardBackground,
             }}
           >
             {match.league.name}
@@ -186,8 +192,8 @@ export default function Match(props) {
                   height: 'auto',
                   margin: 20,
                   fontWeight: 600,
-                  color: color.card.color,
-                  backgroundColor: "#FFFFFF"
+                  // color: "theme" !== 1 ? colorTheme.dark.text:colorTheme.light.text,
+                  // backgroundColor: "theme" !== 1 ? colorTheme.dark.cardBackground:colorTheme.light.cardBackground,
                 }}
               >
                 <div
@@ -226,12 +232,18 @@ export default function Match(props) {
                       alignContent: "center",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      marginBottom: "3.5px"
+                      marginBottom: "3.5px",
+                       color: "theme" !== 1 ? colorTheme.dark.countDownText:colorTheme.light.countDownText,
+            
                     }}
                   >
+                    <Typography variant="caption" style={{ margin: "3px 5px", fontWeight: 600 }}>
                     <Countdown 
-                    date={match.starting_at ? match.starting_at : match.starting_at} 
-                    daysInHours={false} />
+                     
+                     date={match.starting_at ? match.starting_at : match.starting_at} 
+                     daysInHours={false} />
+                  </Typography>
+                    
 
                   </div>
 

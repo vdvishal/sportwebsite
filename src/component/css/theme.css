@@ -1,0 +1,18 @@
+:root {
+    --main-bg-dark-color: #232C31;
+    --main-bg-light-color: #F9F8FC;
+    --main-text-light-color: #FFFFFF;
+    --main-text-dark-color: rgb(0, 0, 0);
+  }
+
+
+.light{
+    background-color: #232C31;
+    color: var(--main-text-light-color);
+}
+
+.dark{
+    background-color: #232C31;
+    color: var(--main-text-dark-color);
+
+}

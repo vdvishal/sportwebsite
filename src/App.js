@@ -46,17 +46,91 @@ import ScrollToTop from './component/common/scrollToTop';
 
  import Transaction from './component/users/transaction';
 
+ import Message from './component/users/message';
+
 import Kyc from './component/users/kyc';
 
 import * as color from './json/color.json';
 
+import * as theme from './json/colorPallete.json';
+
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+export const ModeContext = React.createContext()
 
  
 // LogRocket.init('wtxkj7/fanapp');
 // setupLogRocketReact(LogRocket);
 
 const darkTheme = createMuiTheme({
+  palette: {
+    primary:  {
+      main: color.primary.main,
+    },
+    secondary: {
+      main: theme.dark.secondary,
+      contrastText: theme.dark.text,
+    },
+  },
+  overrides: {
+    MuiMenu:{
+      paper:{
+        color:"green",
+        backgroundColor:theme.dark.menu
+      }
+    },
+    MuiListItem:{
+      root:{
+        color:"white",
+      }
+    },
+    MuiPaper:{
+      root:{
+        color:"white",
+        backgroundColor:theme.dark.cardBackground //:colorTheme.light.cardBackground,
+      }
+    },
+    MuiTab:{
+      wrapper:{
+        color:"#AAC0C8",
+      }
+    },
+    MuiSelect:{
+      root:{
+        color:"white",
+      }
+    },
+    MuiPaginationItem:{
+      root:{
+        color:"white",
+      }
+    },
+    MuiFormLabel:{
+      root:{
+        color:"white",
+      },
+      text:{
+        color:"white",
+      }
+    },
+    MuiInputBase:{
+      input:{
+        color:"white",
+      }
+    },
+    MuiLinearProgress:{
+      root:{
+        color:"white",
+        backgroundColor:'black' //:colorTheme.light.cardBackground,
+      }
+    }
+ 
+  }
+  
+});
+
+
+const lightTheme = createMuiTheme({
   palette: {
     type: 'light',
     primary:  {
@@ -67,15 +141,30 @@ const darkTheme = createMuiTheme({
       main: color.secondary.main,
       contrastText: 'black'
     },
+    overrides: {
+    //   MuiTypography:{
+    //     root:{
+    //       color: 'black'
+    //     }
+    // }
+  }
+    
   },
 });
 
 function App() {
+
+  const [mode, setMode] = React.useState(false);
+
   useEffect(() => {
     initGA.initGA();
+    setMode(
+      localStorage.getItem('mode') === 'true' ? true : false
+    )
+    localStorage.getItem('mode') === 'true' ? localStorage.setItem('mode',true)  : localStorage.setItem('mode',false)
   }, [])
   return (
-    <div className="App">
+    <div className="App" style={mode ? {"backgroundColor": theme.dark.background} :{"backgroundColor": theme.light.background} }>
           <Helmet>
                 <meta charSet="utf-8" />
                 <title>FantasyJutsu: Play fantasy cricket online 24/7</title>
@@ -108,10 +197,10 @@ function App() {
 
 
         <CookiesProvider>
-          <ThemeProvider theme={darkTheme}>
+          <ThemeProvider theme={mode ? darkTheme : lightTheme}>
            
             <BrowserRouter >
-          
+            <ModeContext.Provider value={[mode, setMode]} >
             <Home style={{minHeight:"100vh"}}>
               <Route path="/" exact component={Match} />
               <Route path="/register" exact component={Register} /> 
@@ -139,11 +228,13 @@ function App() {
 
               <Route path="/terms" exact component={Terms} />  
               <Route path="/privacypolicy" exact component={Privacy} />  
+              <Route path="/message" exact component={Message} />  
 
               
               
               </Home>
-              
+             
+              </ModeContext.Provider>
             </BrowserRouter>
           </ThemeProvider>
         </CookiesProvider>

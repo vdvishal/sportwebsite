@@ -1,0 +1,23 @@
+{
+    "dark":{
+        "background":"#232C31",
+        "header":"#1A1E23",
+        "footer1":"#1A1E23",
+        "footer2":"#222C30",
+        "cardBackground":"#29363E",
+        "menu":"#1A252B",
+        "secondary":"#77BC37",
+        "text":"#FFFFFF",
+        "countDownText":"#77BC37"
+    },
+    "light":{
+        "background":"#F9F8FC",
+        "header":"#1A1E23",
+        "footer1":"#1A1E23",
+        "footer2":"#222C30",
+        "cardBackground":"#FFFFFF",
+        "secondary":"#77BC37",
+        "text":"black",
+        "countDownText":"#77BC37"
+    }
+}

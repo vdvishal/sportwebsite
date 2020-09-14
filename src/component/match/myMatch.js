@@ -360,12 +360,17 @@ export default function MyMatch(props) {
                         alignContent: "center",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        marginBottom: "3.5px"
+                        marginBottom: "3.5px",
+                        color:"#77BC37"
                       }}
                     >
-                      <Countdown 
-                      date={match.starting_at ? match.starting_at : match.starting_at} 
-                      daysInHours={false} />
+                      <Typography variant="caption" style={{ margin: "3px 5px", fontWeight: 600 }}>
+                    <Countdown 
+                     
+                     date={match.starting_at ? match.starting_at : match.starting_at} 
+                     daysInHours={false} />
+                  </Typography>
+                     
   
                     </div>
   

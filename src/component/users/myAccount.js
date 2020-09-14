@@ -266,7 +266,7 @@ export default function Profile() {
                                     </span>
                                     <br />
                                     <Typography variant="caption" style={{ fontSize: 10 }}>
-                                        20% of entry fee will be added when joining a contest
+                                        100% of can be used when joining a contest
                             </Typography>
                                 </div>
 
@@ -285,7 +285,11 @@ export default function Profile() {
                                     </span>
                                     <br />
                                     <Typography variant="caption" style={{ fontSize: 10 }}>
-                                        Minimum amount you can withdraw ₹200
+                                        Minimum amount you can withdraw ₹200 
+                            </Typography>
+                            <br />
+                                    <Typography variant="caption" style={{ fontSize: 10 }}>
+                                        Minimum deposit should be ₹50 
                             </Typography>
                                 </div>
                             </Grid>
@@ -306,10 +310,7 @@ export default function Profile() {
                                 >
                                     <Button size="small" variant="outlined"
                                         onClick={() => setTeamOpen(true)}
-                                        style={{
-                                            color: js.buttonGreen,
-
-                                        }}
+                                        color="secondary"
                                     >Deposit
                             </Button>
                                 </div>
@@ -317,9 +318,7 @@ export default function Profile() {
                                 <Link to={{ pathname: `/withdraw` }} style={{ textDecoration: 'none' }}>
                                 <Button size="small"
                                         variant="outlined"
-                                        style={{
-                                            color: js.buttonGreen,
-                                        }}
+                                        color="secondary"
                                     >Withdraw</Button>
                             </Link>
 
@@ -382,7 +381,9 @@ export default function Profile() {
                                 fontWeight: 600,
                                 fontSize: 'smaller',
                                 lineHeight: 1.5,
-                                padding: '10px'
+                                padding: '10px',
+                                display:"flex",
+                                alignItems:"center"
                             }}>
                                 <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none' }}>
                                 My Transactions
@@ -394,7 +395,9 @@ export default function Profile() {
                                 fontSize: 'smaller',
                                 lineHeight: 1.5,
                                 padding: '10px',
-                                textAlign:"end"
+                                justifyContent:"flex-end",
+                                display:"flex",
+                                alignItems:"center"
                             }} >
                                  <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none' }}>
                                  <ChevronRightIcon />
@@ -439,6 +442,16 @@ export default function Profile() {
                                 onChange={(event) => setAmount(event.target.value)}
                                 value={amount}
                             />
+                            <TextField
+
+                                autoFocus
+                                margin="dense"
+                                id="name"
+                                label="Promo code"
+                                 
+                                onChange={(event) => setAmount(event.target.value)}
+                                value={''}
+                                />
                             <div
                                 style={{
                                     justifyContent: 'center',
@@ -448,13 +461,11 @@ export default function Profile() {
                                     alignItems: 'center'
                                 }}
                             >
-                                <Button size="medium" variant="contained" style={{
-                                    backgroundColor: js.buttonGreen,
-                                    color: 'white',
+                                <Button size="medium" color="secondary" variant="contained" style={{
                                     width: 200
                                 }} onClick={handleClick}>
                                     Deposit
-                    </Button>
+                                     </Button>
                             </div>
                         </List>
                     </Paper>

@@ -2797,8 +2797,13 @@ export default function Contest(props) {
                   value={filterCustom}
                   onChange={(event) => handleFilterCustom(event.target.value)}
                 >
-                  <MenuItem value={5}>Under/Over</MenuItem>
-                  <MenuItem value={6}>Duel</MenuItem>
+                  <MenuItem value={5}>
+                  <Typography variant="caption" style={{ marginRight: 5 }}>
+                  Under/Over
+              </Typography></MenuItem>
+                  <MenuItem value={6}><Typography variant="caption" style={{ marginRight: 5 }}>
+                  Duels
+              </Typography></MenuItem>
 
                 </Select>
               </div>
@@ -2816,8 +2821,12 @@ export default function Contest(props) {
                   value={directionCustom}
                   onChange={(event) => handleCustomDirectionChange(event.target.value)}
                 >
-                  <MenuItem value={1}>Asc</MenuItem>
-                  <MenuItem value={-1}>Dsc</MenuItem>
+                  <MenuItem value={1}><Typography variant="caption" style={{ marginRight: 5 }}>
+                  Asc
+              </Typography></MenuItem>
+                  <MenuItem value={-1}><Typography variant="caption" style={{ marginRight: 5 }}>
+                  Desc
+              </Typography></MenuItem>
                 </Select>
               </div>
 

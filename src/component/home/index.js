@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import * as js from '../common/color.json';
 import Countdown from 'react-countdown';
@@ -21,7 +21,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { Divider, Container, Avatar } from '@material-ui/core';
+import { Divider, Container, Avatar,Badge } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -36,6 +36,8 @@ import Footer from './footer'
 
 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { ModeContext } from '../../App';
+
 import * as api from '../../api/user'
 import * as ref from '../../api/ref'
 
@@ -49,6 +51,8 @@ export const HomeContext = React.createContext()
 export const LoginContext = React.createContext()
 
 export const WalletBonusContext = React.createContext()
+
+export const TransactContext = React.createContext()
 
 
 export default function HomePage(props) {
@@ -100,8 +104,12 @@ export default function HomePage(props) {
     const [bonus, setBonus] = React.useState(0);
 
     const [pic, setPro] = React.useState('');
+    const [msg, setMsgCount] = React.useState(0);
 
+    
     const [type, setType] = React.useState('info')
+
+    const [mode, setMode] = useContext(ModeContext)
 
  
     useEffect(() => {
@@ -120,7 +128,7 @@ export default function HomePage(props) {
             let data = response.data.data
 
             setPro(data.profilePic);
-
+            setMsgCount(data.messageCount || 0);
             setWallet(data.wallet.balance)
             setBonus(data.wallet.bonus)
             localStorage.setItem('sid',data._id);
@@ -242,6 +250,7 @@ export default function HomePage(props) {
                         let data = response.data.data
 
                         setPro(data.profilePic);
+                        setMsgCount(data.messageCount);
                         localStorage.setItem('un', data.userName[0]);
 
                         setWallet(data.wallet.balance)
@@ -261,7 +270,7 @@ export default function HomePage(props) {
                     })
 
 
-            } else if (response.status === 401) {
+            } else if (response &&  response.status === 401) {
                 setwrongPasword(true)
                 setmessage(response.data.message)
                 setopen(true)
@@ -269,10 +278,16 @@ export default function HomePage(props) {
                 setTimeout(() => {
                     setwrongPasword(false)
                 }, 5000);
-            } else if (response.status === 204) {
+            } else if (response &&  response.status === 204) {
                 
 
                 setmessage("No user found")
+                setopen(true)
+                setType('info')
+            }else if (response &&  response.status === 202) {
+                
+
+                setmessage(response.data.message)
                 setopen(true)
                 setType('info')
             }
@@ -443,18 +458,7 @@ export default function HomePage(props) {
     }
 
     const Completionist = () => <Typography variant="caption">OTP expired!</Typography>;
-
-    const renderer = ({ minutes, seconds, completed }) => {
-        if (completed) {
-            // Render a completed state
-            return <Completionist />;
-        } else {
-            // Render a countdown
-            return <Typography variant="caption" style={{ margin: "3px 5px", fontWeight: 600 }}>
-                OTP expires in  {minutes}:{seconds}
-            </Typography>;
-        }
-    }
+ 
 
 
     return (
@@ -464,6 +468,8 @@ export default function HomePage(props) {
 
             
             <HomeContext.Provider value={[balance, setWallet]} maxWidth="lg">
+            
+            <TransactContext.Provider value={[msg, setMsgCount]} >
                 <WalletBonusContext.Provider value={[bonus, setBonus]} >
                 <LoginContext.Provider value={[openLogin, setOpenLogin]} >
 
@@ -934,6 +940,7 @@ export default function HomePage(props) {
                                     flexDirection: 'column'
                                 }}>
                                     <div
+                                    onClick={()=>{mode ? localStorage.setItem('mode',false)  : localStorage.setItem('mode',true);setMode(!mode);}}
                                         style={{
                                             display: 'flex',
                                             flexDirection: 'row',
@@ -966,19 +973,35 @@ export default function HomePage(props) {
                                     </div>
                                 </MenuItem>
                                 <Divider />
+                                 
+                               
                                 <Link
                                     to={{
-                                        pathname: '/notification'
+                                        pathname: '/transactions'
                                     }}
                                     style={{
                                         textDecoration: 'none',
                                         color: '#262626'
                                     }}
                                 >
-                                    <MenuItem
-                                    > <Typography variant="caption">Notification</Typography> </MenuItem>
+                                    <MenuItem 
+                                    style={
+                                        {
+                                            padding: "15px 16px"
+                                        }
+                                    }
+                                    onClick={handleClose}
+                                    >  
+                                    <Badge color="secondary" badgeContent={
+                                        msg
+                                    } showZero>
+                                            <Typography variant="caption">My Updates</Typography>
+                                
+                                    </Badge>
+                                         
+                                    </MenuItem>
                                 </Link>
-                                <Divider />
+                                 <Divider />
                                 <Link
                                     to={{
                                         pathname: '/profile'
@@ -1045,7 +1068,7 @@ export default function HomePage(props) {
                                     
                 </LoginContext.Provider>
                 </WalletBonusContext.Provider>
-                
+                </TransactContext.Provider>
             </HomeContext.Provider>
             </div>
             <Footer/>

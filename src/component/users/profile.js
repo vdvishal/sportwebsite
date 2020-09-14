@@ -13,6 +13,7 @@ import { Paper, Container, Button, Divider,Avatar, Typography, Dialog, IconButto
 import { useTheme } from '@material-ui/core/styles';
 import Slide from '@material-ui/core/Slide';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ImageUploader from 'react-images-upload';
 
 import * as api from '../../api/user'
 import * as logo from './whatsapp.png'
@@ -66,6 +67,11 @@ export default function Profile() {
 
     const [copiedvalue, setcopiedvalue] = React.useState('');
 
+    const [image, setImage] = React.useState('')
+
+    const [wait] = React.useState(false);
+    const [complete, setComplete] = React.useState(false);
+    const [waitUpload, setwaitUpload] = React.useState(false);
 
     useEffect(() => {
         api.profile().then(response => {
@@ -117,6 +123,10 @@ export default function Profile() {
             case 3:
                 setType("Old Password");
                 break;
+            
+                case 4:
+                    setType("Profile Picture");
+                    break;
             default:
                 break;
         }
@@ -230,6 +240,50 @@ export default function Profile() {
      
     }
 
+    const onDrop = (e) => {
+        const formdata = new FormData();
+    
+        formdata.append('image',e[0])
+        setwaitUpload(true)
+    
+    
+        api.uploadImage(formdata).then(response => {
+                 setwaitUpload(false)
+                if(response.status === 200){
+                    setComplete(true);
+                    api.patchProfile({
+                        profilePic:response.data.link
+                    }).then(response => {
+                        handleEditClose()
+                        api.profile().then(response => {
+                            let data = {
+                                status: response.status,
+                                data: response.data.data
+                            }
+                            setTeam(data)
+                        }).catch(error => {
+                            if (error.response) {
+                                // The request was made and the server responded with a status code
+                                // that falls out of the range of 2xx
+                                if (error.response.status === 401) {
+                                    history.push({
+                                        pathname: "/login"
+                                    });
+                                }
+                            }
+                        })
+                        
+                        handleNotificationClick(response.data.message)
+                    }).catch(() => {
+                        handleNotificationClick("Some error occured")
+                    })
+                }
+                 
+    
+        })
+    }
+    
+
     const setcopiedTime = () => {
         setcopied(true);
         setTimeout(() => {
@@ -247,7 +301,7 @@ export default function Profile() {
                     
                     }}>
                         <div style={{ borderRadius:5, padding: "5px 10px",display:"flex",background: "rgb(248 248 248)",justifyContent:"center" }}>
-                            <Avatar style={{width:80,height:80}} src={data.profilePic} ></Avatar>
+                            <Avatar style={{width:80,height:80,cursor:"pointer"}} src={data.profilePic} onClick={() => handleEdit(4)} ></Avatar>
                         </div>
                         <Div>
                             <div style={{ padding: "5px 10px" }}>
@@ -389,7 +443,7 @@ export default function Profile() {
                     <CopyToClipboard text={copiedvalue}
                     onCopy={() => setcopiedTime(true)}>
                         <Tooltip title={copied ? "Copied!" : "Copy Link" } aria-label="add">
-                        <Button size="small" variant="outlined" color="secondary">
+                        <Button size="small" variant="contained" style={{color:"#FFFFFF"}} color="secondary">
                         Copy Link
                         </Button>
                         </Tooltip>
@@ -408,9 +462,11 @@ export default function Profile() {
                             </Toolbar>
                         </AppBar>
                         <Container maxWidth="md" style={{ padding: 10, minWidth: 256, marginTop: "10px" }}>
-                            <Paper elevation={0}   >
+                        {
+                                    typeNum !== 4 ? <Paper elevation={0}   >
+                          
 
-                                <TextField
+                             <TextField
 
                                     autoFocus
                                     margin="dense"
@@ -426,6 +482,7 @@ export default function Profile() {
                                     autoFocus
                                     margin="dense"
                                     type="Password"
+
                                     label="New Password"
                                     fullWidth
                                     onChange={(event) => setValuePasword(event.target.value)}
@@ -457,8 +514,16 @@ export default function Profile() {
                                         Save
                                     </Button> }
                                 </div>
-
+                       
                             </Paper>
+                             : <ImageUploader
+                             withIcon={true}
+                             buttonText='Choose images'
+                             onChange={onDrop}
+                             imgExtension={['.jpg','.png' ]}
+                             maxFileSize={10485760}
+                             label={'Max file size: 10mb, accepted: jpg,png'}
+                         />  }
                         </Container>
 
 
