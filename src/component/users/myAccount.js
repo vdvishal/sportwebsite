@@ -8,7 +8,7 @@ import * as js from '../common/color.json';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Slide from '@material-ui/core/Slide';
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles,withStyles, useTheme } from '@material-ui/core/styles';
 import { Typography, Dialog, IconButton, AppBar, Toolbar, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -100,14 +100,38 @@ const useStyles = makeStyles({
             top: 'auto',
             bottom: 0,
             color:"white"
+        },
+        focused:{
+            color:"white"
         }
     }
 });
 
+const CssTextField = withStyles({
+    root: {
+      '& label.Mui-focused': {
+        color: 'grey',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: 'green',
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: 'red',
+        },
+        '&:hover fieldset': {
+          borderColor: 'yellow',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'green',
+        },
+      },
+    },
+  })(TextField);
 
 export default function Profile() {
     const [team, setTeam] = React.useState({});
-    const [amount, setamount] = React.useState(0);
+    const [amount, setamount] = React.useState('');
     const [wait, setwait] = React.useState(false);
     const [, setWallet] = useContext(HomeContext)
 
@@ -245,7 +269,7 @@ export default function Profile() {
                                 Total Balance
                         <br />
                                 <span >
-                                    <Typography variant="caption" style={{ fontSize: "1.25rem", color: "black" }} >
+                                    <Typography variant="caption" style={{ fontSize: "1.25rem"}} >
                                         ₹{Number.parseFloat(data.wallet.balance).toFixed(2)}
                                     </Typography>
                                 </span>
@@ -261,7 +285,7 @@ export default function Profile() {
                                 }}>
                                     Bonus
                         <br />
-                                    <span style={{ color: "black" }}>
+                                    <span  >
                                         ₹{Number.parseFloat(data.wallet.bonus).toFixed(2)}
                                     </span>
                                     <br />
@@ -280,9 +304,18 @@ export default function Profile() {
                                 }}>
                                     Withdrawable
                         <br />
-                                    <span style={{ color: "black" }}>
-                                        ₹{data.wallet.withdrawal || 0}
-                                    </span>
+                                    
+                                    <Typography variant="caption" color="secondary" style={{
+                           
+                                    fontWeight: 600,
+                                    fontSize: 'large',
+                                    lineHeight: 1.5,
+                                    // marginTop:20
+                                }} >
+                                    ₹{data.wallet.withdrawal || 0}
+                                    </Typography>
+                                        
+                                     
                                     <br />
                                     <Typography variant="caption" style={{ fontSize: 10 }}>
                                         Minimum amount you can withdraw ₹200 
@@ -308,7 +341,8 @@ export default function Profile() {
                                 <div
 
                                 >
-                                    <Button size="small" variant="outlined"
+                                    <Button size="small" color="secondary" variant="contained"
+                                     style={{color:"white"}}
                                         onClick={() => setTeamOpen(true)}
                                         color="secondary"
                                     >Deposit
@@ -317,8 +351,8 @@ export default function Profile() {
                                 <div>
                                 <Link to={{ pathname: `/withdraw` }} style={{ textDecoration: 'none' }}>
                                 <Button size="small"
-                                        variant="outlined"
-                                        color="secondary"
+                                 style={{color:"white"}}
+                                        color="secondary" variant="contained"
                                     >Withdraw</Button>
                             </Link>
 
@@ -385,7 +419,8 @@ export default function Profile() {
                                 display:"flex",
                                 alignItems:"center"
                             }}>
-                                <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none' }}>
+                                <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none',color:'grey' }}>
+                               
                                 My Transactions
                             </Link>
                                 
@@ -399,7 +434,7 @@ export default function Profile() {
                                 display:"flex",
                                 alignItems:"center"
                             }} >
-                                 <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none' }}>
+                                 <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none',color:'grey' }}>
                                  <ChevronRightIcon />
                             </Link>
                                 
@@ -432,17 +467,18 @@ export default function Profile() {
                 <Container maxWidth="md" style={{ padding: 10,minWidth:256, }}>
                     <Paper elevation={0}   >
                         <List>
-                            <TextField
-
+                            <CssTextField
+                                className={{focused:classes.focused}}
                                 autoFocus
                                 margin="dense"
                                 id="name"
                                 label="Amount"
                                 fullWidth
+                                variant="filled"
                                 onChange={(event) => setAmount(event.target.value)}
                                 value={amount}
                             />
-                            <TextField
+                            {/* <TextField
 
                                 autoFocus
                                 margin="dense"
@@ -451,7 +487,7 @@ export default function Profile() {
                                  
                                 onChange={(event) => setAmount(event.target.value)}
                                 value={''}
-                                />
+                                /> */}
                             <div
                                 style={{
                                     justifyContent: 'center',
@@ -461,8 +497,8 @@ export default function Profile() {
                                     alignItems: 'center'
                                 }}
                             >
-                                <Button size="medium" color="secondary" variant="contained" style={{
-                                    width: 200
+                                <Button  size="medium" color="secondary" variant="contained" style={{
+                                    width: 200,color:"white"
                                 }} onClick={handleClick}>
                                     Deposit
                                      </Button>

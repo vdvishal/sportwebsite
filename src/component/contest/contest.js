@@ -111,9 +111,9 @@ const useStyles = makeStyles({
       width: 750,
 
     },
-    paper: {
-      backgroundColor: localStorage.getItem('mode') === 'true' ? "black" : "white"
-    },
+    // paper: {
+    //   backgroundColor: localStorage.getItem('mode') === 'true' ? "black" : "white"
+    // },
     progress: {
       width: "100%",
       
@@ -157,10 +157,11 @@ const useStyles = makeStyles({
       bottom: 0,
     },
     select: {
-      height: "51px"
+      height: "51px",
+      color:'white'
     },
-    selectType2: {
-
+    input: {
+      color:'white'
     },
 
   }
@@ -207,7 +208,7 @@ const ColorLinearProgress = withStyles({
   root: {
     height: 7,
     
-    backgroundColor: localStorage.getItem('mode') === 'true' ? "black" : "white"
+    // backgroundColor: localStorage.getItem('mode') === 'true' ? "black" : "white"
   },
   bar: {
     borderRadius: "0 0 2px 2px",
@@ -1339,7 +1340,7 @@ export default function Contest(props) {
               style={{
                 cursor: "pointer",
                 boxShadow: dynamicObj2[contest._id][contest._id + "playerL"] ? "0 0 1em 0 #71bc4f" : "",
-                backgroundColor: dynamicObj2[contest._id][contest._id + "playerL"] ? color.secondary.main : mode ? "#607D8B" : "#f5f4f8",
+                backgroundColor: dynamicObj2[contest._id][contest._id + "playerL"] ? color.secondary.main : mode ? "#232c31" : "#f5f4f8",
                 color: dynamicObj2[contest._id][contest._id + "playerL"] ?
                  "white" : 
                  mode ? "white" : "black"
@@ -1371,7 +1372,7 @@ export default function Contest(props) {
                 gridTemplateColumns: "45px 1fr 45px",
                 boxShadow: dynamicObj2[contest._id][contest._id + "playerM"] ? "0 0 1em 0 #71bc4f" : "",
                 backgroundColor: dynamicObj2[contest._id][contest._id + "playerM"] ?
-                color.secondary.main : mode ? "#607D8B" : "#f5f4f8",
+                color.secondary.main : mode ? "#232c31" : "#f5f4f8",
                 color: dynamicObj2[contest._id][contest._id + "playerM"] ?
                  "white"
                   :
@@ -1430,7 +1431,7 @@ export default function Contest(props) {
                 cursor: "pointer", boxShadow: dynamicObj2[contest._id][contest._id + "playerR"] ?
                   "0 0 1em 0 #71bc4f" : "",
                 backgroundColor: dynamicObj2[contest._id][contest._id + "playerR"] ?
-                color.secondary.main : mode ? "#607D8B" : "#f5f4f8",
+                color.secondary.main : mode ? "#232c31" : "#f5f4f8",
                  color: dynamicObj2[contest._id][contest._id + "playerR"] ?
                     "white" :  
                 mode ? 
@@ -1930,7 +1931,7 @@ export default function Contest(props) {
   const viewFantasy = () => fantasy.map(cnt => (
     <Paper className={classes.paper} elevation={2} style={
       { margin: "15px 0", borderRadius: 5,
-      backgroundColor: mode ? "black" : "white" }
+      backgroundColor: mode ? "" : "white" }
       } key={cnt._id}>
       <Paper className={classes.gridCard}>
         <div className={classes.gridCardContent}>
@@ -2002,7 +2003,7 @@ export default function Contest(props) {
       }}
       
       className={classes.progress}>
-        <ColorLinearProgress style={{ borderRadius: 0 }} variant="determinate" value={(cnt.totalJoined / cnt.totalSpots) * 100} />
+        <ColorLinearProgress style={{ borderRadius: 0,backgroundColor:mode ? '#262c33':'#F9F8FC' }} variant="determinate" value={(cnt.totalJoined / cnt.totalSpots) * 100} />
       </div>
       <Paper className={classes.gridCard}  >
         <div className={classes.gridCardContent}>
@@ -2136,10 +2137,10 @@ export default function Contest(props) {
               }}
               style={{ textDecoration: "none" }}
             >
-              <EditIcon style={{ textDecoration: "none" }} />
+              <EditIcon style={{ color: mode ? "white" : "grey",textDecoration: "none" }} />
 
               <Divider />
-              <Typography variant="caption" style={{ textDecoration: "none" }}>
+              <Typography variant="caption" style={{ color: mode ? "white" : "grey",textDecoration: "none" }}>
                 Edit
                   </Typography>
 
@@ -2153,15 +2154,19 @@ export default function Contest(props) {
   ))
 
   const viewJoinTeam = () => teamList.map(team => (
-    <ListItem style={{ padding: 0 }} key={team._id}>
+<ListItem style={{ padding: 0 }} key={team._id}>
       <Paper className={classes.paper} elevation={2} style={{ margin: "2.5px 0", padding: "0", width: "100%" }}>
         <TeamCard>
           <TeamCommon>
             <Typography variant="caption" style={{ fontWeight: 700 }}>
               #{team.serialNumber} {team.teamName}
             </Typography>
+
           </TeamCommon>
-          <TeamCommon style={{ justifyContent: "flex-end", height: 0 }}>
+          <TeamCommon style={{ justifyContent: "flex-end" }}>
+            <Typography variant="caption" style={{ fontWeight: 700 }}>
+              Wk-{team.Wicketkeeper} Bat-{team.Batsman} AllR-{team.Allrounder} Bowl-{team.Bowler}
+            </Typography>
 
           </TeamCommon>
           <TeamCommon>
@@ -2174,13 +2179,16 @@ export default function Contest(props) {
                 }}
                 badgeContent="C"
                 color="error"
-                style={{ height: "50px", width: "50px" }}
+                style={{ height: "50px", width: "50px", alignSelf: "center" }}
               >
-                <Avatar src={team.captain.image_path} style={{ height: "50px", width: "50px" }} variant="circle" />
+                <Avatar src={team.captain.image_path} style={{ height: "50px", width: "50px", alignSelf: "center" }} variant="circle" />
               </Badge>
-              <br />
+
               <Typography variant="caption">
                 {team.captain.firstname[0] + ". " + team.captain.lastname}
+              </Typography>
+              <Typography variant="caption">
+                {team.captain.position.name}
               </Typography>
             </TeamCommonPlayer>
             <Divider />
@@ -2193,23 +2201,28 @@ export default function Contest(props) {
                 }}
                 badgeContent="VC"
                 color="error"
-                style={{ height: "50px", width: "50px" }}
+                style={{ height: "50px", width: "50px", alignSelf: "center" }}
               >
                 <Avatar src={team.viceCaptain.image_path} style={{ height: "50px", width: "50px" }} variant="circle" />
               </Badge>
-              <br />
+
               <Typography variant="caption">
                 {team.viceCaptain.firstname[0] + ". " + team.viceCaptain.lastname}
               </Typography>
+
+              <Typography variant="caption">
+                {team.viceCaptain.position.name}
+              </Typography>
             </TeamCommonPlayer>
           </TeamCommon>
-          <TeamCommon style={{ justifyContent: "flex-end", alignItems: "start", color: "white" }}>
+          <TeamCommon style={{ justifyContent: "flex-end", alignItems: "center", color: "white" }}>
             <Button color="secondary" variant="contained" style={{ color: "white" }} onClick={() => confirmJoinFantasyContest(team._id)}>Join</Button>
           </TeamCommon>
         </TeamCard>
       </Paper>
 
     </ListItem>
+
   ))
 
 
@@ -3254,7 +3267,10 @@ export default function Contest(props) {
                     textAlign: "center",
                     marginTop: 30
                   }}>
-                    <Typography variant="caption" >Create a Duel</Typography>
+                    <Typography variant="caption" style={
+                      mode ? {color:"white"} : {color:"black"}
+                    }>
+                      Create a Duel</Typography>
                   </div>
                 :
                 <CircularProgress style={{
@@ -3300,8 +3316,8 @@ export default function Contest(props) {
             }}>
 
               <div style={{
-                backgroundColor: "white",
-                boxShadow: multiple >= 2 ? "0 0 0.52em 0 white" : "",
+                // backgroundColor: "white",
+                // boxShadow: multiple >= 2 ? "0 0 0.52em 0 white" : "",
 
                 width: '100%',
                 color: 'black',
@@ -3310,7 +3326,7 @@ export default function Contest(props) {
                 textAlign: "center"
               }}
               >
-                <Input type="text" placeholder="Amount" style={{ width: '100%' }} onChange={(e) => setBetAmount((e.target.value))} />
+                <Input className={classes.input} type="text" placeholder="Amount" style={{ width: '100%' }} onChange={(e) => setBetAmount((e.target.value))} />
               </div>
 
               {/* <IconButton style={{
@@ -3365,7 +3381,7 @@ export default function Contest(props) {
 
           </BetInfo>
           <BetFooter onClick={() => { joinMatchUps(betAmount); setMinimize(!minimize) }}>
-            Confirm {betAmount}₹
+          Confirm  {isNaN(betAmount) ? 0 : betAmount}₹
         </BetFooter>
         </Betslip>
         ) : <div></div>}
@@ -3394,8 +3410,8 @@ export default function Contest(props) {
 
                 </IconButton > */}
               <div style={{
-                backgroundColor: "white",
-                boxShadow: multiple >= 3 ? "0 0 0.52em 0 white" : "",
+                // backgroundColor: "white",
+                // boxShadow: multiple >= 3 ? "0 0 0.52em 0 white" : "",
 
                 width: '100%',
                 color: 'black',
@@ -3413,7 +3429,7 @@ export default function Contest(props) {
                   >
                     {betAmount}₹
               </Typography> */}
-                <Input type="text" placeholder="Amount" style={{ width: '100%' }} onChange={(e) => setBetAmount((e.target.value))} />
+                <Input className={classes.input} type="text" placeholder="Amount" style={{ width: '100%' }} onChange={(e) => setBetAmount((e.target.value))} />
               </div>
 
               {/* <IconButton style={{
@@ -3467,7 +3483,7 @@ export default function Contest(props) {
             </div>
           </BetInfo>
           <BetFooter onClick={() => { joinUnderOver(betAmount); setMinimize2(!minimize2) }}>
-            Confirm {betAmount}₹
+            Confirm  {isNaN(betAmount) ? 0 : betAmount}₹
         </BetFooter>
         </Betslip>
         ) : <div></div>}
@@ -3819,10 +3835,8 @@ export default function Contest(props) {
             </Typography>
             </Toolbar>
           </AppBar>
-          <Container maxWidth="md" style={{ padding: 10 }}>
-            {match && new Date(match.starting_at).getTime() > Date.now() ? <Paper elevation={0} style={{
-              marginBottom: 60
-            }} >
+          <Container maxWidth="md" style={{ padding: 10,backgroundColor:mode ? "#232C31" : '#F9F8FC' }}>
+            {match && new Date(match.starting_at).getTime() > Date.now() ?  
               <List>
                 {teamList.length > 0 ? viewmyTeam() :
                   <Link to={{ pathname: `/team/${props.match.params.matchId}` }} style={{ textDecoration: 'none' }}>
@@ -3844,7 +3858,7 @@ export default function Contest(props) {
                 }
 
               </List>
-            </Paper> : <Typography variant="caption">
+            : <Typography variant="caption">
                 Match has already started
               </Typography>}
           </Container>
@@ -3863,11 +3877,9 @@ export default function Contest(props) {
             </Typography>
             </Toolbar>
           </AppBar>
-          <Container maxWidth="md" style={{ padding: 10 }}>
-            {match && new Date(match.starting_at).getTime() > Date.now() ? <Paper elevation={0} style={{
-              marginBottom: 60
-            }} >
-              <List style={fullScreen ? { minWidth: 0 } : teamList.length > 0 ? { minWidth: 469 } : { minWidth: 0 }}>
+          <Container maxWidth="md" style={{ padding: 10,backgroundColor:mode ? "#232C31" : '#F9F8FC' }}>
+            {match && new Date(match.starting_at).getTime() > Date.now() ?  
+              <List style={fullScreen ? { minWidth: 0 } : teamList.length > 0 ? { minWidth: 469,backgroundColor:mode ? "#232C31" : '#F9F8FC' } : { minWidth: 0,backgroundColor:mode ? "#232C31" : '#F9F8FC' }}>
                 {teamList.length > 0 ? viewJoinTeam() :
                   <Link to={{ pathname: `/team/${props.match.params.matchId}` }} style={{ textDecoration: 'none' }}>
 
@@ -3887,7 +3899,7 @@ export default function Contest(props) {
                   </Link>
                 }
               </List>
-            </Paper> : <Typography variant="caption">
+             : <Typography variant="caption">
                 Match has already started
               </Typography>}
           </Container>

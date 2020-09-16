@@ -178,7 +178,8 @@ export default function FAQ() {
                     <div
 
                         style={{
-                            padding: 0
+                            padding: 0,
+                            color: "grey"
                         }}
                     >
                         <h3><strong>

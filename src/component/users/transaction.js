@@ -137,10 +137,7 @@ export default function Transaction() {
                         </Typography>
                 </Div>    
             </Paper>  
-            <Paper elevation={0}  style={{
-            backgroundColor:"#f9f8fc"
- 
-        }}>
+             
                  
                     { transaction !== null ? transaction.length > 0 ? viewList() :  <div style={{
             display:"flex",
@@ -159,7 +156,7 @@ export default function Transaction() {
                 }} disableShrink />}
 
 
-            </Paper> 
+             
             
             </div>
             <div

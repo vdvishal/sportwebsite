@@ -10,7 +10,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import CloseIcon from '@material-ui/icons/Close';
 import { Paper, Container, Button, Divider,Avatar, Typography, Dialog, IconButton,Tooltip, AppBar, Toolbar, TextField } from '@material-ui/core';
 
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme,withStyles } from '@material-ui/core/styles';
 import Slide from '@material-ui/core/Slide';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ImageUploader from 'react-images-upload';
@@ -24,6 +24,28 @@ import styled from 'styled-components'
 
 import Notification from '../common/notification'
 
+
+const CssTextField = withStyles({
+    root: {
+      '& label.Mui-focused': {
+        color: 'grey',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: 'white',
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: 'red',
+        },
+        '&:hover fieldset': {
+          borderColor: 'yellow',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'white',
+        },
+      },
+    },
+  })(TextField);
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -300,9 +322,10 @@ export default function Profile() {
                         borderRadius:5
                     
                     }}>
-                        <div style={{ borderRadius:5, padding: "5px 10px",display:"flex",background: "rgb(248 248 248)",justifyContent:"center" }}>
+                        <div style={{ borderRadius:5, padding: "5px 10px",display:"flex",justifyContent:"center" }}>
                             <Avatar style={{width:80,height:80,cursor:"pointer"}} src={data.profilePic} onClick={() => handleEdit(4)} ></Avatar>
                         </div>
+                        <Divider />
                         <Div>
                             <div style={{ padding: "5px 10px" }}>
                                 <Typography variant="caption" style={{ fontWeight: 700, color: "grey" }}>
@@ -466,7 +489,7 @@ export default function Profile() {
                                     typeNum !== 4 ? <Paper elevation={0}   >
                           
 
-                             <TextField
+                             <CssTextField
 
                                     autoFocus
                                     margin="dense"
@@ -477,7 +500,7 @@ export default function Profile() {
                                     value={value}
                                 />
                                 {
-                                    typeNum === 3 ? <TextField
+                                    typeNum === 3 ? <CssTextField
 
                                     autoFocus
                                     margin="dense"
@@ -499,17 +522,17 @@ export default function Profile() {
                                     }}
                                 >
                                   { typeNum === 3 ? <Button size="small"
-                                        variant="outlined"
+                                        variant="contained"
                                         color="secondary"
                                         style={{
-                                            margin: "20px 50px 0 50px"
+                                            margin: "20px 50px 0 50px",color:'#FFFFFF'
                                         }} onClick={handlePassClick}>
                                         Save
                              </Button> : <Button size="small"
-                                        variant="outlined"
+                                        variant="contained"
                                         color="secondary"
                                         style={{
-                                            margin: "20px 50px 0 50px"
+                                            margin: "20px 50px 0 50px",color:'#FFFFFF'
                                         }} onClick={handleClick}>
                                         Save
                                     </Button> }

@@ -38,7 +38,7 @@ const Section3Sub = styled.div`
 font-size: 1.35em;font-weight: bold;line-height: 30px;padding-top: 15px;
 `
 const TopContainer2 = styled.div`
-background-color: #262C33;min-height: 175px;color: white;
+background-color: #1f2226;min-height: 175px;color: white;
 `
 
 export default function Footer(props) {

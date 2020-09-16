@@ -137,7 +137,7 @@ export default function Terms() {
 
                 <h5>Taxes Payable</h5>
                 <Typography variant="caption">
-                    All prizes shall be subject to deduction of tax ("TDS") as per the Income Tax Act 1961. As of April 1, 2018, the TDS rate prescribed by the Government of India with respect to any prize money amount that is in excess of Rs. 10,000/- is 31.2% of the total prize money amount. In case of any revisions by the Government of India to the aforementioned rate in the future, TDS will be deducted in accordance with the then current prescribed TDS rate. Winners will be provided TDS certificates in respect of such tax deductions. The Winners shall be responsible for payment of any other applicable tax, including but not limited to, income tax, gift tax, etc. in respect of the prize money.
+                    All prizes shall be subject to deduction of tax ("TDS") as per the Income Tax Act 1961. As of April 1, 2018, the TDS rate prescribed by the Government of India with respect to any prize money amount that is in excess of Rs. 10,000/- is 30% of the total prize money amount. In case of any revisions by the Government of India to the aforementioned rate in the future, TDS will be deducted in accordance with the then current prescribed TDS rate. Winners will be provided TDS certificates in respect of such tax deductions. The Winners shall be responsible for payment of any other applicable tax, including but not limited to, income tax, gift tax, etc. in respect of the prize money.
                 </Typography>
                 <h5>A Game of Skill</h5>
                 <Typography variant="caption">

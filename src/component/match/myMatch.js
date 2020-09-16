@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactGA from 'react-ga';
 
-import  {  useEffect } from 'react';
+import  {  useEffect,useContext } from 'react';
 import * as color from '../../json/color.json'
 
 //
@@ -16,6 +16,7 @@ import Tab from '@material-ui/core/Tab';
   
 import { Paper, Divider, Typography, Avatar } from '@material-ui/core';
 
+import { ModeContext } from '../../App';
 
 // Other modules
 import Countdown from 'react-countdown';
@@ -68,7 +69,7 @@ height: 50vh;
 text-align: center;
 margin-top: 100px;
 font-weight: 500;
-background-color:#F9F8FC;
+ 
 `;
  
 
@@ -82,7 +83,8 @@ export default function MyMatch(props) {
     const [resp, setresp] = React.useState(0);
     const [wait, setWait] = React.useState(false);
 
-    
+    const [mode, setMode] = useContext(ModeContext)
+
 
     const [value, setValue] = React.useState(0);
 
@@ -276,7 +278,7 @@ export default function MyMatch(props) {
             padding: 10,
             margin: "10px 0",
             borderRadius:5,
-            color: color.card.color,
+           
             }}
         >
           <Link to={{
@@ -293,7 +295,7 @@ export default function MyMatch(props) {
               style={{
                 height: 25,
                 fontSize: '0.75rem',
-                color: color.card.color,
+               
                 
               }}
             >
@@ -320,7 +322,7 @@ export default function MyMatch(props) {
                     height: 'auto',
                     margin: 20,
                     fontWeight: 600,
-                    color: color.card.color,
+                    
                     
                   }}
                 >
@@ -421,7 +423,7 @@ export default function MyMatch(props) {
             padding: 10,
             margin: "10px 0",
             borderRadius:5,
-            color: color.card.color,
+             
  
           }}
         >
@@ -439,7 +441,7 @@ export default function MyMatch(props) {
               style={{
                 height: 25,
                 fontSize: '0.75rem',
-                color: color.card.color,
+                 
                 
               }}
             >
@@ -466,7 +468,7 @@ export default function MyMatch(props) {
                     height: 'auto',
                     margin: "20px 0px",
                     fontWeight: 600,
-                    color: color.card.color,
+                     
                     
                   }}
                 >
@@ -623,7 +625,7 @@ export default function MyMatch(props) {
           </Paper>
         </Container>
         <Container style={{ position: "relative", marginTop: 0, padding: "0px 5px" }} maxWidth='md'>
-          <Paper elevation={0} style={value === 0 ? { display: 'block', marginTop: '5px',backgroundColor:"#F9F8FC" } : { display: 'none' }}>
+          <Paper elevation={0} style={value === 0 ? { display: 'block', marginTop: '5px',backgroundColor: mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
             { !wait ? matches.length > 0 && value === 0 ? viewUpcMatch() : <EDIV>
               Join match
             </EDIV> : <CircularProgress style={{
@@ -633,7 +635,7 @@ export default function MyMatch(props) {
       }} disableShrink />}
           </Paper>
 
-          <Paper elevation={0} style={value === 1 ? { display: 'block', marginTop: '5px',backgroundColor:"#F9F8FC" } : { display: 'none' }}>
+          <Paper elevation={0} style={value === 1 ? { display: 'block', marginTop: '5px',backgroundColor:mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
             {!wait ? matches.length > 0 && value === 1 ? viewLiveMatch() : <EDIV>
               Join match
               </EDIV> : <CircularProgress style={{
@@ -642,7 +644,7 @@ export default function MyMatch(props) {
           left: "50%"
       }} disableShrink />}
       </Paper>
-          <Paper elevation={0} style={value === 2 ? { display: 'block', marginTop: '5px',backgroundColor:"#F9F8FC" } : { display: 'none' }}>
+          <Paper elevation={0} style={value === 2 ? { display: 'block', marginTop: '5px',backgroundColor:mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
             {!wait ? matches.length > 0 && value === 2 ? viewCompMatch() : <EDIV>
               Join match
               </EDIV> : <CircularProgress style={{

@@ -77,7 +77,7 @@ const useStyles = makeStyles({
 
     },
     paper: {
-      backgroundColor: "#F5F6FA"
+      // backgroundColor: "#F5F6FA"
     },
     progress: {
       width: "100%",
@@ -909,8 +909,8 @@ export default function ContestDetails(props) {
           <Notification message={message} open={openNotification} close={handleNotificationClose} />
 
           <Paper elevation={3} className={classes.paper}  style={{
-            border: "1px solid #F5F6FA",
-            backgroundColor: "white",
+           
+            
             margin: "0 0"
           }}
             key={contest._id}>
@@ -934,7 +934,8 @@ export default function ContestDetails(props) {
                       style={{
                         fontWeight: "700",
                         padding: "5px 10px",
-                        cursor: "pointer", borderRadius: 5, border: "1px solid #777777",
+                        cursor: "pointer", borderRadius: 5,
+                        border: "1px solid #777777",
                         fontSize: "15px"
                       }}>
                       ₹{contest.prizePool}
@@ -942,7 +943,7 @@ export default function ContestDetails(props) {
                     </Typography>
 
                   </span>
-                  <span style={{ padding: "2.5px", fontSize: "14px", color: "black" }}>
+                  <span style={{ padding: "2.5px", fontSize: "14px" }}>
                     <Typography variant="caption">
                       {contest.totalWinners} Winner
 
@@ -986,14 +987,14 @@ export default function ContestDetails(props) {
             {
         match && new Date(match.starting_at).getTime() > Date.now() ?
         <div className={classes.progress}>
-        <ColorLinearProgress style={{ borderRadius: 0 }} variant="determinate" value={(contest.totalJoined / contest.totalSpots) * 100} />
+        <ColorLinearProgress style={{ borderRadius: 0, }} variant="determinate" value={(contest.totalJoined / contest.totalSpots) * 100} />
       </div> :
       <div />
       
       }
               
             </div>
-            <div className={classes.gridCard} style={{ backgroundColor: "#F5F6FA" }}>
+            <div className={classes.gridCard}  >
               <div className={classes.gridCardContent}>
                 <div className={classes.gridCardSubContent}>
                   <span style={{ padding: "2.5px", fontSize: "12px", }}>
@@ -1035,7 +1036,7 @@ export default function ContestDetails(props) {
 
           </Paper>
           <Paper elevation={2}  style={{
-            border: "1px solid #F5F6FA",
+             
             marginTop:10
           }}>
             <Tabs

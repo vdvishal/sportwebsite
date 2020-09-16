@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactGA from 'react-ga';
 
-import { useEffect } from 'react';
+import { useEffect,useContext } from 'react';
 import { Link } from "react-router-dom";
 import { Collapse } from 'react-collapse';
 
@@ -34,6 +34,9 @@ import Slide from '@material-ui/core/Slide';
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+
+import { ModeContext } from '../../App';
+
 import * as mqtt from 'mqtt';
 
 
@@ -100,7 +103,7 @@ const useStyles = makeStyles({
 
     },
     paper: {
-      backgroundColor: "#F5F6FA"
+      // backgroundColor: "#F5F6FA"
     },
     progress: {
       width: "100%",
@@ -187,7 +190,7 @@ export const device = {
 const ColorLinearProgress = withStyles({
   root: {
     height: 7,
-    backgroundColor: 'white',
+    // backgroundColor: '#aac0c8',
   },
   bar: {
     borderRadius: "0 0 2px 2px",
@@ -206,9 +209,9 @@ const ColorLinearProgress = withStyles({
 
 
 
-
+// background-color: white;
 const ContestMainHeader = styled.div`
-  background-color: white;
+  
  border-radius:5px;
   border-image: initial;
   padding: 10px;
@@ -381,7 +384,7 @@ const StatFieldDiv = styled.div`
 
 const HeaderDiv = styled.div`
   padding-left: 1.5rem;
-  color: #2b2c2d;
+  
    border-color: #edeef0;
   padding: .75rem 12px;
   text-align:center;
@@ -398,8 +401,8 @@ const StatsContainerDiv = styled.div`
 
 const ContentDiv = styled.div`
   padding-left: 1.5rem;
-  color: #2b2c2d;
-  background-color: #FFFFFF;
+   
+   
   border-color: #edeef0;
   padding: .75rem 12px;
   text-align:center;
@@ -424,7 +427,7 @@ const DuelsCustom = styled.div`
     grid-template-rows: auto auto auto;
     align-items: center;
     margin:10px 0 10px 0;
-    background-color:white;
+    
      text-align:center;
      border: 1px solid #cdcbcb;
     border-radius: 5px;
@@ -578,8 +581,8 @@ const DuelsCustomDiv = styled.div`
 display:flex;
 flex-direction:row;
 margin:2px;
-border:1px solid #cbd4df;
-background-color: #FFFFFF;
+ 
+ 
 padding:5px;
 border-radius:4px;
 transition: transform .2s;
@@ -596,8 +599,7 @@ const DuelsCustomDiv2 = styled.div`
 display:flex;
 flex-direction:row-reverse;
 margin:2px;
-border:1px solid #cbd4df;
-background-color: #FFFFFF;
+ 
 padding:6px;
 border-radius:4px;
 transition: transform .2s;
@@ -616,8 +618,7 @@ const DuelsCustomDiv2a = styled.div`
 display:flex;
 flex-direction:row-reverse;
 margin:2px;
-border:1px solid #cbd4df;
-background-color: #FFFFFF;
+ 
 padding:6px;
 border-radius:4px;
 transition: transform .2s;
@@ -728,6 +729,7 @@ export default function Contest(props) {
   const [playerStats, setPlayer] = React.useState(null);
   const [openPlayerDetail, setOpenPlayerDetail] = React.useState(false);
 
+  const [mode, setMode] = useContext(ModeContext)
 
   useEffect(() => {
     uState = {};
@@ -1516,7 +1518,7 @@ export default function Contest(props) {
                                 }}  style={{ textDecoration: 'none' }}> */}
           <div className={classes.gridCardSubContent}>
 
-            <span style={{ padding: "5px", fontSize: "12px", color: "#777777" }}>
+            <span style={{ padding: "5px", fontSize: "12px", }}>
               <Typography variant="caption">
                 Prize Pool
 
@@ -1527,7 +1529,8 @@ export default function Contest(props) {
                 style={{
                   fontWeight: "700",
                   padding: "5px 10px",
-                  cursor: "pointer", borderRadius: 5, border: "1px solid #777777",
+                  cursor: "pointer", borderRadius: 5, 
+                  border: "1px solid #777777",
                   fontSize: "15px"
                 }}>
                 ₹{cnt.contestDetails.prizePool}
@@ -1535,7 +1538,7 @@ export default function Contest(props) {
               </Typography>
 
             </span>
-            <span style={{ padding: "2.5px", fontSize: "14px", color: "black" }}>
+            <span style={{ padding: "2.5px", fontSize: "14px", color: "grey" }}>
               <Typography variant="caption">
                 {cnt.contestDetails.totalWinners} Winner
 
@@ -1565,12 +1568,12 @@ export default function Contest(props) {
       {
         match && new Date(match.starting_at).getTime() > Date.now() ?
           <div className={classes.progress}>
-            <ColorLinearProgress style={{ borderRadius: 0 }} variant="determinate" value={(cnt.contestDetails.totalJoined / cnt.contestDetails.totalSpots) * 100} />
+            <ColorLinearProgress style={{ borderRadius: 0,backgroundColor:mode ? '#262c33':'#F9F8FC' }} variant="determinate" value={(cnt.contestDetails.totalJoined / cnt.contestDetails.totalSpots) * 100} />
           </div> :
           <div />
 
       }
-      <div className={classes.gridCard} style={{ backgroundColor: "white" }}>
+      <div className={classes.gridCard}  >
         <div className={classes.gridCardContent}>
           <div className={classes.gridCardSubContent}>
             <span style={{ padding: "2.5px", fontSize: "12px", }}>
@@ -1886,9 +1889,9 @@ export default function Contest(props) {
     </div>
   })
 
-  const statsVisitorTeamField = () => teamStats.players[teamStats.visitorTeam].map((players) => {
+  const statsVisitorTeamField = () => teamStats.players[teamStats.visitorTeam].map((players,index) => {
     return <div key={players.id + "b"} style={players.catchStump ? { display: "block" } : { display: "none" }}>
-      <StatFieldDiv>
+      <StatFieldDiv >
         <ContentDiv>
           <Typography variant="caption">
             {players.fullname}
@@ -1924,8 +1927,11 @@ export default function Contest(props) {
 
         <DuelsCustom >
  
+        <Paper elevation={0} >
 
-          <DuelsCustomDiv style={{ padding: "6px" }} >
+        
+          <DuelsCustomDiv 
+          style={{ padding: "6px" }} >
             <div style={{
               padding: '2.5px',
               margin: '5.5px',
@@ -2008,7 +2014,8 @@ export default function Contest(props) {
             </DuelSingleRight>
       
           </DuelsCustomDiv>
-         
+          </Paper>
+          <Paper elevation={0} > 
           <DuelsCustomDiv
             onClick={() => getPlayer(contest.playerDetail.id)}
             style={{
@@ -2084,7 +2091,8 @@ export default function Contest(props) {
               </div>
 
           </DuelsCustomDiv>
-         
+          </Paper>
+          <Paper elevation={0} > 
           {contest.open ? 
           <DuelsCustomDiv style={{ padding: "5px" }} >
 
@@ -2197,7 +2205,7 @@ export default function Contest(props) {
             </DuelsCustomDiv2a>
 
           }
-
+        </Paper>
 
         </DuelsCustom>
       </div>
@@ -2212,8 +2220,8 @@ export default function Contest(props) {
         Player Duel 
       </DuelCustomHeader> */}
 
-
-        <DuelsCustomDiv style={{ padding: "6px",border:"1px solid #cbd4df" }} >
+      <Paper elevation={0} >
+        <DuelsCustomDiv style={{ padding: "6px" }} >
           <div style={{
             padding: '2.5px',
             margin: '5.5px',
@@ -2308,6 +2316,7 @@ export default function Contest(props) {
 
           </DuelSingleRight>
         </DuelsCustomDiv>
+        </Paper><Paper elevation={0} >
         <div style={{
           display: "flex",
           alignContent: "center",
@@ -2322,6 +2331,7 @@ export default function Contest(props) {
           </AntiDiagonalTrans>
 
         </div>
+        </Paper><Paper elevation={0} >
         {contest.open === true ?
           <DuelsCustomDiv style={{ padding: "7px" }} >
 
@@ -2453,7 +2463,9 @@ export default function Contest(props) {
 
             </DuelSingleRight1a>
           </DuelsCustomDiv2>}
-      </DuelsCustom2>
+          </Paper>
+          </DuelsCustom2>
+          
     </div>
   ))
 
@@ -2704,11 +2716,11 @@ export default function Contest(props) {
 
 
             {UnderOver !== null ? UnderOver.length > 0 ? view()
-              :  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
-              <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+              :  <Paper elevation={0} style={{ width: "100%", textAlign: "center", backgroundColor: mode ? "#232C31" : "#F9F8FC" }}>
+              <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center" }} >
                 Join Contest
              </Typography>
-            </div> :
+            </Paper> :
               <CircularProgress style={{
                 position: "fixed",
                 top: "50%",
@@ -2743,11 +2755,11 @@ export default function Contest(props) {
               </div>
             </Paper>
 
-            {matchUps !== null ? matchUps.length > 0 ? viewCombo() :  <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+            {matchUps !== null ? matchUps.length > 0 ? viewCombo() :  <Paper elevation={0} style={{ width: "100%", textAlign: "center", backgroundColor: mode ? "#232C31" : "#F9F8FC" }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", }} >
                     Join Contest
                  </Typography>
-                </div> :
+                </Paper> :
               <CircularProgress style={{
                 position: "fixed",
                 top: "50%",
@@ -2762,11 +2774,11 @@ export default function Contest(props) {
           <Container maxWidth="md" style={{ padding: 10 }}>
             <Paper elevation={0} style={{
               marginBottom: 60,
-              backgroundColor: "#F9F8FC"
+              backgroundColor: "rgba(0,0,0,0)"
             }} >
               {fantasy.length > 0 ? viewFantasy() :
-                <div style={{ width: "100%", textAlign: "center", backgroundColor: "#F9F8FC" }}>
-                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center", backgroundColor: "#F9F8FC" }} >
+                <div style={{ width: "100%", textAlign: "center" }}>
+                  <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center" }} >
                     Join Contest
                  </Typography>
                 </div>}
@@ -2776,7 +2788,7 @@ export default function Contest(props) {
         </div>
 
         <div style={value === 3 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
-          <Paper elevation={0} style={{ backgroundColor: "#F9F8FC", }}>
+          
             <Paper elevation={0} style={{
               display: "flex",
               flexDirection: "row",
@@ -2836,16 +2848,17 @@ export default function Contest(props) {
 
             <Paper elevation={0} style={{
               marginBottom: 60,
-              backgroundColor: "#F9F8FC"
+              backgroundColor: "rgba(0,0,0,0)"
             }} >
               {custom !== null ?
                 custom.length > 0 ?
                   filterCustom === 5 ? viewCustom() : viewCustomDuel() :
                   <div style={{
                     textAlign: "center",
-                    marginTop: 30
+                    marginTop: 30,
+                    height:100
                   }}>
-                    <Typography variant="caption" >Create a Duel.</Typography>
+                    <Typography variant="caption" >Create a Duel</Typography>
                   </div>
                 :
                 <CircularProgress style={{
@@ -2854,7 +2867,7 @@ export default function Contest(props) {
                   left: "50%"
                 }} disableShrink />}
             </Paper>
-          </Paper>
+      
 
         </div>
 
@@ -2883,7 +2896,7 @@ export default function Contest(props) {
                  </Typography>
                 </div> : <div />}
                 <Divider />
-                <StatDiv style={{ backgroundColor: "#E4E5E6" }} >
+                <StatDiv style={{ backgroundColor: !mode ? "#E4E5E6" : "#2F3D44" }} >
                   <HeaderDiv>
                     <Typography variant="caption" style={{
                       fontSize: "0.85rem",
@@ -2981,7 +2994,7 @@ export default function Contest(props) {
                  </Typography>
                 </div> : <div />}
                 <Divider />
-                <StatBowlerDiv style={{ backgroundColor: "#E4E5E6" }} >
+                <StatBowlerDiv style={{ backgroundColor: !mode ? "#E4E5E6" : "#2F3D44" }} >
                   <HeaderDiv>
                     <Typography variant="caption" style={{
                       fontSize: "0.85rem",
@@ -3080,7 +3093,7 @@ export default function Contest(props) {
                  </Typography>
                 </div>
                 <Divider />
-                <StatFieldDiv style={{ backgroundColor: "#E4E5E6" }}>
+                <StatFieldDiv style={{ backgroundColor: !mode ? "#E4E5E6" : "#2F3D44" }}>
 
                   <HeaderDiv>
                     <Typography variant="caption" style={{
@@ -3137,7 +3150,7 @@ export default function Contest(props) {
                  </Typography>
                 </div> : <div />}
                 <Divider />
-                <StatDiv style={{ backgroundColor: "#E4E5E6" }} >
+                <StatDiv style={{ backgroundColor: !mode ? "#E4E5E6" : "#2F3D44" }} >
                   <HeaderDiv>
                     <Typography variant="caption" style={{
                       fontSize: "0.85rem",
@@ -3236,7 +3249,7 @@ export default function Contest(props) {
                  </Typography>
                 </div> : <div />}
                 <Divider />
-                <StatBowlerDiv style={{ backgroundColor: "#E4E5E6" }} >
+                <StatBowlerDiv style={{ backgroundColor: !mode ? "#E4E5E6" : "#2F3D44" }} >
                   <HeaderDiv>
                     <Typography variant="caption" style={{
                       fontSize: "0.85rem",
@@ -3334,7 +3347,7 @@ export default function Contest(props) {
                  </Typography>
                 </div>
                 <Divider />
-                <StatFieldDiv style={{ backgroundColor: "#E4E5E6" }} >
+                <StatFieldDiv style={{ backgroundColor: !mode ? "#E4E5E6" : "#2F3D44" }} >
 
                   <HeaderDiv>
                     <Typography variant="caption" style={{

@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
+import React, { useEffect,useContext } from 'react';
 import ReactGA from 'react-ga';
+
+import { ModeContext } from '../../App';
 
  import * as api from '../../api/team';
 import styled from 'styled-components'
@@ -90,8 +92,8 @@ const DuelSingleRightTop = styled.div`
   display:grid;
   grid-template-columns: 0.2fr 2fr 1fr;
   margin:2px;
-  border:1px solid #cbd4df;
-  background-color: #FFFFFF;
+   
+   
   padding:5px;
   border-radius:4px;
   transition: transform .2s;
@@ -109,8 +111,7 @@ const TeamView = styled.div`
   display:grid;
   grid-template-columns: 0.2fr 2fr 1fr;
   margin:2px;
-  border:1px solid #cbd4df;
-  background-color: #FFFFFF;
+ 
   padding:5px;
   border-radius:4px;
   transition: transform .2s;
@@ -127,8 +128,7 @@ const SingleHeadingTop = styled.div`
   display:grid;
   grid-template-columns: 0.2fr 2fr 1fr;
   margin:2px;
-  border:1px solid #cbd4df;
-  background-color: #FFFFFF;
+ 
   padding:0px 5px;
   border-radius:0;
   transition: transform .2s;
@@ -157,7 +157,7 @@ const HeaderTop = styled.div`
   margin:2px;
   height:4.5rem;
 
-  background-color: #FFFFFF;
+  
   padding:5px;
   border-radius:4px;
   transition: transform .2s;
@@ -290,7 +290,8 @@ export default function EditTeam(props) {
   const [cap, setCap] = React.useState(null);
   const [vcap, setvCap] = React.useState(null);
 
- 
+  const [mode, setMode] = useContext(ModeContext)
+
 
   const [Allrounder, setAllrounder] = React.useState({});
   const [Batsman, setBatsman] = React.useState({});
@@ -950,7 +951,12 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
       key={player.id}
     >
       <DuelSingleRightTop
-        style={{ cursor: "pointer", boxShadow: dynamicObj2[player.id][player.id] ? "0 0 1em 0 #71bc4f" : "", backgroundColor: dynamicObj2[player.id][player.id] ? color.secondary.main : "#F5F6FA", color: dynamicObj2[player.id][player.id] ? "white" : "black" }}
+        style={{ cursor: "pointer",
+        border: mode ? "1px solid #29363E" : "1px solid #cbd4df",
+        boxShadow: dynamicObj2[player.id][player.id] ? "0 0 1em 0 #71bc4f" : "",
+         backgroundColor: dynamicObj2[player.id][player.id] ? 
+         color.secondary.main : mode ? "#29363E"  : "#F5F6FA", 
+         color: dynamicObj2[player.id][player.id] ? "white" :  mode ?  "white" :"black"}}
       >
         <div style={{
           padding: '2.5px',
@@ -1053,7 +1059,11 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
       key={value.id}
     >
       <DuelSingleRightTop
-        style={{ cursor: "pointer", boxShadow: dynamicObj2[value.id][value.id] ? "0 0 1em 0 #71bc4f" : "", backgroundColor: dynamicObj2[value.id][value.id] ? color.secondary.main : "#F5F6FA", color: dynamicObj2[value.id][value.id] ? "white" : "black" }}
+        style={{ cursor: "pointer",
+        border: mode ? "1px solid #29363E" : "1px solid #cbd4df",
+        boxShadow: dynamicObj2[value.id][value.id] ? "0 0 1em 0 #71bc4f" : "", 
+        backgroundColor: dynamicObj2[value.id][value.id] ? color.secondary.main : mode ? "#29363E"  : "#F5F6FA", 
+        color: dynamicObj2[value.id][value.id] ? "white" :  mode ?  "white" :"black" }}
       >
         <div style={{
           padding: '2.5px',
@@ -1152,7 +1162,12 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
       key={value.id}
     >
       <DuelSingleRightTop
-        style={{ cursor: "pointer", boxShadow: dynamicObj2[value.id][value.id] ? "0 0 1em 0 #71bc4f" : "", backgroundColor: dynamicObj2[value.id][value.id] ? color.secondary.main : "#F5F6FA", color: dynamicObj2[value.id][value.id] ? "white" : "black" }}
+        style={{ cursor: "pointer",
+        border: mode ? "1px solid #29363E" : "1px solid #cbd4df",
+        boxShadow: dynamicObj2[value.id][value.id] ? "0 0 1em 0 #71bc4f" : "",
+         backgroundColor: dynamicObj2[value.id][value.id] ? 
+         color.secondary.main : mode ? "#29363E"  : "#F5F6FA", 
+         color: dynamicObj2[value.id][value.id] ? "white" :  mode ?  "white" :"black" }}
       >
         <div style={{
           padding: '2.5px',
@@ -1253,7 +1268,12 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
           key={value.id}
     >
       <DuelSingleRightTop
-        style={{ cursor: "pointer", boxShadow: dynamicObj2[value.id][value.id] ? "0 0 1em 0 #71bc4f" : "", backgroundColor: dynamicObj2[value.id][value.id] ? color.secondary.main : "#F5F6FA", color: dynamicObj2[value.id][value.id] ? "white" : "black" }}
+        style={{ cursor: "pointer",
+        border: mode ? "1px solid #29363E" : "1px solid #cbd4df",
+         boxShadow: dynamicObj2[value.id][value.id] ? "0 0 1em 0 #71bc4f" : "", 
+         backgroundColor: dynamicObj2[value.id][value.id] ? 
+         color.secondary.main : mode ? "#29363E"  : "#F5F6FA", 
+         color: dynamicObj2[value.id][value.id] ? "white" :  mode ?  "white" :"black" }}
       >
         <div style={{
           padding: '2.5px',
@@ -1358,7 +1378,12 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
     </ListItem>
     {key2 === "Wicketkeeper" ? Object.entries({...value2}).map(([key, value]) => 
     <ListItem style={{padding:0}} key={key+"p"} >
-      <TeamView>
+      <TeamView
+              style={{
+                border: mode ? "" : "1px solid #cbd4df",
+                backgroundColor: mode ? "#29363E" : "#F9F8FC",
+              }}
+              >
         <RowNameSection style={{
           padding: '2.5px',
           margin: '5.5px',
@@ -1438,8 +1463,8 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
               display:"flex",
               alignItems:"center",
               justifyContent:"center",
-              border: !value.viceCaptain ? "1px solid" : "1px solid white",
-              color: !value.viceCaptain ? "black" : "white",
+              border: !value.viceCaptain ? !mode ? "1px solid" : "1px solid white" : "1px solid white",
+              color: !value.viceCaptain ? !mode ? "black" : "white" : "white",
               backgroundColor: value.viceCaptain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
@@ -1474,8 +1499,8 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
               display:"flex",
               alignItems:"center",
               justifyContent:"center",
-              border: !value.captain ? "1px solid" : "1px solid white",
-              color: !value.captain ? "black" : "white",
+              border: !value.captain ? !mode ? "1px solid" : "1px solid white" : "1px solid white",
+              color: !value.captain ? !mode ? "black" : "white" : "white",
               backgroundColor: value.captain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
@@ -1496,7 +1521,10 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
     ) : <div/>}
     {key2 === "Batsman" ? Object.entries({...value2}).map(([key, value]) => 
     <ListItem style={{padding:0}} key={key+"p"} >
-      <TeamView>
+      <TeamView  style={{
+          border: mode ? "" : "1px solid #cbd4df",
+          backgroundColor: mode ? "#29363E" : "#F9F8FC",
+        }}>
         <RowNameSection style={{
           padding: '2.5px',
           margin: '5.5px',
@@ -1577,8 +1605,8 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
                 display:"flex",
                 alignItems:"center",
                 justifyContent:"center",
-                border: !value.viceCaptain ? "1px solid" : "1px solid white",
-                color: !value.viceCaptain ? "black" : "white",
+                border: !value.viceCaptain ? !mode ? "1px solid" : "1px solid white" : "1px solid white",
+                color: !value.viceCaptain ? !mode ? "black" : "white" : "white",
                 backgroundColor: value.viceCaptain ? "#77BC37" : "rgba(0,0,0,0)"
               }}
               >
@@ -1612,8 +1640,8 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
               display:"flex",
               alignItems:"center",
               justifyContent:"center",
-              border: !value.captain ? "1px solid" : "1px solid white",
-              color: !value.captain ? "black" : "white",
+              border: !value.captain ? !mode ? "1px solid" : "1px solid white" : "1px solid white",
+              color: !value.captain ? !mode ? "black" : "white" : "white",
               backgroundColor: value.captain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
@@ -1632,7 +1660,12 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
     ) : <div/>}
         {key2 === "Allrounder" ? Object.entries({...value2}).map(([key, value]) => 
     <ListItem style={{padding:0}} key={key+"p"} >
-      <TeamView>
+      <TeamView
+        style={{
+          border: mode ? "" : "1px solid #cbd4df",
+          backgroundColor: mode ? "#29363E" : "#F9F8FC",
+        }}
+      >
         <RowNameSection style={{
           padding: '2.5px',
           margin: '5.5px',
@@ -1713,8 +1746,8 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
               display:"flex",
               alignItems:"center",
               justifyContent:"center",
-              border: !value.viceCaptain ? "1px solid" : "1px solid white",
-              color: !value.viceCaptain ? "black" : "white",
+              border: !value.viceCaptain ? !mode ? "1px solid" : "1px solid white" : "1px solid white",
+              color: !value.viceCaptain ? !mode ? "black" : "white" : "white",
               backgroundColor: value.viceCaptain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
@@ -1749,8 +1782,8 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
               display:"flex",
               alignItems:"center",
               justifyContent:"center",
-              border: !value.captain ? "1px solid" : "1px solid white",
-              color: !value.captain ? "black" : "white",
+              border: !value.captain ? !mode ? "1px solid" : "1px solid white" : "1px solid white",
+              color: !value.captain ? !mode ? "black" : "white" : "white",
               backgroundColor: value.captain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
@@ -1769,7 +1802,10 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
     ) : <div/>}
             {key2 === "Bowler" ? Object.entries({...value2}).map(([key, value]) => 
     <ListItem style={{padding:0}} key={key+"p"} >
-      <TeamView>
+      <TeamView         style={{
+          border: mode ? "" : "1px solid #cbd4df",
+          backgroundColor: mode ? "#29363E" : "#F9F8FC",
+        }}>
         <RowNameSection style={{
           padding: '2.5px',
           margin: '5.5px',
@@ -1853,8 +1889,8 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
               display:"flex",
               alignItems:"center",
               justifyContent:"center",
-              border: !value.viceCaptain ? "1px solid" : "1px solid white",
-              color: !value.viceCaptain ? "black" : "white",
+              border: !value.viceCaptain ? !mode ? "1px solid" : "1px solid white" : "1px solid white",
+              color: !value.viceCaptain ? !mode ? "black" : "white" : "white",
               backgroundColor: value.viceCaptain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             
@@ -1892,8 +1928,8 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
               display:"flex",
               alignItems:"center",
               justifyContent:"center",
-              border: !value.captain ? "1px solid" : "1px solid white",
-              color: !value.captain ? "black" : "white",
+              border: !value.captain ? !mode ? "1px solid" : "1px solid white" : "1px solid white",
+              color: !value.captain ? !mode ? "black" : "white" : "white",
               backgroundColor: value.captain ? "#77BC37" : "rgba(0,0,0,0)"
             }}
             >
@@ -1928,14 +1964,15 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
     >
        <AppBar elevation={0} position="sticky" 
        style={{ width: "100%", 
-       background: "#F9F8FC", 
+       background: mode ? "#232C31" : "#F9F8FC",
        top: 57,
        borderRadius: 7,
        boxShadow: 0 
        }}>
        <Paper elevation={3} style={{
-        border: "1px solid #77BC37",
-        backgroundColor: "#77BC37",
+                 border: "1px solid #77BC37",
+                 backgroundColor: "#77BC37",
+        
          
       }}>
         {Object.keys(contest).length > 0 ?
@@ -2113,14 +2150,13 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
               flexDirection: "row",
               justifyContent: "center",
               padding: "10px",
-              backgroundColor:"#F9F8FC"
+              backgroundColor:mode ? "#232C31" : "#F9F8FC",
             }}>
                
               <div elevation={0} style={{
                 fontStyle: "italic",
                 textAlign: 'end',
-                backgroundColor:"#F9F8FC"
-              }}>
+               }}>
                 {value === 0 ? <Typography variant="caption">1-4 Wicketkeeper</Typography> : 
                  value === 1 ? <Typography variant="caption">3-6 Batsman</Typography> : 
                  value === 2 ? <Typography variant="caption">1-4 All rounder</Typography> :
@@ -2132,7 +2168,7 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
 
 
             </Paper>
-        
+            <Paper>
         <SingleHeadingTop
           style={{
             padding: '0px',
@@ -2209,9 +2245,10 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
 
 
             </div>
-
+            
           </DuelOptionRight>
         </SingleHeadingTop>
+        </Paper>
       </Duels>
 
 
@@ -2222,57 +2259,42 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
 
       <div style={!open && value === 0 ? { display: 'block', position: "relative", width: "100%" } : { display: 'none' }}>
         <Container maxWidth="md" style={{ padding: 5 }}>
-          <Paper elevation={0} style={{
-            marginBottom: 60,
-            backgroundColor:"#F9F8FC"
-          }} >
+ 
             {Object.keys(contest).length > 0 ? showWk() : <div />}
-          </Paper>
+      
         </Container>
       </div>
       <div style={!open && value === 1 ? { display: 'block', position: "relative", width: "100%" } : { display: 'none' }}>
         <Container maxWidth="md" style={{ padding: 5 }}>
-          <Paper elevation={0} style={{
-            marginBottom: 60,
-            backgroundColor:"#F9F8FC"
-          }} >
+           
             {Object.keys(contest).length > 0 ? showBat() : <div />}
-          </Paper>
+          
         </Container>
       </div>
 
       <div style={!open && value === 2 ? { display: 'block', position: "relative", width: "100%" } : { display: 'none' }}>
         <Container maxWidth="md" style={{ padding: 5 }}>
-          <Paper elevation={0} style={{
-            marginBottom: 60,
-            backgroundColor:"#F9F8FC"
-          }} >
+           
             {Object.keys(contest).length > 0 ? showAllR() : <div />}
-          </Paper>
+          
         </Container>
       </div>
       <div style={!open && value === 3 ? { display: 'block', position: "relative", width: "100%" } : { display: 'none' }}>
         <Container maxWidth="md" style={{ padding: 5 }}>
-          <Paper elevation={0} style={{
-            marginBottom: 60,
-            backgroundColor:"#F9F8FC"
-          }} >
+          
             {Object.keys(contest).length > 0 ? showBowl() : <div />}
-          </Paper>
+      
         </Container>
       </div>
       
       
       <div style={open ? { display: 'block', position: "relative", width: "100%" } : { display: 'none' }}>
         <Container maxWidth="md" style={{ padding: 5 }}>
-            <Paper elevation={0} style={{
-              marginBottom: 60,
-              backgroundColor:"#F9F8FC"
-            }} >
+             
               <List  >
                 {prev()}
               </List>
-            </Paper>
+    
           </Container>
       </div>
 

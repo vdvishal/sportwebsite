@@ -73,6 +73,7 @@ const darkTheme = createMuiTheme({
     },
   },
   overrides: {
+
     MuiMenu:{
       paper:{
         color:"green",
@@ -95,20 +96,22 @@ const darkTheme = createMuiTheme({
         color:"#AAC0C8",
       }
     },
-    MuiSelect:{
+    MuiInputBase:{
       root:{
-        color:"white",
+         color:"white"
       }
     },
     MuiPaginationItem:{
-      root:{
+      input:{
         color:"white",
       }
     },
     MuiFormLabel:{
       root:{
         color:"white",
+
       },
+ 
       text:{
         color:"white",
       }
@@ -116,15 +119,27 @@ const darkTheme = createMuiTheme({
     MuiInputBase:{
       input:{
         color:"white",
+      },
+      root:{
+        color:"white",
       }
     },
     MuiLinearProgress:{
-      root:{
+      colorPrimary:{
         color:"white",
-        backgroundColor:'black' //:colorTheme.light.cardBackground,
+        backgroundColor:'#262c33' //:colorTheme.light.cardBackground,
       }
+    },
+    Mui:{
+      focused:{
+        color:"white"
+      }
+    },
+    MuiButton:{
+      root:{
+        color:"white"
+      },
     }
- 
   }
   
 });
@@ -132,25 +147,88 @@ const darkTheme = createMuiTheme({
 
 const lightTheme = createMuiTheme({
   palette: {
-    type: 'light',
+    
     primary:  {
       main: color.primary.main,
-      
     },
     secondary: {
       main: color.secondary.main,
-      contrastText: 'black'
+      contrastText: 'white'
     },
     overrides: {
-    //   MuiTypography:{
-    //     root:{
-    //       color: 'black'
-    //     }
-    // }
-  }
+      MuiMenu:{
+        paper:{
+          color:"green",
+          backgroundColor:theme.light.menu
+        }
+      },
+      MuiListItem:{
+        root:{
+          color:"white",
+        }
+      },
+      MuiPaper:{
+        root:{
+          color:"white",
+          backgroundColor:theme.light.cardBackground //:colorTheme.light.cardBackground,
+        }
+      },
+      MuiTab:{
+        wrapper:{
+          color:"#AAC0C8",
+        }
+      },
+      MuiSelect:{
+        select:{
+          color:"white",
+          backgroundColor:"white"
+        }
+      },
+      MuiPaginationItem:{
+        root:{
+          color:"white",
+        }
+      },
+      MuiFormLabel:{
+        root:{
+          color:"white",
+        },
+        text:{
+          color:"white",
+        }
+      },
+      MuiInputBase:{
+        input:{
+          color:"white",
+        },
+        root:{
+          color:"white",
+        }
+      },
+      MuiLinearProgress:{
+        colorPrimary:{
+          color:"white",
+          backgroundColor:'#F9F8FC' //:colorTheme.light.cardBackground,
+        }
+      },
+      MuiButton:{
+        containedSecondary:{
+          color:"white"
+      },
+      root:{
+        color:"white"
+      },
+      },
+      MuiBadge:{colorSecondary:{
+        color:"white"
+      }
+      }
+    }
     
   },
 });
+
+
 
 function App() {
 
@@ -163,6 +241,14 @@ function App() {
     )
     localStorage.getItem('mode') === 'true' ? localStorage.setItem('mode',true)  : localStorage.setItem('mode',false)
   }, [])
+
+  const handlemode = () => {
+    setMode(!mode)
+    localStorage.setItem('mode',
+      !mode ? true : false
+    )
+  }
+
   return (
     <div className="App" style={mode ? {"backgroundColor": theme.dark.background} :{"backgroundColor": theme.light.background} }>
           <Helmet>
@@ -200,7 +286,7 @@ function App() {
           <ThemeProvider theme={mode ? darkTheme : lightTheme}>
            
             <BrowserRouter >
-            <ModeContext.Provider value={[mode, setMode]} >
+            <ModeContext.Provider value={[mode, handlemode]} >
             <Home style={{minHeight:"100vh"}}>
               <Route path="/" exact component={Match} />
               <Route path="/register" exact component={Register} /> 

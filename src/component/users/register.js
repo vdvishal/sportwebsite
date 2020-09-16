@@ -13,6 +13,7 @@ import cookies from 'universal-cookie';
 
 import CloseOutlined from '@material-ui/icons/CloseOutlined';
 
+import { withStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -40,6 +41,27 @@ export const LoginContext = React.createContext()
 
 const CLIENT_ID = '303261768201-l8c6ojtlvgcees3e94gcs11pq7fns0a8.apps.googleusercontent.com';
 
+const CssTextField = withStyles({
+    root: {
+      '& label.Mui-focused': {
+        color: 'grey',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: 'green',
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: 'red',
+        },
+        '&:hover fieldset': {
+          borderColor: 'yellow',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'green',
+        },
+      },
+    },
+  })(TextField);
 
 export default function Register(props) {
     const history = useHistory()
@@ -386,12 +408,12 @@ export default function Register(props) {
     }
 
     return (
-        <div style={{
+        <Paper style={{
             maxWidth: 652,
             marginLeft: "auto",
             marginRight: "auto",
             marginTop:40,
-            backgroundColor:"white"
+ 
         }}>
          <Notification message={message} open={openB} type={type} close={handleNotificationClose} />
 
@@ -402,7 +424,7 @@ export default function Register(props) {
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: 10,
-                backgroundColor:"white"
+                 
             }} >
                 {/* onClick={handleClickJoinClose} > */}
 
@@ -417,7 +439,7 @@ export default function Register(props) {
           
             </div>
             <DialogContent>
-                <TextField
+                <CssTextField
                     autoFocus
                     margin="dense"
 
@@ -425,7 +447,7 @@ export default function Register(props) {
                     fullWidth
                     onChange={(event) => setPhoneNumber(event.target.value)}
                 />
-                <TextField
+                <CssTextField
                     autoFocus
                     margin="dense"
 
@@ -434,7 +456,7 @@ export default function Register(props) {
                     fullWidth
                     onChange={(event) => setEmail(event.target.value)}
                 />
-                <TextField
+                <CssTextField
                     autoFocus
                     margin="dense"
 
@@ -443,7 +465,7 @@ export default function Register(props) {
                     fullWidth
                     onChange={(event) => setPassword(event.target.value)}
                 />
-                <TextField
+                <CssTextField
                     autoFocus
                     margin="dense"
                     value={refCode}
@@ -535,7 +557,7 @@ export default function Register(props) {
                                 <CloseOutlined  /> 
                         </div>
                         <div style={ { padding:"10px 25px" } }>
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
                                 
@@ -544,7 +566,7 @@ export default function Register(props) {
                                 fullWidth
                                 onChange={(event) => setPhoneNumber(event.target.value)}
                             />
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
                                 
@@ -554,7 +576,7 @@ export default function Register(props) {
                                 onChange={(event) => setPassword(event.target.value)}
                             />
 
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
                                 
@@ -604,7 +626,7 @@ export default function Register(props) {
                                 </div>
 
                                 <DialogContent>
-                                    <TextField
+                                    <CssTextField
                                         autoFocus
                                         margin="dense"
 
@@ -661,6 +683,6 @@ export default function Register(props) {
                     </Dialog>
 
  
-        </div>
+        </Paper>
     )
 }

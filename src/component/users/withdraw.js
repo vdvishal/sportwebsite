@@ -405,7 +405,7 @@ export default function Profile() {
                         <Typography variant="caption">
 
 
-                            <span style={{ color: "black", fontWeight: 600 }}>
+                            <span style={{ fontWeight: 600 }}>
                                 ₹{isNaN(Number.parseFloat(bank.wallet.withdrawal).toFixed(2)) ? 0 : Number.parseFloat(bank.wallet.withdrawal).toFixed(2) }
                             </span>
                         </Typography>
@@ -440,7 +440,7 @@ export default function Profile() {
                 <div
                         style={{ padding: "20px 10px 0 0", textAlign: "end" }}
                     >
-                        <Button variant="outlined" onClick={SubmitWithdraw}>Submit</Button>
+                        <Button variant="contained" color="secondary" style={{color:"white"}} onClick={SubmitWithdraw}>Submit</Button>
                     </div>
             </Paper>
 

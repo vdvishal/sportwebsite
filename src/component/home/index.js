@@ -7,7 +7,7 @@ import  { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 import cookies from 'universal-cookie';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme,withStyles } from '@material-ui/core/styles';
 
 import CloseOutlined from '@material-ui/icons/CloseOutlined';
 
@@ -24,6 +24,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { Divider, Container, Avatar,Badge } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -45,6 +47,28 @@ import './fb.css'
 import * as logo from './logo_transparent.png'
 
 const Cookies = new cookies();
+
+const CssTextField = withStyles({
+    root: {
+      '& label.Mui-focused': {
+        color: 'grey',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: 'green',
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: 'red',
+        },
+        '&:hover fieldset': {
+          borderColor: 'yellow',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'green',
+        },
+      },
+    },
+  })(TextField);
 
 
 export const HomeContext = React.createContext()
@@ -500,7 +524,7 @@ export default function HomePage(props) {
                             <CloseOutlined />
                         </div>
                         <DialogContent  style={fullScreen ? { marginTop: 100,flexGrow:0 } : { marginTop: 0 }}>
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
 
@@ -509,7 +533,7 @@ export default function HomePage(props) {
                                 fullWidth
                                 onChange={(event) => setEmail(event.target.value)}
                             />
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
 
@@ -568,7 +592,7 @@ export default function HomePage(props) {
                                 </div>
 
                                 <DialogContent style={fullScreen ? { marginTop: 100,flexGrow:0 } : { marginTop: 0 }}>
-                                    <TextField
+                                    <CssTextField
                                         autoFocus
                                         margin="dense"
 
@@ -645,7 +669,7 @@ export default function HomePage(props) {
                             <CloseOutlined />
                         </div>
                         <DialogContent  style={fullScreen ? { marginTop: 100,flexGrow:0 } : { marginTop: 0 }}>
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
 
@@ -689,7 +713,7 @@ export default function HomePage(props) {
                             <CloseOutlined />
                         </div>
                         <DialogContent style={fullScreen ? { marginTop: 100,flexGrow:0 } : { marginTop: 0 }}>
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
 
@@ -698,7 +722,7 @@ export default function HomePage(props) {
                                 fullWidth
                                 onChange={(event) => setOTP(event.target.value)}
                             />
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
 
@@ -707,7 +731,7 @@ export default function HomePage(props) {
                                 fullWidth
                                 onChange={(event) => setpassword(event.target.value)}
                             />
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
 
@@ -778,7 +802,7 @@ export default function HomePage(props) {
                             <CloseOutlined />
                         </div>
                         <DialogContent style={fullScreen ? { marginTop: 100,flexGrow:0 } : { marginTop: 0 }}>
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
 
@@ -787,7 +811,7 @@ export default function HomePage(props) {
                                 fullWidth
                                 onChange={(event) => setPhoneNumber(event.target.value)}
                             />
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
 
@@ -797,7 +821,7 @@ export default function HomePage(props) {
                                 onChange={(event) => setPassword(event.target.value)}
                             />
 
-                            <TextField
+                            <CssTextField
                                 autoFocus
                                 margin="dense"
 
@@ -940,7 +964,7 @@ export default function HomePage(props) {
                                     flexDirection: 'column'
                                 }}>
                                     <div
-                                    onClick={()=>{mode ? localStorage.setItem('mode',false)  : localStorage.setItem('mode',true);setMode(!mode);}}
+                                     
                                         style={{
                                             display: 'flex',
                                             flexDirection: 'row',
@@ -973,8 +997,27 @@ export default function HomePage(props) {
                                     </div>
                                 </MenuItem>
                                 <Divider />
-                                 
-                               
+                                
+                                <MenuItem 
+                                    onClick={() => {setMode(!mode);handleClose()}}
+                                    >  
+                                    <div
+                                        style={{
+                                            display:"flex",
+                                            width:"100%",
+                                            justifyContent:"space-between",
+                                            alignContent:"center",
+                                            alignItems:"center"
+                                        }}
+                                    >
+                                        <Typography variant="caption">
+                                            Color Mode
+                                        </Typography>
+                                        {mode ? <BrightnessHighIcon /> : <Brightness4Icon />}
+                                    </div>
+                                      
+                                         
+                                    </MenuItem>
                                 <Link
                                     to={{
                                         pathname: '/transactions'
