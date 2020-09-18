@@ -2,6 +2,7 @@
 /* eslint-disable no-lone-blocks */
 import React from 'react';
 import ReactGA from 'react-ga';
+import Slider from "react-slick";
 
 import { Link } from 'react-router-dom';
  
@@ -64,6 +65,19 @@ min-width:760px;
     transform: scale(1.025);
     box-shadow:0 0 0.52em 0 rgba(0,0,0,0.15)
 }
+`;
+
+const SDiv2 = styled.div`
+transition: transform .2s;
+cursor:pointer;
+padding: 2.5px;
+max-width:760px;
+display:none;
+@media ${device.hdiv} {
+  padding: 2.5px;
+  display:block
+}
+ 
 `;
 
 const HDiv = styled.div`
@@ -281,9 +295,194 @@ export default function Match(props) {
      
   </div>)
 
+const viewMyMatch = () => matches.map(match => 
+<div
+ 
+  key={match._id}
+>
+  <SDiv2 >
+    <Paper className="dark" elevation={1}
+        
+        style={{
+        height: 'auto',
+        padding: 10,
+        margin: "10px 0",
+
+        // color: "theme" !== 1 ? colorTheme.dark.text:colorTheme.light.text,
+        // backgroundColor: "theme" !== 1 ? colorTheme.dark.cardBackground:colorTheme.light.cardBackground,
+      
+      }}
+      className="dark"
+    >
+      <Link to={{
+        pathname: `/contest/${match.id}`,
+        state: {
+          matchInfo: match
+        }
+      }}
+        style={{
+          textDecoration: 'none',
+        }}
+      >
+        <Paper elevation={0}
+        
+          style={{
+            height: 25,
+            fontSize: '0.75rem',
+            // color: "theme" !== 1 ? colorTheme.dark.text:colorTheme.light.text,
+            // backgroundColor: "theme" !== 1 ? colorTheme.dark.cardBackground:colorTheme.light.cardBackground,
+          }}
+        >
+          {match.league.name}
+        </Paper>
+        <Divider />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: 'space-between',
+            alignItems: "center",
+
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+            }}
+          >
+            <Paper elevation={0}
+              style={{
+
+                height: 'auto',
+                margin: 20,
+                fontWeight: 600,
+                // color: "theme" !== 1 ? colorTheme.dark.text:colorTheme.light.text,
+                // backgroundColor: "theme" !== 1 ? colorTheme.dark.cardBackground:colorTheme.light.cardBackground,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: 'row',
+                  width: "100%",
+                  justifyContent: "space-between"
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: 'row',
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "space-between"
+                  }}
+                >
+
+                  <Avatar src={match.localteam.image_path} variant="circle"></Avatar>
+                  <Typography variant="caption" style={{
+                    fontWeight: 600,
+                    margin: 10
+                  }}>
+                    {match.localteam.code}
+                  </Typography>
+
+
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: 'row',
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: "3.5px",
+                     color: "theme" !== 1 ? colorTheme.dark.countDownText:colorTheme.light.countDownText,
+          
+                  }}
+                >
+                  <Typography variant="caption" style={{ margin: "3px 5px", fontWeight: 600 }}>
+                  <Countdown 
+                   
+                   date={match.starting_at ? match.starting_at : match.starting_at} 
+                   daysInHours={false} />
+                </Typography>
+                  
+
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: 'row',
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "space-between"
+                  }}>
+
+                  <Typography variant="caption" style={{
+                    fontWeight: 600,
+                    margin: 10
+                  }}>
+                    {match.visitorteam.code}
+                  </Typography>
+                  <Avatar src={match.visitorteam.image_path} variant="circle"></Avatar>
+
+                </div>
+              </div>
+
+            </Paper>
+
+
+          </div>
 
 
 
+        </div>
+      </Link>
+    </Paper>
+  </SDiv2>
+   
+</div>)
+
+
+const settings = {
+  arrows: false,
+  infinite: false,
+  speed: 500,
+  autoplaySpeed:2500,
+  autoplay:true,
+  slidesToShow: 2,
+  slidesToScroll: 2,
+  initialSlide: 0,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        infinite: true,
+         
+      }
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        initialSlide: 2
+      }
+    },
+    {
+      breakpoint: 525,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+  ]
+
+};
 
 
 
@@ -298,12 +497,93 @@ export default function Match(props) {
  
       }}
     >
+       <HDiv>
+        <Container maxWidth="md" style={{padding:"2.5px 2.50px",maxWidth:760}} >
+          
+        <Slider {...settings}>
+              <div
+      style={{height:"100%",maxWidth:760 }}
+      key={"deposit"}
+      >
+  <SDiv2 >
+   <Paper className="dark" elevation={1}
+       
+       style={{
+       height: 'auto',
+       padding: 10,
+       margin: "10px 0",
 
-      <HDiv>
-        {/* <Container maxWidth="md" style={{padding:"2.5px 2.50px"}} >
-        <img style={{width:"100%",maxHeight:160}} src="https://images.fanfight.com/Refer%26Earn%20InAppBanner-31595323227122.jpg" alt="banner" />
+       // color: "theme" !== 1 ? colorTheme.dark.text:colorTheme.light.text,
+       // backgroundColor: "theme" !== 1 ? colorTheme.dark.cardBackground:colorTheme.light.cardBackground,
+     
+     }}
+     className="dark"
+   >
+     
+     <Link to={{
+       pathname: `/myaccount`,
+ 
+     }}
+       style={{
+         textDecoration: 'none',
+       }}
+     >
+       <Paper elevation={0}
+       
+         style={{
+           height: 25,
+           fontSize: '0.75rem',
+           // color: "theme" !== 1 ? colorTheme.dark.text:colorTheme.light.text,
+           // backgroundColor: "theme" !== 1 ? colorTheme.dark.cardBackground:colorTheme.light.cardBackground,
+         }}
+       >
+         
+       </Paper>
+       <Divider />
+       <div
+         style={{
+           display: "flex",
+           flexDirection: "row",
+           justifyContent: 'space-between',
+           alignItems: "center",
 
-        </Container> */}
+         }}
+       >
+         <div
+           style={{
+             width: "100%",
+           }}
+         >
+           <Paper elevation={0}
+             style={{
+
+               height: 'auto',
+               margin: 30,
+               fontWeight: 600,
+               // color: "theme" !== 1 ? colorTheme.dark.text:colorTheme.light.text,
+               // backgroundColor: "theme" !== 1 ? colorTheme.dark.cardBackground:colorTheme.light.cardBackground,
+             }}
+           >
+ 
+           </Paper>
+
+
+         </div>
+
+
+
+       </div>
+     </Link>
+   </Paper>
+ </SDiv2>
+  
+</div>
+          {matches.length > 0 ? viewMyMatch() : <div></div>}
+         </Slider>
+        </Container>
+ 
+
+         
         <Container maxWidth="md"
           style={{
             backgroundColor: color.secondary.main,
@@ -311,7 +591,7 @@ export default function Match(props) {
             borderRadius: 4,
             padding:10
           }}>
-            
+
           <Typography
             variant="caption"
             style={{

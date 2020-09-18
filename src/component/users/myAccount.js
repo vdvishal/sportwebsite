@@ -399,8 +399,8 @@ export default function Profile() {
                             }} >
                                   <Typography variant="caption" style={{
                            
-                           fontWeight: 600,
-                           fontSize: 'large',
+                           fontWeight: 500,
+                           fontSize: 'medium',
                            lineHeight: 1.5,
                            // marginTop:20
                        }}>
@@ -429,7 +429,7 @@ export default function Profile() {
                                  
                             </Grid>
                             <Grid item xs={6} sm={6} lg={6} style={{
-                                fontWeight: 600,
+                                fontWeight: 500,
                                  
                                 lineHeight: 1.5,
                                 padding: '10px',
@@ -440,12 +440,12 @@ export default function Profile() {
                                   <Typography variant="caption" style={{
                            
                            fontWeight: 600,
-                           fontSize: 'large',
+                           fontSize: 'medium',
                            lineHeight: 1.5,
                            // marginTop:20
                        }}>
                                 <span style={{color:"#ff3502"}}>
-                                           ₹{data.stats ? data.stats.loss : 0}
+                                           -₹{data.stats ? -data.stats.loss : 0}
                                        </span>
                                </Typography>
                             </Grid>
@@ -468,7 +468,7 @@ export default function Profile() {
                                  
                             </Grid>
                             <Grid item xs={6} sm={6} lg={6} style={{
-                                fontWeight: 600,
+                                fontWeight: 500,
                                  
                                 lineHeight: 1.5,
                                 padding: '10px',
@@ -479,7 +479,7 @@ export default function Profile() {
                                   <Typography variant="caption" style={{
                            
                            fontWeight: 600,
-                           fontSize: 'large',
+                           fontSize: 'medium',
                            lineHeight: 1.5,
                            // marginTop:20
                        }}>

@@ -2093,7 +2093,7 @@ export default function Contest(props) {
                   horizontal: 'right',
                 }}
                 badgeContent="C"
-                color="error"
+                color="secondary"
                 style={{ height: "50px", width: "50px", alignSelf: "center" }}
               >
                 <Avatar src={team.captain.image_path} style={{ height: "50px", width: "50px", alignSelf: "center" }} variant="circle" />
@@ -2115,7 +2115,7 @@ export default function Contest(props) {
                   horizontal: 'right',
                 }}
                 badgeContent="VC"
-                color="error"
+                color="secondary"
                 style={{ height: "50px", width: "50px", alignSelf: "center" }}
               >
                 <Avatar src={team.viceCaptain.image_path} style={{ height: "50px", width: "50px" }} variant="circle" />
@@ -2178,7 +2178,7 @@ export default function Contest(props) {
                   horizontal: 'right',
                 }}
                 badgeContent="C"
-                color="error"
+                color="secondary"
                 style={{ height: "50px", width: "50px", alignSelf: "center" }}
               >
                 <Avatar src={team.captain.image_path} style={{ height: "50px", width: "50px", alignSelf: "center" }} variant="circle" />
@@ -2200,7 +2200,7 @@ export default function Contest(props) {
                   horizontal: 'right',
                 }}
                 badgeContent="VC"
-                color="error"
+                color="secondary"
                 style={{ height: "50px", width: "50px", alignSelf: "center" }}
               >
                 <Avatar src={team.viceCaptain.image_path} style={{ height: "50px", width: "50px" }} variant="circle" />

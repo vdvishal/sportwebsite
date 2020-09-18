@@ -47,6 +47,7 @@
     "react-router-sitemap": "^1.2.0",
     "react-scripts": "3.4.1",
     "react-share": "^4.2.1",
+    "react-slick": "^0.27.11",
     "react-sticky": "^6.0.3",
     "react-swipeable-views": "^0.13.9",
     "react-table": "^7.1.0",
