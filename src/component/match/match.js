@@ -384,7 +384,9 @@ export default function Match(props) {
        textAlign:"center",
        marginTop:"40vh"
     }}>
-      <Typography variant="subtitle2">
+      <Typography variant="subtitle2" style={{
+        color:"grey"
+      }}>
         No Upcoming matches
       </Typography>
     </div>

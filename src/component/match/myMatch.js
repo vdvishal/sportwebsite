@@ -138,8 +138,7 @@ export default function MyMatch(props) {
             padding: 10,
             margin: "10px 0",
             borderRadius:5,
-            color: color.card.color,
- 
+            
             
           }}
         >
@@ -157,7 +156,7 @@ export default function MyMatch(props) {
               style={{
                 height: 25,
                 fontSize: '0.75rem',
-                color: color.card.color,
+                 
                 
               }}
             >
@@ -184,7 +183,7 @@ export default function MyMatch(props) {
                     height: 'auto',
                     margin: 20,
                     fontWeight: 600,
-                    color: color.card.color,
+                     
                     
                   }}
                 >

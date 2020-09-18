@@ -541,6 +541,9 @@ export default function Profile() {
                             </Paper>
                              : <ImageUploader
                              withIcon={true}
+                             style={{
+                                 color:"black"
+                             }}
                              buttonText='Choose images'
                              onChange={onDrop}
                              imgExtension={['.jpg','.png' ]}

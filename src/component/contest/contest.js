@@ -1754,7 +1754,7 @@ export default function Contest(props) {
 
                     color: '#77BC37'
                   }}>
-                  Payout: 1.9x
+                  Payout: ₹{contest.totalAmount.toFixed(2)}
                   </Typography>
               </div>
             </DuelSingleRight>
@@ -1875,7 +1875,7 @@ export default function Contest(props) {
               padding: "6.89px 0",
               color: "#77BC37",
             }}
-              onClick={() => { setCustomDuelDialog(true); setJoinCustom({ contestId: contest._id, amount: contest.amount.toFixed(2), player1Detail: contest.player1Detail }); joinDialog(false); setMinimize4(true) }}
+              onClick={() => { setCustomDuelDialog(true); setJoinCustom({ contestId: contest._id, amount: contest.amount.toFixed(2),contestInfo: contest, player1Detail: contest.player1Detail }); joinDialog(false); setMinimize4(true) }}
             >
               <Typography variant="caption" style={{
                 color: "grey",
@@ -1905,7 +1905,7 @@ export default function Contest(props) {
               <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
 
                 <Button size="small"
-                  onClick={() => { setCustomDuelDialog(true); setJoinCustom({ contestId: contest._id, amount: contest.amount.toFixed(2), player1Detail: contest.player1Detail }); joinDialog(false); setMinimize4(true) }}
+                  onClick={() => { setCustomDuelDialog(true); setJoinCustom({ contestId: contest._id, amount: contest.amount.toFixed(2),contestInfo: contest, player1Detail: contest.player1Detail }); joinDialog(false); setMinimize4(true) }}
                   variant="contained" style={{
                     backgroundColor: '#77BC37',
                     color: 'white'
@@ -1917,7 +1917,7 @@ export default function Contest(props) {
 
                   color: '#77BC37'
                 }}>
-                Payout: 1.9x
+                Payout: ₹{contest.totalAmount}
                   </Typography>
             </div>
           </DuelSingleRight>
@@ -3189,10 +3189,10 @@ export default function Contest(props) {
                             {player.fullname}
                           </Typography>
                           <Typography variant="caption" >
-                            {player.teamDetails.code}
+                            {player.teamDetails ? player.teamDetails.code : ''}
                           </Typography>
                           <Typography variant="caption" >
-                            {player.position.name}
+                            {player.position ? player.position.name : ''}
                           </Typography>
 
                         </div>
@@ -3570,7 +3570,7 @@ export default function Contest(props) {
 
             }}>
 
-              <div>
+              {/* <div>
                 <Typography variant="caption">
                   Multiplier
                </Typography>
@@ -3581,7 +3581,7 @@ export default function Contest(props) {
                </Typography>
 
 
-              </div>
+              </div> */}
             </div>
             <div style={{
               display: "flex",
@@ -3594,7 +3594,7 @@ export default function Contest(props) {
                </Typography>
               <div>
                 <Typography variant="caption" style={{ color: "#77BC37", fontWeight: 700 }}>
-                  {isNaN(customDialogDetail.amount) ? 0 : (customDialogDetail.amount * 1.9).toFixed(2)}₹
+                  {isNaN(customDialogDetail.contestInfo ? customDialogDetail.contestInfo.totalAmount : 0) ? 0 : (customDialogDetail.contestInfo ? customDialogDetail.contestInfo.totalAmount : 0).toFixed(2)}₹
                </Typography>
 
               </div>
@@ -3714,11 +3714,11 @@ export default function Contest(props) {
                         {player.fullname}
                       </Typography>
                       <Typography variant="caption" >
-                        {player.position.name}
-                      </Typography>
-                      <Typography variant="caption" >
-                        {player.teamDetails.code}
-                      </Typography>
+                            {player.teamDetails ? player.teamDetails.code : ''}
+                          </Typography>
+                          <Typography variant="caption" >
+                            {player.position ? player.position.name : ''}
+                          </Typography>
                     </div>
 
 
@@ -3740,7 +3740,7 @@ export default function Contest(props) {
 
             }}>
 
-              <div>
+              {/* <div>
                 <Typography variant="caption">
                   Multiplier
                </Typography>
@@ -3751,7 +3751,7 @@ export default function Contest(props) {
                </Typography>
 
 
-              </div>
+              </div> */}
             </div>
             <div style={{
               display: "flex",
@@ -3764,7 +3764,7 @@ export default function Contest(props) {
                </Typography>
               <div>
                 <Typography variant="caption" style={{ color: "#77BC37", fontWeight: 700 }}>
-                  {isNaN(customDialogDetail.amount) ? 0 : (customDialogDetail.amount * 1.9).toFixed(2)}₹
+                  {isNaN(customDialogDetail.contestInfo ? customDialogDetail.contestInfo.totalAmount : 0) ? 0 : (customDialogDetail.contestInfo ? customDialogDetail.contestInfo.totalAmount : 0).toFixed(2)}₹
                </Typography>
 
               </div>
@@ -4030,11 +4030,11 @@ export default function Contest(props) {
                           {player.fullname}
                         </Typography>
                         <Typography variant="caption" >
-                          {player.teamDetails.code}
-                        </Typography>
-                        <Typography variant="caption" >
-                          {player.position.name}
-                        </Typography>
+                            {player.teamDetails ? player.teamDetails.code : ''}
+                          </Typography>
+                          <Typography variant="caption" >
+                            {player.position ? player.position.name : ''}
+                          </Typography>
                       </div>
 
 

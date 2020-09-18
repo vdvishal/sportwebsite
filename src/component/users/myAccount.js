@@ -269,7 +269,7 @@ export default function Profile() {
                                 Total Balance
                         <br />
                                 <span >
-                                    <Typography variant="caption" style={{ fontSize: "1.25rem"}} >
+                                    <Typography variant="caption"  color="secondary" style={{ fontSize: "1.25rem"}} >
                                         ₹{Number.parseFloat(data.wallet.balance).toFixed(2)}
                                     </Typography>
                                 </span>
@@ -285,12 +285,21 @@ export default function Profile() {
                                 }}>
                                     Bonus
                         <br />
-                                    <span  >
-                                        ₹{Number.parseFloat(data.wallet.bonus).toFixed(2)}
+                        <Typography variant="caption" color="secondary" style={{
+                           
+                           fontWeight: 600,
+                           fontSize: 'large',
+                           lineHeight: 1.5,
+                           // marginTop:20
+                       }} >
+                           ₹{Number.parseFloat(data.wallet.bonus).toFixed(2)}
+                           </Typography>
+                                    <span   >
+                                        
                                     </span>
                                     <br />
-                                    <Typography variant="caption" style={{ fontSize: 10 }}>
-                                        100% of can be used when joining a contest
+                                    <Typography variant="caption" style={{ fontSize: 11.5 }}>
+                                        100% of bonus can be used when joining a contest upto a total of ₹100, after that 50% of bonus is usable
                             </Typography>
                                 </div>
 
@@ -317,11 +326,11 @@ export default function Profile() {
                                         
                                      
                                     <br />
-                                    <Typography variant="caption" style={{ fontSize: 10 }}>
+                                    <Typography variant="caption" style={{ fontSize: 11.5}}>
                                         Minimum amount you can withdraw ₹200 
                             </Typography>
                             <br />
-                                    <Typography variant="caption" style={{ fontSize: 10 }}>
+                                    <Typography variant="caption" style={{ fontSize: 11.5}}>
                                         Minimum deposit should be ₹50 
                             </Typography>
                                 </div>
@@ -362,6 +371,128 @@ export default function Profile() {
 
                         </Grid>
                     </Paper>
+                    <Paper>
+                        <Grid container style={{ marginTop: '20px' }} >
+                            <Grid item xs={6} sm={6} lg={6} style={{
+                                textAlign: 'left',
+                                fontWeight: 600,
+                                 
+                                lineHeight: 1.5,
+                                padding: '10px',
+                                display:"flex",
+                                alignItems:"center"
+                            }}>
+                                
+                                <Typography variant="caption" >
+                                        Profit
+                               </Typography>
+                                 
+                            </Grid>
+                            <Grid item xs={6} sm={6} lg={6} style={{
+                                fontWeight: 600,
+                                 
+                                lineHeight: 1.5,
+                                padding: '10px',
+                                justifyContent:"flex-end",
+                                display:"flex",
+                                alignItems:"center"
+                            }} >
+                                  <Typography variant="caption" style={{
+                           
+                           fontWeight: 600,
+                           fontSize: 'large',
+                           lineHeight: 1.5,
+                           // marginTop:20
+                       }}>
+                                       <span style={{color:"#77BC37"}}>
+                                           ₹{data.stats ? data.stats.profit : 0}
+                                       </span>
+                                        
+                               </Typography>
+                            </Grid>
+
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={6} sm={6} lg={6} style={{
+                                textAlign: 'left',
+                                fontWeight: 600,
+                                 
+                                lineHeight: 1.5,
+                                padding: '10px',
+                                display:"flex",
+                                alignItems:"center"
+                            }}>
+                                
+                                <Typography variant="caption" >
+                                        Loss
+                               </Typography>
+                                 
+                            </Grid>
+                            <Grid item xs={6} sm={6} lg={6} style={{
+                                fontWeight: 600,
+                                 
+                                lineHeight: 1.5,
+                                padding: '10px',
+                                justifyContent:"flex-end",
+                                display:"flex",
+                                alignItems:"center"
+                            }} >
+                                  <Typography variant="caption" style={{
+                           
+                           fontWeight: 600,
+                           fontSize: 'large',
+                           lineHeight: 1.5,
+                           // marginTop:20
+                       }}>
+                                <span style={{color:"#ff3502"}}>
+                                           ₹{data.stats ? data.stats.loss : 0}
+                                       </span>
+                               </Typography>
+                            </Grid>
+
+                        </Grid>
+                        <Grid container >
+                            <Grid item xs={6} sm={6} lg={6} style={{
+                                textAlign: 'left',
+                                fontWeight: 600,
+                                 
+                                lineHeight: 1.5,
+                                padding: '10px',
+                                display:"flex",
+                                alignItems:"center"
+                            }}>
+                                
+                                <Typography variant="caption" >
+                                        Waggered
+                               </Typography>
+                                 
+                            </Grid>
+                            <Grid item xs={6} sm={6} lg={6} style={{
+                                fontWeight: 600,
+                                 
+                                lineHeight: 1.5,
+                                padding: '10px',
+                                justifyContent:"flex-end",
+                                display:"flex",
+                                alignItems:"center"
+                            }} >
+                                  <Typography variant="caption" style={{
+                           
+                           fontWeight: 600,
+                           fontSize: 'large',
+                           lineHeight: 1.5,
+                           // marginTop:20
+                       }}>
+                                <span style={{color:"grey"}}>
+                                           ₹{data.stats ? data.stats.waggered : 0}
+                                       </span>
+                               </Typography>
+                            </Grid>
+
+                        </Grid>
+                   
+                    </Paper>
+
 
                     <Paper>
                         <Grid container style={{ marginTop: '20px' }} >

@@ -429,7 +429,7 @@ const DuelsCustom = styled.div`
     margin:10px 0 10px 0;
     
      text-align:center;
-     border: 1px solid #cdcbcb;
+      
     border-radius: 5px;
  
   }
@@ -2132,7 +2132,7 @@ export default function Contest(props) {
 
                     color: '#77BC37'
                   }}>
-                  Payout: 1.9x
+                  No Challenger yet
                   </Typography>
               </div>
             </DuelSingleRight>
@@ -2373,7 +2373,7 @@ export default function Contest(props) {
 
                     color: '#77BC37'
                   }}>
-                  Payout: 1.9x
+                  No Challenger yet
                   </Typography>
               </div>
             </DuelSingleRight>
