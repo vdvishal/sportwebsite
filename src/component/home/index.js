@@ -1,5 +1,6 @@
 import React, { useEffect,useContext } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory, Router } from "react-router-dom";
+
 import * as js from '../common/color.json';
 import Countdown from 'react-countdown';
 import  { CountdownCircleTimer } from 'react-countdown-circle-timer';
@@ -33,7 +34,8 @@ import Paper from '@material-ui/core/Paper';
 
 import TextField from '@material-ui/core/TextField';
 import Notification from '../common/notification'
- 
+import styled from 'styled-components'
+
 import Footer from './footer'
 
 
@@ -42,9 +44,36 @@ import { ModeContext } from '../../App';
 
 import * as api from '../../api/user'
 import * as ref from '../../api/ref'
+import * as matchapi from '../../api/match';
+
 
 import './fb.css'
 import * as logo from './logo_transparent.png'
+
+const size = {
+    mobileS: '320px',
+    mobileM: '375px',
+    mobileL: '525px',
+    tablet: '768px',
+    laptop: '1024px',
+    laptopL: '1440px',
+    desktop: '2560px',
+    customPreset: '525px',
+ 
+  
+  }
+
+  const device = {
+    mobileS: `(max-width: ${size.mobileS})`,
+    mobileM: `(max-width: ${size.mobileM})`,
+    mobileL: `(max-width: ${size.mobileL})`,
+    tablet: `(max-width: ${size.tablet})`,
+    laptop: `(max-width: ${size.laptop})`,
+    laptopL: `(max-width: ${size.laptopL})`,
+    desktop: `(max-width: ${size.desktop})`,
+    desktopL: `(max-width: ${size.desktop})`,
+    customPreset: `(max-width: ${size.customPreset})`,  
+  };
 
 const Cookies = new cookies();
 
@@ -70,10 +99,50 @@ const CssTextField = withStyles({
     },
   })(TextField);
 
+  const SDiv = styled.div`
+ 
+cursor:pointer;
+height:25px;
+background-color:#232C31;
+margin-left:20px;
+display:flex;
+align-items:center;
+color:#AAC0C8;
+@media ${device.customPreset} {
+    display:none
+ };
+&:hover {
+    color: #77BC37;
+}
+`;
+
+const SDivMenu = styled.div`
+    cursor:pointer;
+    height:25px;
+    background-color:#232C31;
+    
+    display:flex;
+    align-items:center;
+    color:#AAC0C8;
+    @media ${device.customPreset} {
+        cursor:pointer;
+        height:25px;
+        background-color:#232C31;
+         
+        display:flex;
+        align-items:center;
+        color:#AAC0C8;
+    };
+    &:hover {
+        color: #77BC37;
+    }
+`; 
 
 export const HomeContext = React.createContext()
 export const LoginContext = React.createContext()
+export const GameContext = React.createContext()
 
+ 
 export const WalletBonusContext = React.createContext()
 
 export const TransactContext = React.createContext()
@@ -135,8 +204,12 @@ export default function HomePage(props) {
 
     const [mode, setMode] = useContext(ModeContext)
 
- 
+    const [game, setGame] = React.useState(1);
+
+    const [matches, setMatches] = React.useState(null);
+
     useEffect(() => {
+ 
         if (localStorage.getItem('isLogged') === "false" || localStorage.getItem('isLogged') === null) {
             api.login({ loginType: 4 }).then(response => {
                 if (response && response.status === 200) {
@@ -184,6 +257,14 @@ export default function HomePage(props) {
             }
         })
 
+        matchapi.match(game,1).then(response => {      
+            if(response.data.match !== null){      
+                  setMatches(response.data.match);
+            }else{
+              setMatches([]);
+            }
+          })
+
     }, []);
 
     const setEmail = (mail) => {
@@ -207,6 +288,31 @@ export default function HomePage(props) {
 
     const handleForgot = () => {
         setSendForget(true)
+    }
+
+    const handleGameType = (value) => {
+        
+        if(window.location.pathname === "/"){
+            setGame(value);
+            matchapi.match(value,1).then(response => {      
+                if(response.data.match !== null){      
+                      setMatches(response.data.match);
+                }else{
+                  setMatches([]);
+                }
+              })
+        }else{
+            setGame(value);
+            setMatches(null);
+            matchapi.match(value,1).then(response => {      
+                if(response.data.match !== null){      
+                      setMatches(response.data.match);
+                }else{
+                  setMatches([]);
+                }
+              })
+            history.push('/')
+        }
     }
 
     const handleClickLoginOpen = () => {
@@ -496,8 +602,9 @@ export default function HomePage(props) {
             <TransactContext.Provider value={[msg, setMsgCount]} >
                 <WalletBonusContext.Provider value={[bonus, setBonus]} >
                 <LoginContext.Provider value={[openLogin, setOpenLogin]} >
+                <GameContext.Provider value={[matches, handleGameType]} >
 
-
+                
                     <Notification message={message} open={openB} type={type} close={handleNotificationClose} />
                      
                     <Dialog fullScreen={fullScreen} open={openLogin}
@@ -871,6 +978,39 @@ export default function HomePage(props) {
                                 }}>
                                     <img src={logo} height="60px" alt="logo"></img>
                             </Link>
+                                <SDiv
+                                    style={{
+                                        color:game === 1 ? "white" : '',
+                                        backgroundColor: game === 1 ? "#77BC37" : '',
+                                        borderRadius: "5px 0 0 5px"
+                                    }}
+                                    onClick={() => handleGameType(1)}
+                                >
+                                <Typography variant="caption" style={{
+                                fontWeight:600,
+                                padding:10,
+                                
+                            }}>
+                                Cricket
+                            </Typography>
+                                </SDiv>
+                                <SDiv 
+                                    style={{
+                                    marginLeft:0,
+                                    color:game === 2 ? "white" : '',
+                                    backgroundColor: game === 2 ? "#77BC37" : '',
+                                    borderRadius: "0px 5px 5px 0px"
+                                }}
+                                    onClick={() => handleGameType(2)}
+                                    >
+                                    <Typography variant="caption" style={{
+                                    fontWeight:600,
+                                    padding:10
+                                        }}>
+                                            FootBall
+                                        </Typography>
+                                </SDiv>
+
                         </div>
 
 
@@ -997,7 +1137,44 @@ export default function HomePage(props) {
                                     </div>
                                 </MenuItem>
                                 <Divider />
+                            <MenuItem onClick={handleClose} style={{
+                                display:"flex",
+                                justifyContent:"center"
+                            }}>
+                                <SDivMenu
+                                    style={{
+                                        color:game === 1 ? "white" : '',
+                                        backgroundColor: game === 1 ? "#77BC37" : '',
+                                        borderRadius: "5px 0 0 5px"
+                                    }}
+                                    onClick={() => handleGameType(1)}
+                                >
+                                <Typography variant="caption" style={{
+                                fontWeight:600,
+                                padding:10,
                                 
+                            }}>
+                                Cricket
+                            </Typography>
+                                </SDivMenu>
+                                <SDivMenu 
+                                    style={{
+                                    
+                                    color:game === 2 ? "white" : '',
+                                    backgroundColor: game === 2 ? "#77BC37" : '',
+                                    borderRadius: "0px 5px 5px 0px"
+                                }}
+                                    onClick={() => handleGameType(2)}
+                                    >
+                                    <Typography variant="caption" style={{
+                                    fontWeight:600,
+                                    padding:10
+                                        }}>
+                                            FootBall
+                                        </Typography>
+                                </SDivMenu>
+                                </MenuItem>
+                                <Divider />
                                 <MenuItem 
                                     onClick={() => {setMode(!mode);handleClose()}}
                                     >  
@@ -1108,7 +1285,8 @@ export default function HomePage(props) {
 
                     </AppBar>
                     {props.children}
-                                    
+                    </GameContext.Provider>
+           
                 </LoginContext.Provider>
                 </WalletBonusContext.Provider>
                 </TransactContext.Provider>

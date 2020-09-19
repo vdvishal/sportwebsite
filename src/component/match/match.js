@@ -6,7 +6,7 @@ import Slider from "react-slick";
 
 import { Link } from 'react-router-dom';
  
-import { useEffect } from 'react';
+import { useEffect,useContext } from 'react';
 import Countdown from 'react-countdown';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -21,6 +21,7 @@ import * as colorTheme from '../../json/colorPallete.json'
 import { Paper, Divider, Typography, Avatar } from '@material-ui/core';
 
 import styled from 'styled-components';
+import { GameContext } from '../home/index';
 
 
 const size = {
@@ -107,9 +108,10 @@ let dynamicObj = {}
 
 export default function Match(props) {
 
-  const [matches, setMatches] = React.useState(null);
+  // const [matches, setMatches] = React.useState(null);
   
 
+  const [matches, handleGameType] = useContext(GameContext)
 
 
 
@@ -117,29 +119,25 @@ export default function Match(props) {
      
     ReactGA.pageview(props.location.pathname);
 
-    api.match("CS:GO",1).then(response => {
- 
-      
- if(response.data.match !== null){
-      dynamicObj = {}
-      response.data.match.forEach(contest => {
-        dynamicObj = {
-          ...dynamicObj,
-          [contest._id]: {
-            bool: false,
-            [contest._id + "playerL"]: false,
-            [contest._id + "playerR"]: false,
-          }
-        }
-      })
+    // api.match(1,1).then(response => {      
+    //   if(response.data.match !== null){
+    //         dynamicObj = {}
+    //         // response.data.match.forEach(contest => {
+    //         //   dynamicObj = {
+    //         //     ...dynamicObj,
+    //         //     [contest._id]: {
+    //         //       bool: false,
+    //         //       [contest._id + "playerL"]: false,
+    //         //       [contest._id + "playerR"]: false,
+    //         //     }
+    //         //   }
+    //         // })
 
-      setMatches(response.data.match);
-}else{
-  setMatches([]);
-}
- 
-
-    })
+    //         setMatches(response.data.match);
+    //   }else{
+    //     setMatches([]);
+    //   }
+    // })
   }, []);
 
 
@@ -498,7 +496,7 @@ const settings = {
       }}
     >
        <HDiv>
-        <Container maxWidth="md" style={{padding:"2.5px 2.50px",maxWidth:760}} >
+        {/* <Container maxWidth="md" style={{padding:"2.5px 2.50px",maxWidth:760}} >
           
         <Slider {...settings}>
               <div
@@ -580,7 +578,7 @@ const settings = {
 </div>
           {matches.length > 0 ? viewMyMatch() : <div></div>}
          </Slider>
-        </Container>
+        </Container> */}
  
 
          
@@ -667,7 +665,7 @@ const settings = {
       <Typography variant="subtitle2" style={{
         color:"grey"
       }}>
-        No Upcoming matches
+        Coming soon
       </Typography>
     </div>
 

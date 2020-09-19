@@ -6,7 +6,8 @@ import ReactGA from 'react-ga';
 import  {  useEffect,useContext } from 'react';
 import * as color from '../../json/color.json'
 
-//
+import Pagination from '@material-ui/lab/Pagination';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import styled from 'styled-components'
 
@@ -88,10 +89,16 @@ export default function MyMatch(props) {
 
     const [value, setValue] = React.useState(0);
 
+    const [page, setPage] = React.useState(null);
+
+    const [activePage, setActivePage] = React.useState(1);
+
+    const [gameType, setGameType] = React.useState(0);
+
     useEffect(() => {
       ReactGA.pageview(props.location.pathname);
 
-        api.myMatch(1).then(response => {
+        api.myMatch(1,page,gameType+1).then(response => {
             setresp(200)
             
             setMatches(response.data.data || [])
@@ -104,14 +111,55 @@ export default function MyMatch(props) {
         })
     },[]);
  
-    const handleChange = (event, newValue) => {
+const handleGameChange  = (event, newValue) => {
+      setWait(true)
+      setMatches([])
+      setGameType(newValue)
+      api.myMatch(newValue+1,1,newValue+1).then(response => {
+        console.log(response);
+          setresp(200)
+          setWait(false)
+          setPage(response.data.page)
+          
+          setMatches(response.data.data || [])
+      }).catch(err => {
+        console.log(err);
+        if(err && err.response){
+          setresp(err.response.status)
+        }
+
+      })
+    }
+
+ const handleChange = (event, newValue) => {
       setWait(true)
       setMatches([])
       
       setValue(newValue);
+      setActivePage(1)
       
+      api.myMatch(newValue+1,1,gameType+1).then(response => {
+        console.log(response);
+          setresp(200)
+          setWait(false)
+          setPage(response.data.page)
+          
+          setMatches(response.data.data || [])
+      }).catch(err => {
+        console.log(err);
+        if(err && err.response){
+          setresp(err.response.status)
+        }
+
+      })
+    };
+
+    const handlePage = (event,page) => {
+      setWait(true)
+      setMatches([])
+      setActivePage(page)
       
-      api.myMatch(newValue+1,0).then(response => {
+      api.myMatch(value+1,page,gameType).then(response => {
         console.log(response);
           setresp(200)
           setWait(false)
@@ -125,7 +173,7 @@ export default function MyMatch(props) {
         }
 
       })
-    };
+    }
   
     const viewCompMatch = () => matches.map(match => <div
  
@@ -604,9 +652,18 @@ export default function MyMatch(props) {
         <div>
            <Container style={{ position: "relative", marginTop: 2, padding: 0 }} maxWidth='md'>
           <Paper elevation={3} style={{
-           
-            
           }}>
+            <Tabs
+              value={gameType}
+              indicatorColor="secondary"
+              textColor="primary"
+              onChange={handleGameChange}
+              scrollButtons="on"
+              centered
+            >
+              <Tab label="Cricket" />
+              <Tab label="Football" />
+             </Tabs>
          
             <Tabs
               value={value}
@@ -624,7 +681,7 @@ export default function MyMatch(props) {
           </Paper>
         </Container>
         <Container style={{ position: "relative", marginTop: 0, padding: "0px 5px" }} maxWidth='md'>
-          <Paper elevation={0} style={value === 0 ? { display: 'block', marginTop: '5px',backgroundColor: mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
+          <Paper elevation={0} style={value === 0 ? { display: 'block',minHeight:"80vh", marginTop: '5px',backgroundColor: mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
             { !wait ? matches.length > 0 && value === 0 ? viewUpcMatch() : <EDIV>
               Join match
             </EDIV> : <CircularProgress style={{
@@ -634,7 +691,7 @@ export default function MyMatch(props) {
       }} disableShrink />}
           </Paper>
 
-          <Paper elevation={0} style={value === 1 ? { display: 'block', marginTop: '5px',backgroundColor:mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
+          <Paper elevation={0} style={value === 1 ? { display: 'block',minHeight:"80vh" , marginTop: '5px',backgroundColor:mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
             {!wait ? matches.length > 0 && value === 1 ? viewLiveMatch() : <EDIV>
               Join match
               </EDIV> : <CircularProgress style={{
@@ -643,15 +700,35 @@ export default function MyMatch(props) {
           left: "50%"
       }} disableShrink />}
       </Paper>
-          <Paper elevation={0} style={value === 2 ? { display: 'block', marginTop: '5px',backgroundColor:mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
+          <Paper elevation={0} style={value === 2 ? { display: 'block',minHeight:"80vh", marginTop: '5px',backgroundColor:mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
             {!wait ? matches.length > 0 && value === 2 ? viewCompMatch() : <EDIV>
               Join match
-              </EDIV> : <CircularProgress style={{
+              </EDIV>
+               : <CircularProgress style={{
           position: "fixed",
           top: "50%",
           left: "50%"
       }} disableShrink />}
+
           </Paper>
+          
+          <div
+            style={{
+                marginTop:15,
+              width: "100%",
+              textAlign: "center",
+              alignItems: "center",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              color:"white"
+            }}>
+            <Pagination 
+             onChange={handlePage}
+ 
+             page={activePage} count={page}
+              color="secondary"  />
+                </div>
         </Container>
         </div>
         :<CircularProgress style={{

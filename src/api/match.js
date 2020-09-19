@@ -4,7 +4,7 @@ const Cookies = new cookies();
 
  
 
-export const match = (type,matchId) => instance.get(`/match?matchId=${matchId}`,{
+export const match = (type,matchId) => instance.get(`/match?matchId=${matchId}&gameType=${type}`,{
   auth:{
     username: "app",
     password: 'qwewqinasdoinoinacino'
@@ -14,7 +14,7 @@ export const match = (type,matchId) => instance.get(`/match?matchId=${matchId}`,
     });
 
 
-    export const myMatch = (type, page) => instance.get(`/match/user?page=${page}&type=${type}`, {
+    export const myMatch = (type, page,gameType) => instance.get(`/match/user?page=${page}&type=${type}&gameType=${gameType}`, {
       headers: {
         'Authorization': `${Cookies.get("token")}`,
       }
