@@ -454,11 +454,11 @@ export default function Profile() {
                      width="77" height="28" style={{border:"none",overflow:"hidden"}} scrolling="no" frameBorder="0" allowtransparency="true" title="fbb" allow="encrypted-media">
 
                      </iframe>
-                    <a href={`https://api.whatsapp.com/send?text=Here's Rs. 50 to play Fantasy Sports with me on Fantasyjutsu. Click ${copiedvalue} to register with my code ${data.refCode}.`}  >
+                    <a href={`https://api.whatsapp.com/send?text=Here's Rs. 25 to play Fantasy Sports with me on Fantasyjutsu. Click ${copiedvalue} to register with my code ${data.refCode}.`}  >
                         <img src={logo} alt="whatsapp" />
                     </a>
                     <a className="twitter-share-button"
-                    href={`https://twitter.com/intent/tweet?text=Here's Rs. 50 to play Fantasy Sports with me on Fantasyjutsu. Click ${copiedvalue} to register with my code ${data.refCode}.`}>
+                    href={`https://twitter.com/intent/tweet?text=Here's Rs. 25 to play Fantasy Sports with me on Fantasyjutsu. Click ${copiedvalue} to register with my code ${data.refCode}.`}>
                     <img src={twitter}  alt="twitter"  />
                     
                     </a>

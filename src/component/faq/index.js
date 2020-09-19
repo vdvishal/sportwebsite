@@ -278,7 +278,7 @@ export default function FAQ() {
                             b. Duels
                             <br/>
 
-                            *Payouts are always 1.9 times the joining fee
+                            *10% of the total amount is deducted as contest fee
                             <br/>
                             <a onClick={() => toggle(4)} style={{color:"blue",cursor:"pointer"}}> More Info</a>
                             <br/>
