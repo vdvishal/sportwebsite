@@ -119,6 +119,18 @@ export const submitBank = (formData) => instance.post(`/users/bank`, formData, {
   }
 })
 
+export const addBeneficiary  = (formData) => instance.post(`/beneficiaries`, formData, {
+  headers: {
+    'Authorization': `${Cookies.get("token")}`,
+  }
+})
+
+export const cashFreePayout = (formData) => instance.post(`/payout`, formData, {
+  headers: {
+    'Authorization': `${Cookies.get("token")}`,
+  }
+}).catch(err => err)
+
 export const withdraw = (formData) => instance.post(`/users/withdraw`, formData, {
   headers: {
     'Authorization': `${Cookies.get("token")}`,

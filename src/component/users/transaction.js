@@ -108,7 +108,9 @@ export default function Transaction() {
                             fontWeight:500
                         }} 
                         variant="caption" >
-                        {orders.status === 'paid' || orders.status === 'bonus' || orders.status === 'contest_credit' ? <span style={{color:"#77BC37"}}>+{(orders.amount/100).toFixed(2)} INR</span>: <span style={{color:"red"}}>-{(orders.amount/100).toFixed(2)} INR</span>}
+                        {orders.status === 'paid' || orders.status === 'bonus' || orders.status === 'contest_credit' ? <span style={{color:"#77BC37"}}>+{(orders.amount/100).toFixed(2)} INR</span> :
+                            orders.status === 'Withdraw' || orders.status === 'Withdraw'  ? <span style={{color:"grey"}}> {(orders.amount/100).toFixed(2)} INR</span>
+                        : <span style={{color:"red"}}>-{(orders.amount/100).toFixed(2)} INR</span>}
                           {/* {orders.status === 'paid' ?   <ImportExportIcon color="secondary" />    : <ImportExportIcon style={{color:"red"}} />} */}
                         </Typography>
 

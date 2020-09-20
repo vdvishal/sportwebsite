@@ -7,6 +7,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { Typography, Paper, Container, TextField, Button } from '@material-ui/core';
 import styled from 'styled-components'
+import MenuItem from '@material-ui/core/MenuItem';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -15,8 +16,9 @@ import ImageUploader from 'react-images-upload';
 import Notification from '../common/notification'
 
 import * as api from '../../api/user'
+import { configure } from '@testing-library/react';
 
-
+ 
 
 
 const Div = styled.div`
@@ -37,12 +39,21 @@ export default function Profile() {
     const [name, setName] = React.useState('');
     const [acc, setAcc] = React.useState('');
     const [IFSC, setIFSC] = React.useState('')
+    const [benName, setBenName] = React.useState('')
+    const [upi, setUpi] = React.useState('')
 
+    const [paytm, setPaytm] = React.useState('')
+
+    
     const [withdraw, setWithdraw] = React.useState('')
 
     const [image, setImage] = React.useState('')
 
+    const [config, setAppConfig] = React.useState({})
+    const [withdrawType, setWithdrawType] = React.useState(1)
+    const [address1, setAddress1] = React.useState('')
 
+    
     // const [wait] = React.useState(false);
     const [complete, setComplete] = React.useState(false);
     const [waitUpload, setwaitUpload] = React.useState(false);
@@ -86,12 +97,73 @@ export default function Profile() {
     }
 
     
+    const SubmitForm2 = () => {
+
+
+        api.addBeneficiary({
+            name:benName,
+            accNumber:acc,
+            IFSC:IFSC,
+            paytmNumber:paytm,
+            vpa:upi,
+            address1
+        }).then(response => {
+            if (response.status === 200) {
+                handleNotificationClick("Beneficiary added");
+                profile();
+            }
+            if (response.status === 202) {
+                console.log(response);
+                
+                handleNotificationClick(response.data.message);
+
+            }
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }
+
+    
     const SubmitWithdraw = () => {
 
 
         api.withdraw({
             amount:withdraw,
             type:1
+        }).then(response => {
+            if (response.status === 200) {
+                handleNotificationClick("Withdraw request processing");
+                window.location.reload()
+
+            }
+
+            if (response.status === 202) {
+                handleNotificationClick(response.data.message);
+
+            }
+        }).catch(err => {
+            console.log(err.response);
+            
+            handleNotificationClick(err.response ? err.response.message : '');
+        })
+    }
+
+    const SubmitWithdraw2 = () => {
+        let amt = parseFloat(withdraw);
+
+
+
+        if (isNaN(amt) && withdraw !== '') {
+            return handleNotificationClick("Amount must be a number")
+        }
+
+        if (amt > bank.wallet.withdrawal  && withdraw !== '') {
+            return handleNotificationClick("Amount must be less than the avail withdrawable amount.")
+        }
+
+        api.cashFreePayout({
+            amount:amt,
+            transferMode:withdrawType
         }).then(response => {
             if (response.status === 200) {
                 handleNotificationClick("Withdraw request processing");
@@ -120,6 +192,10 @@ export default function Profile() {
 
  
         profile();
+        setAppConfig({
+            paytm:false,
+            cashFree:true
+        })
 
 
 
@@ -129,7 +205,9 @@ export default function Profile() {
         api.profile().then(response => {
             console.log(response);
 
-            setTeam(response.data.data)
+            setTeam(response.data.data);
+            setAcc(response.data.data.bankAccountId.length > 0 ? response.data.data.bankAccountId : "Bank account not added" )
+            setUpi(response.data.data.vpa)
         }).catch(error => {
             if (error.response) {
 
@@ -150,13 +228,22 @@ export default function Profile() {
             case 3:
                 setIFSC(value)
                 break;
+            case 4:
+                setBenName(value)
+                    break;
+                    case 5:
+                        setUpi(value)
+                            break;
+                            case 6:
+                                setPaytm(value)
+                                    break;
             default:
                 break;
         }
     }
 
     const setAmount = (amount) => {
- 
+         
         let amt = parseFloat(amount);
 
 
@@ -169,9 +256,9 @@ export default function Profile() {
             return handleNotificationClick("Amount must be less than the avail withdrawable amount.")
         }
 
-        if(bank.bank !== undefined && bank.bank.reject !== true){
+        if(acc.length > 0 || upi.length > 0){
             if (amount !== '') {
-                setWithdraw(amt);
+                
             }else{
                 setWithdraw(0);
             }
@@ -188,113 +275,68 @@ export default function Profile() {
     }
 
     
-
-    return (
-        Object.entries(bank).length > 0 ?
-         <Container maxWidth={'sm'} style={{
+    if(config.cashFree){
+        return(<Container maxWidth={'sm'} style={{
             marginTop:35
         }}>
             <Notification message={message} open={openNotification} close={handleNotificationClose} />
             <h5 style={{color:"grey"}}>
                 Banking
             </h5>
-            {bank.bank !== undefined && bank.bank.reject !== true? <Paper>
-                <Div>
-                <div style={{
-                                    textAlign: 'left',
-                                    fontWeight: 600,
-                                    fontSize: 'small',
-                                    lineHeight: 1.5,
-                                   color:"grey"
-                                }}>
-                            Bank
-                          
-                    </div>
-                    <div style={{
-                                    textAlign: 'left',
-                                    fontWeight: 600,
-                                    fontSize: 'small',
-                                    lineHeight: 1.5,
-                                   color:"grey"
-                                }}>
-                            {bank.bank.bankName}
-                           
-                    </div>
-                </Div>
-                <Div>
-                <div style={{
-                                    textAlign: 'left',
-                                    fontWeight: 600,
-                                    fontSize: 'small',
-                                    lineHeight: 1.5,
-                                   color:"grey"
-                                }}>
-                            Account Number
-                            
-                    </div>
-                    <div style={{
-                                    textAlign: 'left',
-                                    fontWeight: 600,
-                                    fontSize: 'small',
-                                    lineHeight: 1.5,
-                                   color:"grey"
-                                }}> 
-                        {bank.bank.accNumber}
-                            
-                    </div>
-                </Div>
-                <Div>
-                <div style={{
-                                    textAlign: 'left',
-                                    fontWeight: 600,
-                                    fontSize: 'small',
-                                    lineHeight: 1.5,
-                                   color:"grey"
-                                }}>
-                            IFSC
-                           
-                    </div>
-                    <div style={{
-                                    textAlign: 'left',
-                                    fontWeight: 600,
-                                    fontSize: 'small',
-                                    lineHeight: 1.5,
-                                   color:"grey"
-                                }}>
-                        {bank.bank.IFSC}
-                            
-                    </div>
-                </Div>
-                <Div>
-                <div style={{
-                                    textAlign: 'left',
-                                    fontWeight: 600,
-                                    fontSize: 'small',
-                                    lineHeight: 1.5,
-                                   color:"grey"
-                                }}>
-                            Verified
-              
-                    </div>
-                    <div>
-                        <Typography variant="caption">
-                        {bank.bank.verified ? 
-                        <span style={{color:"green"}} >Verified</span>:
-                        
-                        <span style={{color:"red"}} >Unverified</span>
-                        }
+                 
+                {(upi.length || acc.length > 0) && bank.beneficiaryId && bank.beneficiaryId.length > 0  ? 
+                    <Paper style={{
+                        padding: 10
+                    }}>
+                       <Div >
+                        <div>
+                            <Typography variant="caption">
+                                Bank Account
                             </Typography>
-                    </div>
-                </Div>
+                        </div>
+                        <div>
+                            <TextField
 
-            </Paper> :
-                <Paper style={{
-                    padding: 10
-                }}>
+                                disabled
+                                id="demo-simple-select"
+                                value={acc}
+                                
+                            >
+
+                            </TextField>
+                        </div>
+                    </Div>
+ 
                     <Div>
                         <div>
                             <Typography variant="caption">
-                                Bank Name
+                                UPI
+                            </Typography>
+                        </div>
+                        <div>
+                            <TextField
+
+                                disabled
+                                id="demo-simple-select"
+                                value={upi}
+                                
+                            >
+
+                            </TextField>
+                        </div>
+                    </Div>
+ 
+                </Paper>
+         
+                : 
+                
+                <Paper style={{
+                        padding: 10
+                    }}>
+                    <Div>
+                        <div>
+                            <Typography variant="caption">
+                            Account Holder Name
                             </Typography>
                         </div>
                         <div>
@@ -302,14 +344,14 @@ export default function Profile() {
 
 
                                 id="demo-simple-select"
-                                value={name}
-                                onChange={(event) => setText(event.target.value, 1)}
+                                value={benName}
+                                onChange={(event) => setText(event.target.value, 4)}
                             >
 
                             </TextField>
                         </div>
                     </Div>
-                    <Div>
+                    <Div >
                         <div>
                             <Typography variant="caption">
                                 Account Number
@@ -327,7 +369,7 @@ export default function Profile() {
                             </TextField>
                         </div>
                     </Div>
-                    <Div>
+                    <Div >
                         <div>
                             <Typography variant="caption">
                                 IFSC
@@ -345,42 +387,69 @@ export default function Profile() {
                             </TextField>
                         </div>
                     </Div>
-                    <Div
 
-                    >
+                    <Div>
                         <div>
                             <Typography variant="caption">
-                               Your Bank Address
-                            </Typography>
-                            <br />
-                            <Typography variant="caption">
-                                *Your name should match with pan card
+                                UPI
                             </Typography>
                         </div>
+                        <div>
+                            <TextField
 
+
+                                id="demo-simple-select"
+                                value={upi}
+                                onChange={(event) => setText(event.target.value, 5)}
+                            >
+
+                            </TextField>
+                        </div>
                     </Div>
-                    <div>
-
+                    <Div style={{display:config.paytm ? "block" : "none"}}>
                         <div>
-                            {!waitUpload && !complete ? <ImageUploader
-                                withIcon={true}
-                                buttonText='Choose images'
-                                onChange={onDrop}
-                                imgExtension={['.jpg','.png' ]}
-                                maxFileSize={10485760}
-                                label={'Max file size: 10mb, accepted: jpg,png'}
-                            /> : complete ? <img src={image} alt="ID" /> :
-                                    <LinearProgress color="secondary" />}
+                            <Typography variant="caption">
+                                PayTM Number
+                            </Typography>
                         </div>
-                    </div>
+                        <div>
+                            <TextField
 
+
+                                id="demo-simple-select"
+                                value={paytm}
+                                onChange={(event) => setText(event.target.value, 6)}
+                            >
+
+                            </TextField>
+                        </div>
+                    </Div>
+                   
+                    <Div >
+                        <div>
+                            <Typography variant="caption">
+                                Address
+                            </Typography>
+                        </div>
+                        <div>
+                            <TextField
+
+
+                                id="demo-simple-select"
+                                value={address1}
+                                onChange={(event) => setAddress1(event.target.value)}
+                            >
+
+                            </TextField>
+                        </div>
+                    </Div>
                     <div
                         style={{ padding: "20px 10px 0 0", textAlign: "end" }}
                     >
-                        <Button variant="outlined" onClick={SubmitForm}>Submit</Button>
+                        <Button variant="contained" color="secondary" onClick={SubmitForm2}>Submit</Button>
                     </div>
                 </Paper>
-            }
+         }
 
             <h5 style={{color:"grey"}}>
                 Withdraw
@@ -406,7 +475,7 @@ export default function Profile() {
 
 
                             <span style={{ fontWeight: 600 }}>
-                                ₹{isNaN(Number.parseFloat(bank.wallet.withdrawal).toFixed(2)) ? 0 : Number.parseFloat(bank.wallet.withdrawal).toFixed(2) }
+                                ₹{ bank && bank.wallet && !isNaN(Number.parseFloat(bank.wallet.withdrawal).toFixed(2)) ?Number.parseFloat(bank.wallet.withdrawal).toFixed(2) : 0 }
                             </span>
                         </Typography>
                     </div>
@@ -430,27 +499,343 @@ export default function Profile() {
                             id="demo-simple-select"
                             value={withdraw}
 
-                            onChange={(event) => setAmount(event.target.value)}
+                            onChange={(event) => {setAmount(event.target.value);setWithdraw(event.target.value);}}
                         >
 
                         </TextField>
 
                     </div>
                 </Div>
+                <Div>
+                <div style={{
+                                    textAlign: 'left',
+                                    fontWeight: 600,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
+                         
+                            Withdraw Mode
+                 
+                    </div>
+                    <div>
+                    {config.paytm ?
+                        <TextField
+
+                            select    
+                            id="demo-simple-select"
+                            value={withdrawType}
+
+                            onChange={(event) => setWithdrawType(event.target.value)}
+                        >
+                                
+                                <MenuItem key="bank" value={1}>
+                                Bank
+                                </MenuItem>
+                                <MenuItem key="Upi" value={2}>
+                                Upi
+                                </MenuItem>
+                                <MenuItem key="Paytm" value={3}>
+                                Paytm
+                                </MenuItem>
+                                
+
+
+                        </TextField>:
+                                <TextField
+
+                                select    
+                                id="demo-simple-select"
+                                value={withdrawType}
+
+                                onChange={(event) => setWithdrawType(event.target.value)}
+                            >
+                                    
+                                    <MenuItem key="bank" value={1}>
+                                        Bank
+                                        </MenuItem>
+                                        <MenuItem key="Upi" value={2}>
+                                        Upi
+                                        </MenuItem>                                  
+                            </TextField>
+
+                                }
+
+                    </div>
+                </Div>
                 <div
                         style={{ padding: "20px 10px 0 0", textAlign: "end" }}
                     >
-                        <Button variant="contained" color="secondary" style={{color:"white"}} onClick={SubmitWithdraw}>Submit</Button>
+                        <Button variant="contained" color="secondary" style={{color:"white"}} onClick={SubmitWithdraw2}>Submit</Button>
                     </div>
             </Paper>
 
-        </Container>
+        </Container>)
+    }else{
+        return (
+            Object.entries(bank).length > 0 ?
+             <Container maxWidth={'sm'} style={{
+                marginTop:35
+            }}>
+                <Notification message={message} open={openNotification} close={handleNotificationClose} />
+                <h5 style={{color:"grey"}}>
+                    Banking
+                </h5>
+                {bank.bank !== undefined && bank.bank.reject !== true? <Paper>
+                    <Div>
+                    <div style={{
+                                        textAlign: 'left',
+                                        fontWeight: 600,
+                                        fontSize: 'small',
+                                        lineHeight: 1.5,
+                                       color:"grey"
+                                    }}>
+                                Bank
+                              
+                        </div>
+                        <div style={{
+                                        textAlign: 'left',
+                                        fontWeight: 600,
+                                        fontSize: 'small',
+                                        lineHeight: 1.5,
+                                       color:"grey"
+                                    }}>
+                                {bank.bank.bankName}
+                               
+                        </div>
+                    </Div>
+                    <Div>
+                    <div style={{
+                                        textAlign: 'left',
+                                        fontWeight: 600,
+                                        fontSize: 'small',
+                                        lineHeight: 1.5,
+                                       color:"grey"
+                                    }}>
+                                Account Number
+                                
+                        </div>
+                        <div style={{
+                                        textAlign: 'left',
+                                        fontWeight: 600,
+                                        fontSize: 'small',
+                                        lineHeight: 1.5,
+                                       color:"grey"
+                                    }}> 
+                            {bank.bank.accNumber}
+                                
+                        </div>
+                    </Div>
+                    <Div>
+                    <div style={{
+                                        textAlign: 'left',
+                                        fontWeight: 600,
+                                        fontSize: 'small',
+                                        lineHeight: 1.5,
+                                       color:"grey"
+                                    }}>
+                                IFSC
+                               
+                        </div>
+                        <div style={{
+                                        textAlign: 'left',
+                                        fontWeight: 600,
+                                        fontSize: 'small',
+                                        lineHeight: 1.5,
+                                       color:"grey"
+                                    }}>
+                            {bank.bank.IFSC}
+                                
+                        </div>
+                    </Div>
+                    <Div>
+                    <div style={{
+                                        textAlign: 'left',
+                                        fontWeight: 600,
+                                        fontSize: 'small',
+                                        lineHeight: 1.5,
+                                       color:"grey"
+                                    }}>
+                                Verified
+                  
+                        </div>
+                        <div>
+                            <Typography variant="caption">
+                            {bank.bank.verified ? 
+                            <span style={{color:"green"}} >Verified</span>:
+                            
+                            <span style={{color:"red"}} >Unverified</span>
+                            }
+                                </Typography>
+                        </div>
+                    </Div>
+    
+                </Paper> :
+                    <Paper style={{
+                        padding: 10
+                    }}>
+                        <Div>
+                            <div>
+                                <Typography variant="caption">
+                                    Bank Name
+                                </Typography>
+                            </div>
+                            <div>
+                                <TextField
+    
+    
+                                    id="demo-simple-select"
+                                    value={name}
+                                    onChange={(event) => setText(event.target.value, 1)}
+                                >
+    
+                                </TextField>
+                            </div>
+                        </Div>
+                        <Div>
+                            <div>
+                                <Typography variant="caption">
+                                    Account Number
+                                </Typography>
+                            </div>
+                            <div>
+                                <TextField
+    
+    
+                                    id="demo-simple-select"
+                                    value={acc}
+                                    onChange={(event) => setText(event.target.value, 2)}
+                                >
+    
+                                </TextField>
+                            </div>
+                        </Div>
+                        <Div>
+                            <div>
+                                <Typography variant="caption">
+                                    IFSC
+                                </Typography>
+                            </div>
+                            <div>
+                                <TextField
+    
+    
+                                    id="demo-simple-select"
+                                    value={IFSC}
+                                    onChange={(event) => setText(event.target.value, 3)}
+                                >
+    
+                                </TextField>
+                            </div>
+                        </Div>
+                        <Div
+    
+                        >
+                            <div>
+                                <Typography variant="caption">
+                                   Your Bank Address
+                                </Typography>
+                                <br />
+                                <Typography variant="caption">
+                                    *Your name should match with pan card
+                                </Typography>
+                            </div>
+    
+                        </Div>
+                        <div>
+    
+                            <div>
+                                {!waitUpload && !complete ? <ImageUploader
+                                    withIcon={true}
+                                    buttonText='Choose images'
+                                    onChange={onDrop}
+                                    imgExtension={['.jpg','.png' ]}
+                                    maxFileSize={10485760}
+                                    label={'Max file size: 10mb, accepted: jpg,png'}
+                                /> : complete ? <img src={image} alt="ID" /> :
+                                        <LinearProgress color="secondary" />}
+                            </div>
+                        </div>
+    
+                        <div
+                            style={{ padding: "20px 10px 0 0", textAlign: "end" }}
+                        >
+                            <Button variant="contained" color="secondary" onClick={SubmitForm}>Submit</Button>
+                        </div>
+                    </Paper>
+                }
+    
+                <h5 style={{color:"grey"}}>
+                    Withdraw
+                </h5>
+                <Paper style={{
+                    padding: 10,
+                    marginTop: 10
+                }}>
+                    <Div>
+                        
+                    <div style={{
+                                        textAlign: 'left',
+                                        fontWeight: 600,
+                                        fontSize: 'small',
+                                        lineHeight: 1.5,
+                                       color:"grey"
+                                    }}>
+                                        Withdrawable
+                            
+                        </div>
+                        <div>
+                            <Typography variant="caption">
+    
+    
+                                <span style={{ fontWeight: 600 }}>
+                                    ₹{isNaN(Number.parseFloat(bank.wallet.withdrawal).toFixed(2)) ? 0 : Number.parseFloat(bank.wallet.withdrawal).toFixed(2) }
+                                </span>
+                            </Typography>
+                        </div>
+                    </Div>
+                    <Div>
+                    <div style={{
+                                        textAlign: 'left',
+                                        fontWeight: 600,
+                                        fontSize: 'small',
+                                        lineHeight: 1.5,
+                                       color:"grey"
+                                    }}>
+                             
+                                Withdraw Amount
+                     
+                        </div>
+                        <div>
+                            <TextField
+    
+    
+                                id="demo-simple-select"
+                                value={withdraw}
+    
+                                onChange={(event) => setAmount(event.target.value)}
+                            >
+    
+                            </TextField>
+    
+                        </div>
+                    </Div>
+                    <div
+                            style={{ padding: "20px 10px 0 0", textAlign: "end" }}
+                        >
+                            <Button variant="contained" color="secondary" style={{color:"white"}} onClick={SubmitWithdraw}>Submit</Button>
+                        </div>
+                </Paper>
+    
+            </Container>
+    
+                : <CircularProgress style={{
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%"
+                }} disableShrink />
+        )
+    }
 
-            : <CircularProgress style={{
-                position: "fixed",
-                top: "50%",
-                left: "50%"
-            }} disableShrink />
-    )
 
 }

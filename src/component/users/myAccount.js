@@ -185,6 +185,22 @@ export default function Profile() {
     const handleClick = () => {
         setwait(true)
         handleTeamClose()
+    //     pg.gensign(amount).then(response => {
+    //         <form id="redirectForm" method="post" action="https://test.cashfree.com/billpay/checkout/post/submit">
+    //         <input type="hidden" name="appId" value="300426d0c3affe8a8566b5f2e24003"/>
+    //         <input type="hidden" name="orderId" value={orderId}/>
+    //         <input type="hidden" name="orderAmount" value={orderAmount}/>
+    //         <input type="hidden" name="orderCurrency" value="INR"/>
+    //         <input type="hidden" name="orderNote" value={orderNote}/>
+    //         <input type="hidden" name="customerName" value={customerName}/>
+    //         <input type="hidden" name="customerEmail" value={customerEmail}/>
+    //         <input type="hidden" name="customerPhone" value={customerPhone}/>
+    //         <input type="hidden" name="returnUrl" value={returnUrl}/>
+    //         <input type="hidden" name="notifyUrl" value={notifyUrl}/>
+    //         <input type="hidden" name="signature" value={signature}/>
+    //         <input type="submit" value="Pay"></input>
+    //   </form>
+    //     })
         pg.stripe(amount).then(response => {
             setwait(false)
             options = {
@@ -439,13 +455,13 @@ export default function Profile() {
                             }} >
                                   <Typography variant="caption" style={{
                            
-                           fontWeight: 600,
+                           fontWeight: 500,
                            fontSize: 'medium',
                            lineHeight: 1.5,
                            // marginTop:20
                        }}>
                                 <span style={{color:"#ff3502"}}>
-                                           -₹{data.stats ? -data.stats.loss : 0}
+                                           -₹{data.stats ? data.stats.loss : 0}
                                        </span>
                                </Typography>
                             </Grid>
@@ -585,7 +601,7 @@ export default function Profile() {
                 }} disableShrink />}
 
             <Dialog fullScreen={fullScreen} open={openTeam} onClose={handleTeamClose}  TransitionComponent={Transition}>
-                <AppBar position={"relative"} className={classes.appBar} color="secondary">
+                <AppBar position={"relative"} className={classes.appBar}  >
                     <Toolbar>
                         <IconButton edge="start" style={{ color: "white" }} onClick={handleTeamClose} aria-label="close">
                             <CloseIcon />
@@ -599,7 +615,7 @@ export default function Profile() {
                     <Paper elevation={0}   >
                         <List>
                             <CssTextField
-                                className={{focused:classes.focused}}
+                                
                                 autoFocus
                                 margin="dense"
                                 id="name"

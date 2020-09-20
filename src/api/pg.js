@@ -30,3 +30,12 @@ export const transaction = (data) => instance.get(`/payment/transaction?page=${d
 }).then((response) => {
   return (response);
 });  
+
+
+export const gensign = (data) => instance.get(`/gensign`, {
+  headers: {
+    'Authorization': `${Cookies.get("token")}`,
+  }
+}).then((response) => {
+  return (response);
+});  

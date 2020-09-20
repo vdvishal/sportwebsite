@@ -130,11 +130,7 @@ const darkTheme = createMuiTheme({
         backgroundColor:'#262c33' //:colorTheme.light.cardBackground,
       }
     },
-    Mui:{
-      focused:{
-        color:"white"
-      }
-    },
+ 
     MuiButton:{
       root:{
         color:"white"
