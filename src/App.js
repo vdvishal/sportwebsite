@@ -130,7 +130,11 @@ const darkTheme = createMuiTheme({
         backgroundColor:'#262c33' //:colorTheme.light.cardBackground,
       }
     },
- 
+    MuiFormHelperText:{
+      root:{
+        color:"white",
+      }
+    },
     MuiButton:{
       root:{
         color:"white"

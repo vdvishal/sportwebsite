@@ -103,21 +103,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function FAQ() {
+export default function FAQ(props) {
 
-
+    console.log(props);
+    
 
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
-    const [index, setIndexOpen] = React.useState(0);
+    const [index, setIndexOpen] = React.useState(props.location.state && props.location.state.index ? props.location.state.index : 0);
 
     const history = useHistory()
     const check = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
-
+window.scrollTo(0,0)
 
     }, []);
 
@@ -131,7 +132,7 @@ export default function FAQ() {
     };
 
     const goBack = () => {
-        history.goBack()
+        history.push('/')
     }
 
     const toggle = (index) => {
@@ -161,8 +162,8 @@ export default function FAQ() {
                         <IconButton edge="start" style={{ color: "white" }} onClick={goBack} aria-label="close">
                 <CloseIcon />
               </IconButton>
-                            <Typography variant="h6" noWrap className={classes.title}>
-                                FAQ
+                            <Typography variant="h6" style={{cursor:"pointer"}} noWrap className={classes.title} onClick={goBack}> 
+                                Home
           </Typography>
                             <IconButton
                                 color="inherit"
@@ -346,11 +347,10 @@ export default function FAQ() {
           <h3><strong>
                                 Payout Ladder
                                 </strong></h3>
-                            
-                                <Paper elevation={3} style={{maxWidth:260,padding:2.5}}>
-                                <table style={{minWidth:260}}>
-                                    <tbody >
-                                        <tr style={{border:"1px solid black",borderCollapse: "collapse"}}>
+                                <Paper elevation={3} style={{maxWidth:260 }}>
+                                <table style={{ minWidth:260}}>
+                                    <tbody  >
+                                        <tr style={{borderCollapse: "collapse"}}>
                                             <th align="center" style={{width:125}}>Correct Pick</th>
                                             <th align="middle">Multiplier</th>
                                         </tr>
@@ -361,47 +361,47 @@ export default function FAQ() {
                                         </tr>
                                         <tr>
                                             <td align="center" style={{width:125}}>2</td>
-                                            <td align="middle">3</td>
+                                            <td align="middle">2</td>
                   
                                         </tr>
                                         <tr>
                                             <td align="center" style={{width:125}}>3</td>
-                                            <td align="middle">5</td>
+                                            <td align="middle">3</td>
              
                                         </tr>
                                         <tr>
                                             <td align="center" style={{width:125}}>4</td>
-                                            <td align="middle">11</td>
+                                            <td align="middle">5</td>
    
                                         </tr>
                                         <tr>
                                             <td align="center" style={{width:125}}>5</td>
-                                            <td align="middle">26</td>
+                                            <td align="middle">11</td>
    
                                         </tr>
                                         <tr>
                                             <td align="center" style={{width:125}}>6</td>
-                                            <td align="middle">40</td>
+                                            <td align="middle">26</td>
    
                                         </tr>
                                         <tr>
                                             <td align="center" style={{width:125}}>7</td>
-                                            <td align="middle">75</td>
+                                            <td align="middle">40</td>
    
                                         </tr>
                                         <tr>
                                             <td align="center" style={{width:125}}>8</td>
-                                            <td align="middle">125</td>
+                                            <td align="middle">75</td>
    
                                         </tr>
                                         <tr>
                                             <td align="center" style={{width:125}}>9</td>
-                                            <td align="middle">250</td>
+                                            <td align="middle">125</td>
    
                                         </tr>
                                         <tr>
                                             <td align="center" style={{width:125}}>10</td>
-                                            <td align="middle">500</td>
+                                            <td align="middle">250</td>
    
                                         </tr>
                                     </tbody>
@@ -722,31 +722,40 @@ export default function FAQ() {
                             </div>
 
                             <hr />
-                            <h5><strong>
+                            <Typography variant="caption">
                                *Payout is always 1.9 times
-                            </strong>
-                            </h5>
-                            <h5><strong>
-                            *The user who joins your duel has a handicap i.e incase of a tie between two player, the challenger wins the duel.
-
-                            </strong>
-                            </h5>
-                            <h5><strong>
+                            
+                            </Typography >
+                            <br />
+                            <Typography variant="caption">
+                            *The user who joins your duel has a handicap i.e incase of a tie between two player, the challenger wins the due
+                            
+                            </Typography >
+                            <br />
+                            <Typography variant="caption">
                             *Player with star mark indicates a handicap
-                            </strong>
-                            </h5>
-                            <h5><strong>
+                            
+                            </Typography >
+                            <br />
+                            <Typography variant="caption">
                             *The handicap is only applicable in player duels.
-                            </strong>
-                            </h5>
-                            <h5><strong>
-                            *Duels are cancelled when one of the selected players are not playing and amount is refunded
-                            </strong>
-                            </h5>
-                            <h5><strong>
+                            
+                            </Typography >
+                            <br />
+                            <Typography variant="caption">
+                            *If one of the chosen player is not in starting 11 the other will automatically win
+                            
+                            </Typography >
+                            <br />
+                            <Typography variant="caption">
+                            *Duels are cancelled when both selected players are not playing and amount is refunded
+                            
+                            </Typography >
+                            <br />
+                            <Typography variant="caption">
                             *Incase no user joins your duel, the amount will be refunded after match is over.
-                            </strong>
-                            </h5>
+                            
+                            </Typography >
                              
 
                         </Paper>
@@ -815,7 +824,7 @@ export default function FAQ() {
 
 <Typography variant="caption"  >Withdrawals are processed only after your bank account is verified and has the same matching name as submitted verification documents.</Typography>
 
-<Typography variant="caption"  >The minimum withdrawal limit is ₹250 to maximum of ₹1lakh at a time. </Typography>
+<Typography variant="caption"  >The minimum withdrawal limit is ₹200 to maximum of ₹10000 at a time. </Typography>
 
 
 <h4>Details required</h4>
@@ -849,11 +858,11 @@ export default function FAQ() {
 
 <h4>Signup Bonus</h4>
 
-<Typography variant="caption"  >Signup Bonus, we are offering a ₹50 signup bonus for limited period.</Typography>
+<Typography variant="caption"  >Signup Bonus, we are offering a ₹25 signup bonus for limited period.</Typography>
 
 <h4>Referral Bonus</h4>
 
-<Typography variant="caption"  >A bonus of ₹50 is added everytime someone uses your referral code.</Typography>
+<Typography variant="caption"  >A bonus of ₹25 is added everytime someone uses your referral code and deposits in our site.</Typography>
 <br/>
 <Typography variant="caption"  >* If a user is found to use fake emails and phone number to gain bonus, we will ban the user account with no further notice.</Typography>
 

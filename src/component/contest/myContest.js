@@ -68,7 +68,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 const multipleArr = [1.5, 2, 3, 5, 11, 26, 40, 75, 125, 250]
-const multipleArr2 = [1.5, 3, 5, 11, 26, 40, 75, 125, 250, 500]
+const multipleArr2 = [1.5, 2, 3, 5, 11, 26, 40, 75, 125, 250] //[1.5, 3, 5, 11, 26, 40, 75, 125, 250, 500]
 
 const size = {
   mobileS: '320px',

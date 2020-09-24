@@ -32,7 +32,7 @@ export const transaction = (data) => instance.get(`/payment/transaction?page=${d
 });  
 
 
-export const gensign = (data) => instance.get(`/gensign`, {
+export const gensign = (data) => instance.get(`/gensign?amount=${data}`, {
   headers: {
     'Authorization': `${Cookies.get("token")}`,
   }

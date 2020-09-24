@@ -38,11 +38,23 @@ export default function KYC() {
     const [team, setTeam] = React.useState({});
     const [type, setType] = React.useState(2);
     const [text, setText] = React.useState('');
+    const [text2, setText2] = React.useState('');
+
+    
     const [image, setImage] = React.useState('')
+    const [image2, setImage2] = React.useState('')
+    const [image3, setImage3] = React.useState('')
 
     const [wait] = React.useState(false);
+
     const [complete, setComplete] = React.useState(false);
     const [waitUpload, setwaitUpload] = React.useState(false);
+
+    const [complete2, setComplete2] = React.useState(false);
+    const [waitUpload2, setwaitUpload2] = React.useState(false);
+
+    const [complete3, setComplete3] = React.useState(false);
+    const [waitUpload3, setwaitUpload3] = React.useState(false);
 
     
     const [message, setMessage] = React.useState("false");
@@ -93,6 +105,10 @@ export default function KYC() {
     const setIDText = (value) => {
         setText(value)
     }
+
+    const setIDText2 = (value) => {
+        setText2(value)
+    }
  
 
     const handleDateChange = (date) => {
@@ -116,10 +132,44 @@ export default function KYC() {
         })
     }
 
+    const onDrop2 = (e) => {
+        const formdata = new FormData();
+
+        formdata.append('image',e[0])
+        setwaitUpload(true)
+ 
+
+        api.uploadImage(formdata).then(response => {
+                 setwaitUpload(false)
+                if(response.status === 200){
+                    setComplete(true)
+                }
+                setImage2(response.data.link);
+
+        })
+    }
+
+    const onDrop3 = (e) => {
+        const formdata = new FormData();
+
+        formdata.append('image',e[0])
+        setwaitUpload(true)
+ 
+
+        api.uploadImage(formdata).then(response => {
+                 setwaitUpload(false)
+                if(response.status === 200){
+                    setComplete(true)
+                }
+                setImage3(response.data.link);
+
+        })
+    }
+
     const SubmitForm = () => {
  
 
-        api.submitKyc({id:text,type,dob:selectedDate,image}).then(response => {
+        api.submitKyc({id:text,aadhar:text2,type,dob:selectedDate,image,aadharFront:image2,aadharBack:image3}).then(response => {
             if(response.status === 200){
                 handleNotificationClick("Documents uploaded");
                 setTimeout(() => {
@@ -186,6 +236,19 @@ export default function KYC() {
                         <div
                         style={{ padding:"20px 10px 0 0",}}
                             >
+                             <TextField
+                            helperText="*Address proof"
+                            id="demo-simple-select"
+                            placeholder="Aadhaar Number"//{type === 1 ? "Aadhar Card" : "Pan Card"}
+                            value={text2}
+                            onChange={(event) => setIDText2(event.target.value)}
+                            >
+                               
+                            </TextField>
+                        </div>
+                        <div
+                        style={{ padding:"20px 10px 0 0",}}
+                            >
                                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDatePicker
                                 // disableToolbar
@@ -210,17 +273,48 @@ export default function KYC() {
                             <Button variant="outlined" onClick={SubmitForm}>Submit</Button>
                         </div>
                     </Paper>
+                    <Paper elevation={0} style={{
+                        backgroundColor:'rgba(0,0,0,0)',
+                        display:"flex",
+                        flexDirection:"row",
+                        flexWrap:"wrap",
+                        color:"black"
+                    }}>
+
+                    
 
                 { !waitUpload && !complete ? <ImageUploader
                 withIcon={true}
-                buttonText='Choose images'
+                buttonText='Pan card'
                 onChange={onDrop}
                 imgExtension={['.jpg','.png' ]}
                 maxFileSize={10485760}
                 label={'Max file size: 10mb, accepted: jpg,png'}
-            /> : complete ?  <img src={image} alt="ID" />:
+            /> : complete ?  <img src={image} height="50px" alt="ID" />:
             <LinearProgress color="secondary" />}
- 
+            
+                    
+
+            { !waitUpload2 && !complete2 ? <ImageUploader
+                withIcon={true}
+                buttonText='Aadhaar card Front'
+                onChange={onDrop2}
+                imgExtension={['.jpg','.png' ]}
+                maxFileSize={10485760}
+                label={'Max file size: 10mb, accepted: jpg,png'}
+            /> : complete2 ?  <img src={image2} height="50px" alt="Aadhaar" />:
+            <LinearProgress color="secondary" />}
+
+            { !waitUpload3 && !complete3 ? <ImageUploader
+                withIcon={true}
+                buttonText='Aadhaar card Back'
+                onChange={onDrop3}
+                imgExtension={['.jpg','.png' ]}
+                maxFileSize={10485760}
+                label={'Max file size: 10mb, accepted: jpg,png'}
+            /> : complete3 ?  <img src={image3} height="50px" alt="Aadhaar" />:
+            <LinearProgress color="secondary" />}
+                </Paper>
                 </Container>
 
                 : <CircularProgress style={{

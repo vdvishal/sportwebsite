@@ -7,6 +7,7 @@ import { useEffect, useContext } from 'react';
 import * as color from '../../json/color.json';
 
 import * as colorTheme from '../../json/colorPallete.json'
+import * as mqtt from 'mqtt';
 
 import { Link } from "react-router-dom";
 
@@ -77,7 +78,7 @@ let dynamicObj = {}
 let dynamicObj2 = {};
 
 const multipleArr = [1.5, 2, 3, 5, 11, 26, 40, 75, 125, 250]
-const multipleArr2 = [1.5, 3, 5, 11, 26, 40, 75, 125, 250, 500]
+const multipleArr2 = [1.5, 2, 3, 5, 11, 26, 40, 75, 125, 250]//[1.5, 3, 5, 11, 26, 40, 75, 125, 250, 500]
 
 const size = {
   mobileS: '320px',
@@ -158,7 +159,7 @@ const useStyles = makeStyles({
     },
     select: {
       height: "51px",
-      color:'white'
+      color:'grey'
     },
     input: {
       color:'white'
@@ -628,7 +629,8 @@ background-color: #77BC37;
 let combo = {};
 
 export default function Contest(props) {
-
+  console.log('props: ', props);
+  
   const [mode, setMode] = useContext(ModeContext)
 
   // let history = useHistory();
@@ -642,7 +644,7 @@ export default function Contest(props) {
 
 
   const [value, setValue] = React.useState(props.location && props.location.state && props.location.state.tabNumber ?
-    props.location.state.tabNumber : 1);
+    props.location.state.tabNumber : 0);
   const [, setChecked] = React.useState(false);
 
 
@@ -759,10 +761,12 @@ export default function Contest(props) {
 
 
   const handleFilterCustom = (value) => {
+    console.log('setCustomFilter: ', value);
 
     if (parseFloat(min) > parseFloat(max)) {
       return handleNotificationClick("Min amount cannot be greater than max")
     }
+    localStorage.setItem('f_fil',value)
     setCustom(null)
     setCustomFilter(value)
 
@@ -778,6 +782,7 @@ export default function Contest(props) {
 
       setActivePage(1)
     })
+    
   }
 
 
@@ -806,6 +811,7 @@ export default function Contest(props) {
   }
 
   const handleContestType = (event) => {
+    
     setContestType(event.target.value)
   }
 
@@ -834,6 +840,11 @@ export default function Contest(props) {
     if (localStorage.getItem('isLogged') === null || localStorage.getItem('isLogged') === 'false') {
       setOpenLogin(true)
       return
+    }
+
+    if (customAmount === undefined ||  customAmount === '' || customAmount.length === 0) {
+       
+      return handleNotificationClick("Amount can't be empty")
     }
     let object;
     if (!click) {
@@ -864,7 +875,7 @@ export default function Contest(props) {
       api.createContest(object).then(response => {
         if (response.status === 200) {
           handleNotificationClick("Contest created");
-          getCustom()
+          getCustom(123)
           setClick(false)
         }
 
@@ -890,7 +901,7 @@ export default function Contest(props) {
 
     api.joinCustomContest({ contestId }).then(response => {
       if (response.status === 200) {
-        getCustom();
+        getCustom(123);
 
         joinDialog(false)
         return handleNotificationClick("Contest joined");
@@ -900,8 +911,29 @@ export default function Contest(props) {
     })
   }
 
-  const getCustom = () => {
+  const getCustom = (filterValue) => {
+    console.log('filterValue: ', filterValue);
+    console.log('filterCustom: ', filterCustom);
+
     api.customContest(props.match.params.matchId, min, max, filterCustom, 1, playerFilter).then(response => {
+      console.log('filterCustom: ', filterCustom);
+      setClick(false)
+      setCustom(response.data.data);
+
+
+      profile();
+      setPage(response.data.pages)
+      setActivePage(1)
+      handleCustomDialog(false)
+    })
+  }
+
+  const getCustom2 = (filterValue) => {
+    console.log('filterValue: ', filterValue);
+    console.log('filterCustom: ', filterCustom);
+    let filter = localStorage.getItem('f_fil')
+    api.customContest(props.match.params.matchId, min, max, parseInt(filter), 1, playerFilter).then(response => {
+      console.log('filterCustom: ', filterCustom);
       setClick(false)
       setCustom(response.data.data);
 
@@ -925,7 +957,7 @@ export default function Contest(props) {
     }
     api.joinCustomContestDuel({ contestId, playerId: selectedPlayer }).then(response => {
       if (response.status === 200) {
-        getCustom();
+        getCustom(123);
 
         joinDialog(false);
         setCustomDuelDialog(false);
@@ -1048,6 +1080,7 @@ export default function Contest(props) {
     ReactGA.pageview(props.location.pathname);
     window.scrollTo(0, 0)
     console.log("windo");
+    localStorage.setItem('f_fil',5)
 
     matchApi.match(1, props.match.params.matchId).then(response => {
 
@@ -1133,6 +1166,45 @@ export default function Contest(props) {
       console.log(fff);
       setplayerList(fff)
     })
+
+ 
+
+       
+
+    const options = {
+      // clientId uniquely identifies client
+      // choose any string you wish
+      clientId: "MQTT_CLIENT_" + new Date().getTime()
+    };
+
+    var client = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
+    client.on('connect', function () {
+      console.log('ws connected')
+    })
+
+    client.on('reconnect', function () {
+      console.log('ws connected')
+    })
+    client.subscribe(props.match.params.matchId + "reload")
+
+    client.on('message', function (topic, message) {
+      console.log('message: ', JSON.parse(message));
+      // Updates React state with message 
+      if(JSON.parse(message) == '6'){
+        getCustom2(6)
+      }
+      
+      if(JSON.parse(message) == '5'){
+        getCustom2(5)
+      }
+ 
+    });
+
+ 
+    return () => {
+      // HERE I WANT TO UNSUBSCRIBE WHEN THE COMPONENT UNMOUNT 
+      client.unsubscribe(props.match.params.matchId)
+    }
 
 
   }, []);
@@ -1354,7 +1426,7 @@ export default function Contest(props) {
                 style={{
                   fontWeight: 800
                 }}
-              >{contest.value1} FP</Typography>
+              >{contest.value1} points</Typography>
 
             </ContestButtonContent>
           </ContestButton>
@@ -1392,7 +1464,7 @@ export default function Contest(props) {
                   style={{
                     fontWeight: 800
                   }}
-                >{contest.value1 + 1} FP
+                >{contest.value1 + 1}p
 
 
               </Typography>
@@ -1409,7 +1481,7 @@ export default function Contest(props) {
                   style={{
                     fontWeight: 800
                   }}
-                >{contest.value2} FP
+                >{contest.value2}p
 
 
               </Typography>
@@ -1450,7 +1522,7 @@ export default function Contest(props) {
                 style={{
                   fontWeight: 800
                 }}
-              >{contest.value2 + 1} FP</Typography>
+              >{contest.value2 + 1} points</Typography>
 
             </ContestButtonContent>
 
@@ -3793,7 +3865,7 @@ export default function Contest(props) {
                 <Link to={{ pathname: `/team/${props.match.params.matchId}` }} style={{ textDecoration: 'none' }}>
 
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     color="secondary"
                     style={{
                       width: 150,
@@ -3808,7 +3880,7 @@ export default function Contest(props) {
                 </Link>
 
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   color="secondary"
                   style={{
                     width: 150,

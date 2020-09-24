@@ -1,19 +1,19 @@
 import React from 'react';
 import ReactGA from 'react-ga';
 
-import { useHistory,Link } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { useEffect } from 'react';
 import * as js from '../common/color.json';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Slide from '@material-ui/core/Slide';
 
-import { makeStyles,withStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import { Typography, Dialog, IconButton, AppBar, Toolbar, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import List from '@material-ui/core/List';
- 
+
 import CloseIcon from '@material-ui/icons/Close';
 
 import * as api from '../../api/user'
@@ -99,35 +99,35 @@ const useStyles = makeStyles({
         appBar: {
             top: 'auto',
             bottom: 0,
-            color:"white"
+            color: "white"
         },
-        focused:{
-            color:"white"
+        focused: {
+            color: "white"
         }
     }
 });
 
 const CssTextField = withStyles({
     root: {
-      '& label.Mui-focused': {
-        color: 'grey',
-      },
-      '& .MuiInput-underline:after': {
-        borderBottomColor: 'green',
-      },
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-          borderColor: 'red',
+        '& label.Mui-focused': {
+            color: 'grey',
         },
-        '&:hover fieldset': {
-          borderColor: 'yellow',
+        '& .MuiInput-underline:after': {
+            borderBottomColor: 'green',
         },
-        '&.Mui-focused fieldset': {
-          borderColor: 'green',
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'red',
+            },
+            '&:hover fieldset': {
+                borderColor: 'yellow',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'green',
+            },
         },
-      },
     },
-  })(TextField);
+})(TextField);
 
 export default function Profile() {
     const [team, setTeam] = React.useState({});
@@ -139,6 +139,7 @@ export default function Profile() {
 
     const [message, setMessage] = React.useState("false");
     const [openNotification, setOpenNotifi] = React.useState(false);
+    const [signData, setSignData] = React.useState({});
 
     const [, setBonus] = useContext(WalletBonusContext)
 
@@ -166,7 +167,7 @@ export default function Profile() {
 
     let { data } = team;
 
- 
+
 
     const setAmount = (amount) => {
         setamount(amount)
@@ -183,66 +184,67 @@ export default function Profile() {
     }
 
     const handleClick = () => {
-        setwait(true)
-        handleTeamClose()
-    //     pg.gensign(amount).then(response => {
-    //         <form id="redirectForm" method="post" action="https://test.cashfree.com/billpay/checkout/post/submit">
-    //         <input type="hidden" name="appId" value="300426d0c3affe8a8566b5f2e24003"/>
-    //         <input type="hidden" name="orderId" value={orderId}/>
-    //         <input type="hidden" name="orderAmount" value={orderAmount}/>
-    //         <input type="hidden" name="orderCurrency" value="INR"/>
-    //         <input type="hidden" name="orderNote" value={orderNote}/>
-    //         <input type="hidden" name="customerName" value={customerName}/>
-    //         <input type="hidden" name="customerEmail" value={customerEmail}/>
-    //         <input type="hidden" name="customerPhone" value={customerPhone}/>
-    //         <input type="hidden" name="returnUrl" value={returnUrl}/>
-    //         <input type="hidden" name="notifyUrl" value={notifyUrl}/>
-    //         <input type="hidden" name="signature" value={signature}/>
-    //         <input type="submit" value="Pay"></input>
-    //   </form>
-    //     })
-        pg.stripe(amount).then(response => {
-            setwait(false)
-            options = {
-                key: 'rzp_test_XUhylBt5ecsoht',
-                amount: response.data.amount, //  = INR 1
-                order_id: response.data.id,
-                handler: function (response) {
-                    pg.success(response).then(result => {
-                        handleNotificationClick(result.data.message)
-                        api.profile().then(response => {
-                            let data = {
-                                status: response.status,
-                                data: response.data.data
-                            }
-                            setTeam(data)
-                            setWallet(response.data.data.wallet.balance)
-                            setBonus(response.data.data.wallet.bonus)
-                        }).catch(error => {
-                            if (error.response) {
-                                if (error.response.status === 401) {
-                                    history.push({
-                                        pathname: "/login"
-                                    });
-                                }
-                            }
-                        })
-                    })
-                },
-                prefill: {
-                    contact: "+91" + data.phone.phone,
-                    email: data.email,
-                },
-                notes: response.data.notes,
-            };
-            var rzp1 = new window.Razorpay(options);
-            rzp1.open();
-        }).catch(() => {
-            setwait(false)
-           
+        setSignData(null);
+        // handleTeamClose()
+        console.log('amount: ', amount);
+        console.log('amount: ', typeof amount);
+        console.log('amount: ', parseInt(amount));
+
+        pg.gensign(amount).then(response => {
             
-            // handleNotificationClick(err.response.data.message);
+
+            if (response.status === 200) {
+                return setSignData(response.data)
+            }
+            if (response.status === 202) {
+                handleNotificationClick(response.data.message)
+
+                return setSignData({})
+            }
+            handleNotificationClick("Error please try again later")
         })
+        // pg.stripe(amount).then(response => {
+        //     setwait(false)
+        //     options = {
+        //         key: 'rzp_test_XUhylBt5ecsoht',
+        //         amount: response.data.amount, //  = INR 1
+        //         order_id: response.data.id,
+        //         handler: function (response) {
+        //             pg.success(response).then(result => {
+        //                 handleNotificationClick(result.data.message)
+        //                 api.profile().then(response => {
+        //                     let data = {
+        //                         status: response.status,
+        //                         data: response.data.data
+        //                     }
+        //                     setTeam(data)
+        //                     setWallet(response.data.data.wallet.balance)
+        //                     setBonus(response.data.data.wallet.bonus)
+        //                 }).catch(error => {
+        //                     if (error.response) {
+        //                         if (error.response.status === 401) {
+        //                             history.push({
+        //                                 pathname: "/login"
+        //                             });
+        //                         }
+        //                     }
+        //                 })
+        //             })
+        //         },
+        //         prefill: {
+        //             contact: "+91" + data.phone.phone,
+        //             email: data.email,
+        //         },
+        //         notes: response.data.notes,
+        //     };
+        //     var rzp1 = new window.Razorpay(options);
+        //     rzp1.open();
+        // }).catch(() => {
+        //     setwait(false)
+
+
+        //     // handleNotificationClick(err.response.data.message);
+        // })
 
 
 
@@ -250,6 +252,7 @@ export default function Profile() {
 
     const handleTeamClose = () => {
         setTeamOpen(false);
+        setSignData({});
     };
 
 
@@ -258,7 +261,7 @@ export default function Profile() {
             <Notification message={message} open={openNotification} close={handleNotificationClose} />
 
             {data ?
-                <Container maxWidth={'sm'} style={{  marginTop:20, }}>
+                <Container maxWidth={'sm'} style={{ marginTop: 20, }}>
                     <Paper elevation={3}>
                         <Grid container  >
                             {/* <Grid item xs={12} sm={12} lg={12} style={{  
@@ -285,7 +288,7 @@ export default function Profile() {
                                 Total Balance
                         <br />
                                 <span >
-                                    <Typography variant="caption"  color="secondary" style={{ fontSize: "1.25rem"}} >
+                                    <Typography variant="caption" color="secondary" style={{ fontSize: "1.25rem" }} >
                                         ₹{Number.parseFloat(data.wallet.balance).toFixed(2)}
                                     </Typography>
                                 </span>
@@ -294,24 +297,24 @@ export default function Profile() {
                                 <hr />
                                 <div style={{
                                     textAlign: 'left',
-                                    fontWeight: 600,
+ 
                                     fontSize: 'small',
                                     lineHeight: 1.5,
                                     // marginTop:20
                                 }}>
                                     Bonus
                         <br />
-                        <Typography variant="caption" color="secondary" style={{
-                           
-                           fontWeight: 600,
-                           fontSize: 'large',
-                           lineHeight: 1.5,
-                           // marginTop:20
-                       }} >
-                           ₹{Number.parseFloat(data.wallet.bonus).toFixed(2)}
-                           </Typography>
-                                    <span   >
+                                    <Typography variant="caption" color="secondary" style={{
+
                                         
+                                        fontSize: 'large',
+                                        lineHeight: 1.5,
+                                        // marginTop:20
+                                    }} >
+                                        ₹{Number.parseFloat(data.wallet.bonus).toFixed(2)}
+                                    </Typography>
+                                    <span   >
+
                                     </span>
                                     <br />
                                     <Typography variant="caption" style={{ fontSize: 11.5 }}>
@@ -329,25 +332,25 @@ export default function Profile() {
                                 }}>
                                     Withdrawable
                         <br />
-                                    
+
                                     <Typography variant="caption" color="secondary" style={{
-                           
-                                    fontWeight: 600,
-                                    fontSize: 'large',
-                                    lineHeight: 1.5,
-                                    // marginTop:20
-                                }} >
-                                    ₹{data.wallet.withdrawal || 0}
-                                    </Typography>
+
                                         
-                                     
+                                        fontSize: 'large',
+                                        lineHeight: 1.5,
+                                        // marginTop:20
+                                    }} >
+                                        ₹{data.wallet.withdrawal || 0}
+                                    </Typography>
+
+
                                     <br />
-                                    <Typography variant="caption" style={{ fontSize: 11.5}}>
-                                        Minimum amount you can withdraw ₹200 
+                                    <Typography variant="caption" style={{ fontSize: 11.5 }}>
+                                        Minimum amount you can withdraw ₹200
                             </Typography>
-                            <br />
-                                    <Typography variant="caption" style={{ fontSize: 11.5}}>
-                                        Minimum deposit should be ₹50 
+                                    <br />
+                                    <Typography variant="caption" style={{ fontSize: 11.5 }}>
+                                        Minimum total deposit should be ₹50
                             </Typography>
                                 </div>
                             </Grid>
@@ -367,19 +370,19 @@ export default function Profile() {
 
                                 >
                                     <Button size="small" color="secondary" variant="contained"
-                                     style={{color:"white"}}
+                                        style={{ color: "white" }}
                                         onClick={() => setTeamOpen(true)}
                                         color="secondary"
                                     >Deposit
                             </Button>
                                 </div>
                                 <div>
-                                <Link to={{ pathname: `/withdraw` }} style={{ textDecoration: 'none' }}>
-                                <Button size="small"
-                                 style={{color:"white"}}
-                                        color="secondary" variant="contained"
-                                    >Withdraw</Button>
-                            </Link>
+                                    <Link to={{ pathname: `/withdraw` }} style={{ textDecoration: 'none' }}>
+                                        <Button size="small"
+                                            style={{ color: "white" }}
+                                            color="secondary" variant="contained"
+                                        >Withdraw</Button>
+                                    </Link>
 
                                 </div>
 
@@ -392,39 +395,39 @@ export default function Profile() {
                             <Grid item xs={6} sm={6} lg={6} style={{
                                 textAlign: 'left',
                                 fontWeight: 600,
-                                 
+
                                 lineHeight: 1.5,
                                 padding: '10px',
-                                display:"flex",
-                                alignItems:"center"
+                                display: "flex",
+                                alignItems: "center"
                             }}>
-                                
+
                                 <Typography variant="caption" >
-                                        Profit
+                                    Profit
                                </Typography>
-                                 
+
                             </Grid>
                             <Grid item xs={6} sm={6} lg={6} style={{
                                 fontWeight: 600,
-                                 
+
                                 lineHeight: 1.5,
                                 padding: '10px',
-                                justifyContent:"flex-end",
-                                display:"flex",
-                                alignItems:"center"
+                                justifyContent: "flex-end",
+                                display: "flex",
+                                alignItems: "center"
                             }} >
-                                  <Typography variant="caption" style={{
-                           
-                           fontWeight: 500,
-                           fontSize: 'medium',
-                           lineHeight: 1.5,
-                           // marginTop:20
-                       }}>
-                                       <span style={{color:"#77BC37"}}>
-                                           ₹{data.stats ? data.stats.profit : 0}
-                                       </span>
-                                        
-                               </Typography>
+                                <Typography variant="caption" style={{
+
+                                    fontWeight: 500,
+                                    fontSize: 'medium',
+                                    lineHeight: 1.5,
+                                    // marginTop:20
+                                }}>
+                                    <span style={{ color: "#77BC37" }}>
+                                        ₹{data.stats ? data.stats.profit : 0}
+                                    </span>
+
+                                </Typography>
                             </Grid>
 
                         </Grid>
@@ -432,38 +435,38 @@ export default function Profile() {
                             <Grid item xs={6} sm={6} lg={6} style={{
                                 textAlign: 'left',
                                 fontWeight: 600,
-                                 
+
                                 lineHeight: 1.5,
                                 padding: '10px',
-                                display:"flex",
-                                alignItems:"center"
+                                display: "flex",
+                                alignItems: "center"
                             }}>
-                                
+
                                 <Typography variant="caption" >
-                                        Loss
+                                    Loss
                                </Typography>
-                                 
+
                             </Grid>
                             <Grid item xs={6} sm={6} lg={6} style={{
                                 fontWeight: 500,
-                                 
+
                                 lineHeight: 1.5,
                                 padding: '10px',
-                                justifyContent:"flex-end",
-                                display:"flex",
-                                alignItems:"center"
+                                justifyContent: "flex-end",
+                                display: "flex",
+                                alignItems: "center"
                             }} >
-                                  <Typography variant="caption" style={{
-                           
-                           fontWeight: 500,
-                           fontSize: 'medium',
-                           lineHeight: 1.5,
-                           // marginTop:20
-                       }}>
-                                <span style={{color:"#ff3502"}}>
-                                           -₹{data.stats ? data.stats.loss : 0}
-                                       </span>
-                               </Typography>
+                                <Typography variant="caption" style={{
+
+                                    fontWeight: 500,
+                                    fontSize: 'medium',
+                                    lineHeight: 1.5,
+                                    // marginTop:20
+                                }}>
+                                    <span style={{ color: "#ff3502" }}>
+                                        -₹{data.stats ? data.stats.loss : 0}
+                                    </span>
+                                </Typography>
                             </Grid>
 
                         </Grid>
@@ -471,42 +474,42 @@ export default function Profile() {
                             <Grid item xs={6} sm={6} lg={6} style={{
                                 textAlign: 'left',
                                 fontWeight: 600,
-                                 
+
                                 lineHeight: 1.5,
                                 padding: '10px',
-                                display:"flex",
-                                alignItems:"center"
+                                display: "flex",
+                                alignItems: "center"
                             }}>
-                                
+
                                 <Typography variant="caption" >
-                                        Waggered
+                                    Waggered
                                </Typography>
-                                 
+
                             </Grid>
                             <Grid item xs={6} sm={6} lg={6} style={{
                                 fontWeight: 500,
-                                 
+
                                 lineHeight: 1.5,
                                 padding: '10px',
-                                justifyContent:"flex-end",
-                                display:"flex",
-                                alignItems:"center"
+                                justifyContent: "flex-end",
+                                display: "flex",
+                                alignItems: "center"
                             }} >
-                                  <Typography variant="caption" style={{
-                           
-                           fontWeight: 600,
-                           fontSize: 'medium',
-                           lineHeight: 1.5,
-                           // marginTop:20
-                       }}>
-                                <span style={{color:"grey"}}>
-                                           ₹{data.stats ? data.stats.waggered : 0}
-                                       </span>
-                               </Typography>
+                                <Typography variant="caption" style={{
+
+                                    fontWeight: 600,
+                                    fontSize: 'medium',
+                                    lineHeight: 1.5,
+                                    // marginTop:20
+                                }}>
+                                    <span style={{ color: "grey" }}>
+                                        ₹{data.stats ? data.stats.waggered : 0}
+                                    </span>
+                                </Typography>
                             </Grid>
 
                         </Grid>
-                   
+
                     </Paper>
 
 
@@ -563,28 +566,28 @@ export default function Profile() {
                                 fontSize: 'smaller',
                                 lineHeight: 1.5,
                                 padding: '10px',
-                                display:"flex",
-                                alignItems:"center"
+                                display: "flex",
+                                alignItems: "center"
                             }}>
-                                <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none',color:'grey' }}>
-                               
-                                My Transactions
+                                <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none', color: 'grey' }}>
+
+                                    My Transactions
                             </Link>
-                                
+
                             </Grid>
                             <Grid item xs={6} sm={6} lg={6} style={{
                                 fontWeight: 600,
                                 fontSize: 'smaller',
                                 lineHeight: 1.5,
                                 padding: '10px',
-                                justifyContent:"flex-end",
-                                display:"flex",
-                                alignItems:"center"
+                                justifyContent: "flex-end",
+                                display: "flex",
+                                alignItems: "center"
                             }} >
-                                 <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none',color:'grey' }}>
-                                 <ChevronRightIcon />
-                            </Link>
-                                
+                                <Link to={{ pathname: `/transactions` }} style={{ textDecoration: 'none', color: 'grey' }}>
+                                    <ChevronRightIcon />
+                                </Link>
+
                             </Grid>
 
                         </Grid>
@@ -600,7 +603,7 @@ export default function Profile() {
                     left: "50%"
                 }} disableShrink />}
 
-            <Dialog fullScreen={fullScreen} open={openTeam} onClose={handleTeamClose}  TransitionComponent={Transition}>
+            <Dialog fullScreen={fullScreen} open={openTeam} onClose={handleTeamClose} TransitionComponent={Transition}>
                 <AppBar position={"relative"} className={classes.appBar}  >
                     <Toolbar>
                         <IconButton edge="start" style={{ color: "white" }} onClick={handleTeamClose} aria-label="close">
@@ -611,11 +614,11 @@ export default function Profile() {
             </Typography>
                     </Toolbar>
                 </AppBar>
-                <Container maxWidth="md" style={{ padding: 10,minWidth:256, }}>
-                    <Paper elevation={0}   >
+                <Container maxWidth="md" style={{ padding: 10, minWidth: 256,textAlign: "center" }}>
+                    { signData !== null && Object.keys(signData).length === 0  ? <Paper elevation={0}   >
                         <List>
                             <CssTextField
-                                
+
                                 autoFocus
                                 margin="dense"
                                 id="name"
@@ -644,15 +647,60 @@ export default function Profile() {
                                     alignItems: 'center'
                                 }}
                             >
-                                <Button  size="medium" color="secondary" variant="contained" style={{
-                                    width: 200,color:"white"
+                                <Button size="medium" color="secondary" variant="contained" style={{
+                                    width: 200, color: "white"
                                 }} onClick={handleClick}>
                                     Deposit
                                      </Button>
                             </div>
                         </List>
                     </Paper>
-                </Container>
+                    : signData !== null ?  
+                    <Paper elevation={0} >
+                        <form id="redirectForm" method="post"
+                            action={signData.postUrl} style={{
+                                justifyContent: 'center',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                alignItems: 'center'
+                            }} >
+
+                            <input type="hidden" name="appId" value={signData.appId} />
+                            <input type="hidden" name="orderId" value={signData.orderId} />
+                            <input type="hidden" name="orderAmount" value={signData.orderAmount} />
+                            <input type="hidden" name="orderCurrency" value={signData.orderCurrency} />
+                            <input type="hidden" name="orderNote" value={signData.orderNote} />
+                            <input type="hidden" name="customerName" value={signData.customerName} />
+                            <input type="hidden" name="customerPhone" value={signData.customerPhone} />
+                            <input type="hidden" name="customerEmail" value={signData.customerEmail} />
+                            <input type="hidden" name="returnUrl" value={signData.returnUrl} />
+                            <input type="hidden" name="notifyUrl" value={signData.notifyUrl} />
+                            <input type="hidden" name="signature" value={signData.sign} />
+
+                            <Button type="submit" value="Pay"
+                                size="medium"
+                                color="secondary"
+                                variant="contained" style={{
+                                    width: 200, color: "white"
+                                }} >
+                                Proceed
+            </Button>
+                        </form>
+                            </Paper> 
+                    :
+                    <div>
+                    <CircularProgress color="secondary" style={{
+                        marginLeft:"auto"
+                    }} disableShrink />
+                    <br/>
+                        <Typography variant="caption">
+                            Authenticating
+                        </Typography>
+                    </div>
+ }
+            
+                    </Container>
 
 
             </Dialog>

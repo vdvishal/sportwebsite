@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { useHistory } from "react-router-dom";
 import styled from 'styled-components'
 import * as logo from './logo_transparent.png'
+import { useHistory,Link } from "react-router-dom";
 
 const TopContainer = styled.div`
             background-color: #1A1E23;
@@ -75,6 +75,16 @@ export default function Footer(props) {
                     color: "white"}}>
                         Point System
                     </a>
+
+                    </div>
+                    <div>
+                    <Link to={{
+     pathname: "/faq" ,
+     state: {index:8}
+}}  style={{textDecoration: "none",
+color: "white"}}>
+                        Bonus and Promotions
+                    </Link>
 
                     </div>
                 </Section1>
