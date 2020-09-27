@@ -21,4 +21,4 @@ export const match = (type,matchId) => instance.get(`/match?matchId=${matchId}&g
     })
       .then((response) => {
         return (response);
-      });
+      });    

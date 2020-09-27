@@ -167,7 +167,7 @@ export default function Profile() {
         }).then(response => {
             if (response.status === 200) {
                 handleNotificationClick("Withdraw request processing");
-                window.location.reload()
+               // window.location.reload()
 
             }
 

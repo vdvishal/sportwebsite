@@ -12,11 +12,12 @@ import Home from './component/home';
  
 
 import Match from './component/match/match';
+
 import MyMatch from './component/match/myMatch';
 
 import Contest from './component/contest/contest';
   
-import FAQ from './component/faq/index';
+import FAQ from "./component/faq/index";
 
 import Privacy from './component/faq/privacy';
 

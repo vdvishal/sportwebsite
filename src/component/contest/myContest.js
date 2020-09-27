@@ -701,8 +701,9 @@ export default function Contest(props) {
 
 
   const [UnderOver, setUnderOver] = React.useState(null);
+  const [UnderOver2, setUnderOver2] = React.useState(null);
 
-
+  
   const [matchUps, setMatchups] = React.useState(null);
 
   const [fantasy, setfantasy] = React.useState([]);
@@ -739,6 +740,10 @@ export default function Contest(props) {
 
       // setVs(response.data.vs.length === 0 ? [] : response.data.vs)
       setUnderOver(response.data.underOver)
+      setUnderOver2(response.data.underOver2)
+
+      
+
       setMatchups(response.data.comboMatch)
       setfantasy(response.data.fantasy)
 
@@ -746,9 +751,14 @@ export default function Contest(props) {
         return uState[`typeA-${index2}`] = false;
       })
 
+      response.data.underOver2.map((contest2, index2) => {
+        return uState[`typeC-${index2}`] = false;
+      })
+
       response.data.comboMatch.map((contest2, index2) => {
         return uState[`typeB-${index2}`] = false;
       })
+
 
       setCustomAll(response.data.custom)
       let custom = _.filter(response.data.custom, ['contestType', filterCustom]);
@@ -1029,7 +1039,7 @@ export default function Contest(props) {
 
 
 
-
+  
 
   const view = () => UnderOver.map((contest2, index2) => {
     return UnderOver.length !== 0 ?
@@ -1258,6 +1268,232 @@ export default function Contest(props) {
       </Paper>) : <div>No contest Joined</div>
   })
 
+  const viewUnderOver = () => UnderOver2.map((contest2, index2) => {
+    return UnderOver2.length !== 0 ?
+
+      (<Paper elevation={2} style={{ margin: 2.5 }} key={contest2._id} >
+        <Paper  >
+          <ContestCardheader >
+
+            <Typography variant="caption"
+              style={{ fontWeight: 500, fontSize: '1.05rem', color: "white" }}>
+              Entry #{index2 + 1}
+            </Typography>
+            <ExpandMoreIcon onClick={() => handleCollapse(`typeC-${index2}`)} style={!uState[`typeC-${index2}`] ? { fontWeight: 800, padding: 10, fontSize: '1.45rem', color: "white", cursor: "pointer" } : { display: "none" }} />
+            <ExpandLessIcon onClick={() => handleCollapse(`typeC-${index2}`)} style={uState[`typeC-${index2}`] ? { fontWeight: 800, padding: 10, fontSize: '1.45rem', color: "white", cursor: "pointer" } : { display: "none" }} />
+          </ContestCardheader>
+        </Paper>
+        <Collapse isOpened={uState[`typeC-${index2}`]} >
+          {Object.entries(contest2.contest).map(([, contest], indx) =>
+            <ContestType2 key={contest._id}>
+              <ContestNameArea>
+                <ContestRightNameArea
+                style={{
+                  cursor:"pointer"
+                }}
+                   onClick={() => getPlayer(contest.playerInfo.id)}
+                >
+                  <div className="image" style={{
+
+                    padding: '16.5px',
+                    margin: '5.5px',
+
+
+                  }}>
+                    <Avatar src={contest.playerInfo.image_path} variant="circle" />
+                  </div>
+                  <div>
+                    <Typography variant="caption" style={{ fontWeight: 700 }}>
+                      {contest.playerInfo.firstname[0]}. {contest.playerInfo.lastname}
+                    </Typography>
+                    <br />
+                    <Typography variant="caption" style={{ fontWeight: 400 }}>
+                      {contest.playerInfo.team ? contest.playerInfo.team.name : ""}
+                    </Typography>
+                    <br />
+                    <Typography variant="caption" style={{ fontWeight: 400 }}>
+                      {contest.playerInfo.position ? contest.playerInfo.position.name : ""}
+                    </Typography>
+                  </div>
+
+                </ContestRightNameArea>
+              </ContestNameArea>
+
+
+              <ContestvalueArea>
+                <div style={{
+                  positon: "relative",
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+
+                  <NestedFinalDiv
+                    style={
+                      contest2['winner'] ?
+                        contest2['winner'][contest._id] === 1 ? {
+                          backgroundColor: "#77BC37",
+                          boxShadow: "0px 0px 12px 1px #77BC37",
+                          // marginLeft: "-17px"
+                        } : {
+                            backgroundColor: contest2['winner'][contest._id] === 2 ? "#F79123" : "#f58f22",
+                            boxShadow: "0px 0px 12px 1px #f58f22",
+                            // marginLeft: "-17px"
+                          } : {
+                            display: 'flex',
+                          backgroundColor: "#B9B9B9",
+                          boxShadow: "0px 0px 12px 1px #B9B9B9",
+                        }}
+                  >
+                    <Typography variant="caption">
+                      {`${multipleArr2[indx]}X`}
+
+                    </Typography>
+                  </NestedFinalDiv>
+
+                  <Typography variant="caption"  >
+
+                    {/* {multipleArr2[index]}X */}
+                  </Typography>
+                </div>
+
+                <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+
+                  {
+                    contest.status === "Discarded" ?
+                      <Typography variant="caption" style={{ color: "grey", fontWeight: 700 }} >
+                        Contest cancelled
+                </Typography>
+                      :
+                      <Typography variant="caption">
+                        Gets <span style={contest2['winner'] ?
+                          contest2['winner'][contest._id] === 1 ? { color: "#77BC37", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 }} >
+                          {contest2['selectedTeam'][contest._id]['typeName']}
+                        </span>
+                      </Typography>}
+                </Typography>
+
+              </ContestvalueArea>
+            </ContestType2>
+          )}
+        </Collapse>
+        <div>
+          <ContestType2 style={{ height: 88 }}>
+            <ContestNameArea>
+              <ContestRightNameArea>
+                <div style={{
+
+                  padding: '16.5px',
+                  margin: '5.5px',
+
+
+                }}>
+
+                </div>
+
+              </ContestRightNameArea>
+            </ContestNameArea>
+
+
+            <ContestvalueArea>
+              <div style={{
+                positon: "relative",
+                display: "flex",
+                justifyContent: "center",
+              }}>
+
+                <FinalValue >
+                  <NestedFinalDiv style={
+                    contest2['winner'] && contest2['status'] === "Finished" ? contest2.lostContest.length === 0 ? {
+                      backgroundColor: "#77BC37",
+                      boxShadow: "0px 0px 12px 1px #77BC37",
+                    } : {
+                        backgroundColor: "#f58f22",
+                        boxShadow: "0px 0px 12px 1px #f58f22",
+                      } : {
+                        display: "flex",
+                        backgroundColor: "#B9B9B9",
+                        boxShadow: "0px 0px 12px 1px #B9B9B9",
+                      }
+                  }         >
+
+                    <Typography variant="caption">
+                      {contest2.lostContest !== null && contest2.lostContest !== undefined && contest2.lostContest.length === 0 ? multipleArr2[Object.keys(contest2.wonContest).length - 1] : ''}X
+
+                  </Typography>
+
+                  </NestedFinalDiv>
+
+                </FinalValue>
+                <Typography variant="caption"  >
+
+                  {/* {multipleArr2[index]}X */}
+                </Typography>
+              </div>
+
+
+
+              {/* <Typography variant="caption" style={{padding:"0 10px",textAlign:"end"}} >
+            Payout: <span style={{color:"#77BC37",fontWeight:700}} >
+            ₹{multipleArr2[contest2.contest.length - 1]*contest2.amount}
+              </span>
+          </Typography> */}
+
+
+              {contest2['winner'] && contest2['status'] === "Finished" ?
+                contest2.wonContest.length !== 0 && contest2.lostContest.length === 0 ?
+
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                    <span style={{ color: "#77BC37", fontWeight: 500, }} >
+                      You won
+              ₹{multipleArr2[Object.keys(contest2.wonContest).length - 1] * contest2.amount}
+                    </span>
+                  </Typography>
+                  :
+                  contest2.wonContest.length === 0 && contest2.lostContest.length === 0
+                    ?
+                    <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                      <span style={{ color: "#77BC37", fontWeight: 500, }} >
+                        Refund
+              ₹{contest2.amount}
+                      </span>
+                    </Typography>
+                    :
+                    <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                      <span style={{ color: "#F79123", fontWeight: 500 }} >
+                        You lost {contest2.lostContest.length} contest
+              </span>
+                    </Typography>
+                :
+                contest2['status'] === "Aban." ?
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }}>
+                    Refund due to match abandoned
+                    </Typography>
+                  :
+
+                  <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                    <Typography variant="caption">
+                      Entry:
+                    <span style={{ color: "#77BC37", fontWeight: 500 }} >
+
+                        ₹{contest2.amount}
+                      </span>
+                    </Typography>
+                    <br />
+                Payout: <span style={{ color: "#77BC37", fontWeight: 500 }} >
+                      {contest2.lostContest !== null && contest2.lostContest.length > 0 ?
+                        "You lost " + contest2.lostContest.length + " contest"
+                        :
+                        contest2.wonContest !== null && contest2.wonContest.length > 0 ?
+                          "₹" + contest2.wonContest.length > 0 ?
+                            multipleArr2[contest2.wonContest.length - 1] * contest2.amount : 0 : 0}
+
+                    </span>
+                  </Typography>}
+            </ContestvalueArea>
+          </ContestType2>
+        </div>
+      </Paper>) : <div>No contest Joined</div>
+  })
 
   const viewCombo = () => matchUps.length !== 0 ? matchUps.map((contest2, index2) =>
     <Paper key={contest2._id} elevation={2} style={{ margin: "5px 2.5px" }} >
@@ -2675,7 +2911,8 @@ export default function Contest(props) {
             variant="scrollable"
             scrollButtons="on"
           >
-            <Tab label="Under/Over" />
+            <Tab label="1/3 Under/Over" />
+            <Tab label="1/2 Under/Over" />
             <Tab label="Combo Duels" />
             <Tab label="Fantasy 11" />
             <Tab label="Custom Duels" />
@@ -2730,12 +2967,53 @@ export default function Contest(props) {
           </div>
         </div>
 
+        <div style={value === 1 ? { display: 'block', marginTop: '10px' } : { display: 'none' }}  >
+          <Paper elevation={0} style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: "10px",
+            marginBottom: '2.5px'
+          }}>
+            <div elevation={0} style={{
+              fontStyle: "italic",
+              textAlign: 'start',
+
+            }}>
+              <Typography variant="caption" style={{ fontWeight: 800 }}>
+                Under/Over
+             </Typography>
+
+            </div>
+          </Paper>
+          <div style={{
+            display: 'flex',
+            flexDirection: "column",
+
+          }}>
+
+
+            {UnderOver2 !== null ? UnderOver2.length > 0 ? viewUnderOver()
+              :  <Paper elevation={0} style={{ width: "100%", textAlign: "center", backgroundColor: mode ? "#232C31" : "#F9F8FC" }}>
+              <Typography variant="caption" style={{ width: "100%", fontWeight: 600, textAlign: "center" }} >
+                Join Contest
+             </Typography>
+            </Paper> :
+              <CircularProgress style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%"
+              }} disableShrink />
+            }
+          </div>
+        </div>
 
 
 
 
 
-        <div style={value === 1 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
+
+        <div style={value === 2 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
 
           <Container maxWidth="md" style={{ padding: 0 }}>
             <Paper elevation={0} style={{
@@ -2770,7 +3048,7 @@ export default function Contest(props) {
 
         </div>
 
-        <div style={value === 2 ? { display: 'block', marginTop: '10px', position: "relative" } : { display: 'none' }}>
+        <div style={value === 3 ? { display: 'block', marginTop: '10px', position: "relative" } : { display: 'none' }}>
           <Container maxWidth="md" style={{ padding: 10 }}>
             <Paper elevation={0} style={{
               marginBottom: 60,
@@ -2787,7 +3065,7 @@ export default function Contest(props) {
 
         </div>
 
-        <div style={value === 3 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
+        <div style={value === 4 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
           
             <Paper elevation={0} style={{
               display: "flex",
@@ -2871,7 +3149,7 @@ export default function Contest(props) {
 
         </div>
 
-        <div style={value === 4 ? { display: 'block', marginTop: '10px', position: "relative" } : { display: 'none' }}>
+        <div style={value === 5 ? { display: 'block', marginTop: '10px', position: "relative" } : { display: 'none' }}>
           <Container maxWidth="md" style={{ padding: 10 }}>
             <Paper elevation={0} style={{
               marginBottom: 60

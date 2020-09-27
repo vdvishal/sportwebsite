@@ -110,6 +110,15 @@ export const joinUnderOverContest = (data) => instance.post(`/contest/join/under
     return (response);
   });
 
+  export const joinUnderOverContest2 = (data) => instance.post(`/contest/join/underover/2`, data, {
+    headers: {
+      'Authorization': `${Cookies.get("token")}`,
+    }
+  })
+  .then((response) => {
+    return (response);
+  });
+  
 
   export const joinVsContest = (contestId, teamId,playerInfo,amount) => instance.post(`/contest/join/vs`, {
     contestId, teamId,playerInfo,amount

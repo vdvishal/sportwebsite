@@ -464,7 +464,7 @@ export default function Profile() {
                                     // marginTop:20
                                 }}>
                                     <span style={{ color: "#ff3502" }}>
-                                        -₹{data.stats ? data.stats.loss : 0}
+                                        ₹{data.stats ? data.stats.loss : 0}
                                     </span>
                                 </Typography>
                             </Grid>

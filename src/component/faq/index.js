@@ -411,7 +411,7 @@ window.scrollTo(0,0)
 
                             <hr />
                             <h5><strong>
-                               *If a match has a D/L method is applied, then all under/over contest will be cancelled and refunded
+                               *You have to take in account the playing condition, incase of D/L method
                             </strong>
                             </h5>
                             
@@ -850,7 +850,7 @@ window.scrollTo(0,0)
 
 <h3><strong>Bonus</strong></h3>
 
-<Typography variant="caption"  >Currently, we are offering a 100% deposit bonus on 1st deposit upto ₹50.</Typography>
+<Typography variant="caption"  >Currently, we are offering a 100% deposit bonus on 1st deposit upto ₹25.</Typography>
 
 <Typography variant="caption"  >This amount can't be withdrawed to bank account.</Typography>
 

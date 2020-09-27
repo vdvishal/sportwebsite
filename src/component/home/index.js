@@ -42,6 +42,8 @@ import Footer from './footer'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { ModeContext } from '../../App';
 
+import * as mqtt from 'mqtt';
+
 import * as api from '../../api/user'
 import * as ref from '../../api/ref'
 import * as matchapi from '../../api/match';
@@ -265,7 +267,45 @@ export default function HomePage(props) {
             }
           })
 
+        
+          const options = {
+            // clientId uniquely identifies client
+            // choose any string you wish
+            clientId: "MQTT_CLIENT_" + new Date().getTime()
+          };
+      
+          var client = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
+          client.on('connect', function () {
+            console.log("ws home connected")
+          })
+      
+          client.on('reconnect', function () {
+            console.log('ws home reconnect')
+          })
+          client.subscribe("withdraw")
+      
+          client.on('message', function (topic, message) {
+            // console.log('message: ', message);
+            // Updates React state with message 
+            let m = JSON.parse(message)
+            console.log('message: ', m);
+            handleNotificationClick(m.message)
+            setWallet(m.amount)
+          });
+      
+       
+          return () => {
+            // HERE I WANT TO UNSUBSCRIBE WHEN THE COMPONENT UNMOUNT 
+            client.unsubscribe("withdraw")
+          }
+
     }, []);
+
+    const handleNotificationClick = (message) => {
+        setopen(true);
+        setmessage(message);
+    
+      }
 
     const setEmail = (mail) => {
         setmail(mail)
