@@ -2,7 +2,7 @@
 /* eslint-disable no-lone-blocks */
 import React from 'react';
 import ReactGA from 'react-ga';
-
+import moment from 'moment';
 import { useEffect,useContext } from 'react';
 import { Link } from "react-router-dom";
 import { Collapse } from 'react-collapse';
@@ -2329,7 +2329,7 @@ export default function Contest(props) {
           </DuelsCustomDiv>
           </Paper>
           <Paper elevation={0} > 
-          {contest.open ? 
+          {contest.open &&  moment(match.starting_at).unix() >= moment().unix() ? 
           <DuelsCustomDiv style={{ padding: "5px" }} >
 
 
@@ -2373,7 +2373,7 @@ export default function Contest(props) {
               </div>
             </DuelSingleRight>
           </DuelsCustomDiv>
-            : 
+            : contest.userInfo.player2 ?
             <DuelsCustomDiv2a style={{ padding: "6px",}} >
 
  
@@ -2410,7 +2410,7 @@ export default function Contest(props) {
                 : 
               <Typography variant="caption" style={{ color: "red" }}>
                  {
-                   contest.users.player2 === localStorage.getItem('sid') ? 
+                   contest.users.player2.toString() === localStorage.getItem('sid') ? 
                       "You lost, try again in next match"
                       :
                       "Duel lost"
@@ -2439,7 +2439,51 @@ export default function Contest(props) {
                 </DuelSingleRight1bNestedDiv>
                
             </DuelsCustomDiv2a>
+            : 
+            <DuelsCustomDiv style={{ padding: "5px" }} >
 
+
+
+            <DuelSingleRight >
+              <div style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "flex-start",
+                flexDirection: "column",
+                padding: "6.89px 0",
+                color: "#77BC37",
+              }}>
+                <Typography variant="caption" style={{ color: "grey" }}>
+                  Challenger
+            </Typography>
+
+                <Typography variant="caption">
+                  {contest.info.player2}
+                </Typography>
+              </div>
+              <div style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "flex-start",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}>
+                <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
+
+
+
+                </span>
+                <Typography variant="caption"
+                  style={{
+
+                    color: '#77BC37'
+                  }}>
+                  No Challenger. Refunded
+                  </Typography>
+              </div>
+            </DuelSingleRight>
+          </DuelsCustomDiv>
+           
           }
         </Paper>
 
@@ -2490,7 +2534,12 @@ export default function Contest(props) {
               </Typography>
                 : 
                     <Typography variant="caption" className="textAlign" style={{ color: "red" }}>
-                        Duel lost!
+                        {
+                   contest.users.player1 === localStorage.getItem('sid')? 
+                      "You lost, try again in next match"
+                      :
+                      "Duel lost"
+                 } 
                   </Typography>
                 :
                 <Typography variant="caption" className="textAlign" style={{ color: "#77BC37" }}>
@@ -2568,7 +2617,7 @@ export default function Contest(props) {
 
         </div>
         </Paper><Paper elevation={0} >
-        {contest.open === true ?
+        {contest.open &&  moment(match.starting_at).unix() >= moment().unix() ?
           <DuelsCustomDiv style={{ padding: "7px" }} >
 
 
@@ -2614,7 +2663,7 @@ export default function Contest(props) {
               </div>
             </DuelSingleRight>
           </DuelsCustomDiv>
-          : <DuelsCustomDiv2  >
+          : contest.player2 ? <DuelsCustomDiv2  >
 
             <DuelSingleRight2 >
               <div style={{
@@ -2647,8 +2696,13 @@ export default function Contest(props) {
               Winner ₹{contest.totalAmount}
             </Typography>
               : 
-                  <Typography variant="caption" className="textAlign"  style={{ color: "red" }}>
-                      Duel lost!
+                  <Typography variant="caption"  style={{ color: "red",textAlign:"right" }}>
+                                     {
+                   contest.users.player2 === localStorage.getItem('sid')? 
+                      "You lost, try again in next match"
+                      :
+                      "Duel lost"
+                 } 
                 </Typography>
               :
               <Typography variant="caption" className="textAlign"  style={{ color: "#77BC37" }}>
@@ -2698,7 +2752,52 @@ export default function Contest(props) {
               </DuelSingleRight1aNestedDiv>
 
             </DuelSingleRight1a>
-          </DuelsCustomDiv2>}
+          </DuelsCustomDiv2>
+          :   <DuelsCustomDiv style={{ padding: "5px" }} >
+
+
+
+          <DuelSingleRight >
+            <div style={{
+              display: "flex",
+              alignContent: "center",
+              alignItems: "flex-start",
+              flexDirection: "column",
+              padding: "6.89px 0",
+              color: "#77BC37",
+            }}>
+              <Typography variant="caption" style={{ color: "grey" }}>
+                Challenger
+          </Typography>
+
+              <Typography variant="caption">
+              No Challenger
+              </Typography>
+            </div>
+            <div style={{
+              display: "flex",
+              alignContent: "center",
+              alignItems: "flex-start",
+              flexDirection: "column",
+              justifyContent: "center"
+            }}>
+              <span style={{ padding: "2.5px", fontSize: "12px", marginLeft: "auto" }}>
+
+
+
+              </span>
+              <Typography variant="caption"
+                style={{
+
+                  color: '#77BC37'
+                }}>
+                No Challenger. Refunded
+                </Typography>
+            </div>
+          </DuelSingleRight>
+        </DuelsCustomDiv>
+         
+        }
           </Paper>
           </DuelsCustom2>
           

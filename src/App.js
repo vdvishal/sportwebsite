@@ -51,6 +51,9 @@ import ScrollToTop from './component/common/scrollToTop';
 
 import Kyc from './component/users/kyc';
 
+import Success from './component/PG/success';
+
+
 import * as color from './json/color.json';
 
 import * as theme from './json/colorPallete.json';
@@ -316,6 +319,7 @@ function App() {
               <Route path="/terms" exact component={Terms} />  
               <Route path="/privacypolicy" exact component={Privacy} />  
               <Route path="/message" exact component={Message} />  
+              <Route path="/success" exact component={Success} />  
 
               
               

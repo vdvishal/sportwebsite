@@ -3214,10 +3214,10 @@ export default function Contest(props) {
           >
 
             <Tab label="1/3 Under/Over" />
+            <Tab label="1/2 Under/Over" />
             <Tab label="Combo Duels" />
             <Tab label="Fantasy 11" />
             <Tab label="Custom Duels" />
-            <Tab label="1/2 Under/Over" />
           </Tabs>
 
         </Paper>
@@ -3266,11 +3266,43 @@ export default function Contest(props) {
         </div>
 
 
+        <div style={value === 1 ? { display: 'block', marginTop: '10px' } : { display: 'none' }}  >
+          <Paper elevation={0} style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: "10px",
+            marginBottom: '10px'
+          }}>
+            <div elevation={0} style={{
+              fontStyle: "italic",
+              textAlign: 'start',
+
+            }}>
+              <Typography variant="caption" style={{ fontWeight: 800 }}>
+                1/2 Under/Over
+                  </Typography>
+            </div>
+            <div elevation={0} style={{
+              fontStyle: "italic",
+              textAlign: 'end',
+
+            }}>
+              <Typography variant="caption">
+                Select a minimum of 3 outcomes
+                  </Typography>
+            </div>
+
+
+          </Paper>
+          {viewUnderOver()}
+        </div>
 
 
 
 
-        <div style={value === 1 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
+
+        <div style={value === 2 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
 
 
           <Paper elevation={0} style={{
@@ -3309,7 +3341,7 @@ export default function Contest(props) {
 
         </div>
 
-        <div style={value === 2 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
+        <div style={value === 3 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
 
           <Paper elevation={0} style={{
             display: "flex",
@@ -3413,7 +3445,7 @@ export default function Contest(props) {
 
         </div>
 
-        <div style={value === 3 ? {
+        <div style={value === 4 ? {
           display: 'flex',
           flexDirection: "column",
           justifyContent: "space-between",
@@ -3650,10 +3682,6 @@ export default function Contest(props) {
             <Pagination onChange={getPageCustom} page={activePage} count={page} color="secondary" />
           </div>
 
-        </div>
-
-        <div style={value === 4 ? { display: 'block', marginTop: '10px' } : { display: 'none' }}  >
-          {viewUnderOver()}
         </div>
 
 
@@ -4238,7 +4266,7 @@ export default function Contest(props) {
         </Betslip>
         ) : <div></div>}
 
-        {value === 2 ?
+        {value === 3 ?
           <AppBar position="fixed" className={classes.appBar}>
             <Toolbar style={{
               display: "flex",
