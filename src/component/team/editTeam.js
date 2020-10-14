@@ -311,8 +311,9 @@ export default function EditTeam(props) {
  
 
   useEffect(() => {
+    window.scrollTo(0,0)
     ReactGA.pageview(props.location.pathname);
-
+    
     (async function teamsFnc() {
         let userTeam= await getMyTeam();
 
@@ -544,12 +545,7 @@ const getTeam = (teamFinal) => api.team(props.match.params.matchId).then(respons
 
     api.patchUserTeam(obj,props.match.params.teamId).then(response => {
         handleNotificationClick(response.message);
-        history.push({
-          pathname:`/contest/${props.match.params.matchId}`,
-          state: {
-            tabNumber: 2
-          }
-        })
+        history.goBack()
     }).catch(() => {
         handleNotificationClick("Error, Please try again")
     });

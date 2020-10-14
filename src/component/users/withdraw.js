@@ -167,7 +167,9 @@ export default function Profile() {
         }).then(response => {
             if (response.status === 200) {
                 handleNotificationClick("Withdraw request processing");
-               // window.location.reload()
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000);
 
             }
 
@@ -298,7 +300,7 @@ export default function Profile() {
                             <TextField
 
                                 disabled
-                                id="demo-simple-select"
+                                
                                 value={acc}
                                 
                             >
@@ -317,7 +319,7 @@ export default function Profile() {
                             <TextField
 
                                 disabled
-                                id="demo-simple-select"
+                                
                                 value={upi}
                                 
                             >
@@ -335,7 +337,13 @@ export default function Profile() {
                     }}>
                     <Div>
                         <div>
-                            <Typography variant="caption">
+                            <Typography variant="caption" style={{
+                                    textAlign: 'left',
+                                    fontWeight: 500,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                             Account Holder Name
                             </Typography>
                         </div>
@@ -343,7 +351,7 @@ export default function Profile() {
                             <TextField
 
 
-                                id="demo-simple-select"
+                                
                                 value={benName}
                                 onChange={(event) => setText(event.target.value, 4)}
                             >
@@ -353,7 +361,13 @@ export default function Profile() {
                     </Div>
                     <Div >
                         <div>
-                            <Typography variant="caption">
+                            <Typography variant="caption" style={{
+                                    textAlign: 'left',
+                                    fontWeight: 500,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                                 Account Number
                             </Typography>
                         </div>
@@ -361,7 +375,7 @@ export default function Profile() {
                             <TextField
 
 
-                                id="demo-simple-select"
+                                
                                 value={acc}
                                 onChange={(event) => setText(event.target.value, 2)}
                             >
@@ -371,7 +385,13 @@ export default function Profile() {
                     </Div>
                     <Div >
                         <div>
-                            <Typography variant="caption">
+                            <Typography variant="caption" style={{
+                                    textAlign: 'left',
+                                    fontWeight: 500,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                                 IFSC
                             </Typography>
                         </div>
@@ -379,7 +399,7 @@ export default function Profile() {
                             <TextField
 
 
-                                id="demo-simple-select"
+                                
                                 value={IFSC}
                                 onChange={(event) => setText(event.target.value, 3)}
                             >
@@ -390,7 +410,13 @@ export default function Profile() {
 
                     <Div>
                         <div>
-                            <Typography variant="caption">
+                            <Typography variant="caption" style={{
+                                    textAlign: 'left',
+                                    fontWeight: 500,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                                 UPI
                             </Typography>
                         </div>
@@ -398,7 +424,7 @@ export default function Profile() {
                             <TextField
 
 
-                                id="demo-simple-select"
+                                
                                 value={upi}
                                 onChange={(event) => setText(event.target.value, 5)}
                             >
@@ -406,7 +432,11 @@ export default function Profile() {
                             </TextField>
                         </div>
                     </Div>
-                    <Div style={{display:config.paytm ? "block" : "none"}}>
+                    <Div style={{display:config.paytm ? "block" : "none",textAlign: 'left',
+                                    fontWeight: 500,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"}}  >
                         <div>
                             <Typography variant="caption">
                                 PayTM Number
@@ -416,7 +446,7 @@ export default function Profile() {
                             <TextField
 
 
-                                id="demo-simple-select"
+                                
                                 value={paytm}
                                 onChange={(event) => setText(event.target.value, 6)}
                             >
@@ -427,7 +457,13 @@ export default function Profile() {
                    
                     <Div >
                         <div>
-                            <Typography variant="caption">
+                            <Typography variant="caption" style={{
+                                    textAlign: 'left',
+                                    fontWeight: 500,
+                                    fontSize: 'small',
+                                    lineHeight: 1.5,
+                                   color:"grey"
+                                }}>
                                 Address
                             </Typography>
                         </div>
@@ -435,7 +471,7 @@ export default function Profile() {
                             <TextField
 
 
-                                id="demo-simple-select"
+                                
                                 value={address1}
                                 onChange={(event) => setAddress1(event.target.value)}
                             >
@@ -462,7 +498,7 @@ export default function Profile() {
                     
                 <div style={{
                                     textAlign: 'left',
-                                    fontWeight: 600,
+                                    fontWeight: 500,
                                     fontSize: 'small',
                                     lineHeight: 1.5,
                                    color:"grey"
@@ -483,7 +519,7 @@ export default function Profile() {
                 <Div>
                 <div style={{
                                     textAlign: 'left',
-                                    fontWeight: 600,
+                                    fontWeight: 500,
                                     fontSize: 'small',
                                     lineHeight: 1.5,
                                    color:"grey"
@@ -496,7 +532,7 @@ export default function Profile() {
                         <TextField
 
 
-                            id="demo-simple-select"
+                            
                             value={withdraw}
 
                             onChange={(event) => {setAmount(event.target.value);setWithdraw(event.target.value);}}
@@ -509,7 +545,7 @@ export default function Profile() {
                 <Div>
                 <div style={{
                                     textAlign: 'left',
-                                    fontWeight: 600,
+                                    fontWeight: 500,
                                     fontSize: 'small',
                                     lineHeight: 1.5,
                                    color:"grey"
@@ -523,7 +559,7 @@ export default function Profile() {
                         <TextField
 
                             select    
-                            id="demo-simple-select"
+                            
                             value={withdrawType}
 
                             onChange={(event) => setWithdrawType(event.target.value)}
@@ -545,7 +581,7 @@ export default function Profile() {
                                 <TextField
 
                                 select    
-                                id="demo-simple-select"
+                                
                                 value={withdrawType}
 
                                 onChange={(event) => setWithdrawType(event.target.value)}
@@ -570,6 +606,22 @@ export default function Profile() {
                     </div>
             </Paper>
 
+            <Paper style={{
+                padding: 10,
+                marginTop: 10
+            }}>
+                <Typography variant="caption">
+                *Instant/Upi withdraws are charged at ₹4 per withdraw
+                </Typography>
+                <br/>
+                <Typography variant="caption">
+                *Bank withdraws are free of charge
+                </Typography>
+                <br/>
+                <Typography variant="caption">
+                *Max amount withdraws at a time is ₹10000
+                </Typography>                
+            </Paper>
         </Container>)
     }else{
         return (
@@ -585,7 +637,7 @@ export default function Profile() {
                     <Div>
                     <div style={{
                                         textAlign: 'left',
-                                        fontWeight: 600,
+                                        fontWeight: 500,
                                         fontSize: 'small',
                                         lineHeight: 1.5,
                                        color:"grey"
@@ -595,7 +647,7 @@ export default function Profile() {
                         </div>
                         <div style={{
                                         textAlign: 'left',
-                                        fontWeight: 600,
+                                        fontWeight: 500,
                                         fontSize: 'small',
                                         lineHeight: 1.5,
                                        color:"grey"
@@ -607,7 +659,7 @@ export default function Profile() {
                     <Div>
                     <div style={{
                                         textAlign: 'left',
-                                        fontWeight: 600,
+                                        fontWeight: 500,
                                         fontSize: 'small',
                                         lineHeight: 1.5,
                                        color:"grey"
@@ -617,7 +669,7 @@ export default function Profile() {
                         </div>
                         <div style={{
                                         textAlign: 'left',
-                                        fontWeight: 600,
+                                        fontWeight: 500,
                                         fontSize: 'small',
                                         lineHeight: 1.5,
                                        color:"grey"
@@ -629,7 +681,7 @@ export default function Profile() {
                     <Div>
                     <div style={{
                                         textAlign: 'left',
-                                        fontWeight: 600,
+                                        fontWeight: 500,
                                         fontSize: 'small',
                                         lineHeight: 1.5,
                                        color:"grey"
@@ -639,7 +691,7 @@ export default function Profile() {
                         </div>
                         <div style={{
                                         textAlign: 'left',
-                                        fontWeight: 600,
+                                        fontWeight: 500,
                                         fontSize: 'small',
                                         lineHeight: 1.5,
                                        color:"grey"
@@ -651,7 +703,7 @@ export default function Profile() {
                     <Div>
                     <div style={{
                                         textAlign: 'left',
-                                        fontWeight: 600,
+                                        fontWeight: 500,
                                         fontSize: 'small',
                                         lineHeight: 1.5,
                                        color:"grey"
@@ -684,7 +736,7 @@ export default function Profile() {
                                 <TextField
     
     
-                                    id="demo-simple-select"
+                                    
                                     value={name}
                                     onChange={(event) => setText(event.target.value, 1)}
                                 >
@@ -702,7 +754,7 @@ export default function Profile() {
                                 <TextField
     
     
-                                    id="demo-simple-select"
+                                    
                                     value={acc}
                                     onChange={(event) => setText(event.target.value, 2)}
                                 >
@@ -720,7 +772,7 @@ export default function Profile() {
                                 <TextField
     
     
-                                    id="demo-simple-select"
+                                    
                                     value={IFSC}
                                     onChange={(event) => setText(event.target.value, 3)}
                                 >
@@ -776,7 +828,7 @@ export default function Profile() {
                         
                     <div style={{
                                         textAlign: 'left',
-                                        fontWeight: 600,
+                                        fontWeight: 500,
                                         fontSize: 'small',
                                         lineHeight: 1.5,
                                        color:"grey"
@@ -797,7 +849,7 @@ export default function Profile() {
                     <Div>
                     <div style={{
                                         textAlign: 'left',
-                                        fontWeight: 600,
+                                        fontWeight: 500,
                                         fontSize: 'small',
                                         lineHeight: 1.5,
                                        color:"grey"
@@ -810,7 +862,7 @@ export default function Profile() {
                             <TextField
     
     
-                                id="demo-simple-select"
+                                
                                 value={withdraw}
     
                                 onChange={(event) => setAmount(event.target.value)}

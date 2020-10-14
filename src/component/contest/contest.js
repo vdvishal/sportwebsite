@@ -320,7 +320,8 @@ const DuelSingle = styled.div`
   display:flex;
   flex-direction:row;
   margin:2px;
-   
+  border-radius:4px;
+  border: 1px solid #cbd4df; 
  
   padding:5px;
   border-radius:4px;
@@ -364,7 +365,8 @@ const DuelSingleRightTop = styled.div`
   display:flex;
   flex-direction:row;
   margin:2px;
-   
+  border-radius:4px;
+  border: 1px solid #cbd4df; 
   background-color: #FFFFFF;
   padding:5px;
   border-radius:4px;
@@ -578,8 +580,8 @@ const ContestButton = styled.div`
 
 const ContestButtonContent = styled.div`
 cursor: pointer;
-              border-radius:2px;
-                      
+              border-radius:4px;
+              border: 1px solid #cbd4df;       
               width:100%;
               background-color:white;
               padding:0 10px;
@@ -635,7 +637,6 @@ background-color: #77BC37;
             width: 25px;
             height: 25px;
             display:flex;
-            
             align-content:center;
             justify-content:center;
             color: white;
@@ -1402,7 +1403,7 @@ export default function Contest(props) {
 
 
   const view = () => moreLessArr.map(contest => (
-    <Paper key={contest._id} elevation={1} style={{
+    <Paper key={contest._id} elevation={0} style={{
 
       marginTop: 10
     }}>
@@ -1576,7 +1577,7 @@ export default function Contest(props) {
 
 
   const viewUnderOver = () => UnderOver2.map(contest => (
-    <Paper key={contest._id} elevation={1} style={{
+    <Paper key={contest._id} elevation={0} style={{
 
       marginTop: 10
     }}>
@@ -3222,11 +3223,32 @@ export default function Contest(props) {
 
         </Paper>
 
-        {/* <Paper elevation={0} style={value === 0 ? { display: 'block', marginTop: '25px' } : { display: 'none' }}>
-          <div>
-            {vsContest.length > 0 ? viewVs() : <div />}
-          </div>
-        </Paper> */}
+        <Paper elevation={0} style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: "10px",
+            margin: '10px 0'
+          }}>
+            <div elevation={0} style={{
+              fontStyle: "italic",
+              textAlign: 'start',
+
+            }}>
+ 
+            </div>
+            <div elevation={0} style={{
+              fontStyle: "italic",
+              textAlign: 'end',
+
+            }}>
+              <Typography variant="caption">
+                Max joining amount is capped at ₹500 for this season
+                  </Typography>
+            </div>
+
+
+          </Paper>
 
         <div style={value === 0 ? { display: 'block', marginTop: '10px' } : { display: 'none' }}  >
           <Paper elevation={0} style={{
@@ -3251,7 +3273,7 @@ export default function Contest(props) {
 
             }}>
               <Typography variant="caption">
-                Select a minimum of 2 outcomes
+                Select a minimum of 3 outcomes
                   </Typography>
             </div>
 
@@ -3342,9 +3364,14 @@ export default function Contest(props) {
         </div>
 
         <div style={value === 3 ? { display: 'block', position: "relative", marginTop: '10px' } : { display: 'none' }}>
-
+            <Paper elevation={0} style={{textAlign:"center"}}>
+              <Typography variant="caption">
+                Coming Soon
+              </Typography>
+            </Paper>
           <Paper elevation={0} style={{
-            display: "flex",
+            // display: "flex",
+            display: 'none',
             flexDirection: "row",
             justifyContent: "space-between",
             padding: "10px",
@@ -3439,8 +3466,8 @@ export default function Contest(props) {
 
 
           </Paper>
-
-          {fantasy.length > 0 ? viewFantasy() : <div ></div>}
+          
+          {fantasy.length > 0 ? viewFantasy() : <div/>}
 
 
         </div>
@@ -3639,7 +3666,7 @@ export default function Contest(props) {
                   mode ? { color: "white" } : { color: "black" }
                 }
                   variant={"outlined"} size="small" onClick={() => openMyDuels(true)} >
-                  My Duels
+                  My Open Duels
                   </Button>
               </div>
 
@@ -3687,7 +3714,7 @@ export default function Contest(props) {
 
 
 
-        {enterContest && multiple >= 2 ? (<Betslip style={
+        {enterContest && multiple > 2 ? (<Betslip style={
           enterContest ? minimize ? { transform: "translateY(0px)", display: "block", } : { transform: "translateY(79%)", display: "block", } : { display: "none", }
         }
         >
@@ -3773,7 +3800,7 @@ export default function Contest(props) {
         </Betslip>
         ) : <div></div>}
 
-        {enterContest2 && multiple >= 2 ? (<Betslip style={
+        {enterContest2 && multiple > 2 ? (<Betslip style={
           enterContest2 ? minimize2 ? { transform: "translateY(0px)", display: "block", } : { transform: "translateY(79%)", display: "block", } : { display: "none", }
         }
         >
@@ -3875,7 +3902,7 @@ export default function Contest(props) {
         </Betslip>
         ) : <div></div>}
 
-        {enterContest5 && multiple >= 2 ? (<Betslip style={
+        {enterContest5 && multiple > 2 ? (<Betslip style={
           enterContest5 ? minimize5 ? { transform: "translateY(0px)", display: "block", } : { transform: "translateY(79%)", display: "block", } : { display: "none", }
         }
         >
@@ -4267,7 +4294,7 @@ export default function Contest(props) {
         ) : <div></div>}
 
         {value === 3 ?
-          <AppBar position="fixed" className={classes.appBar}>
+          <AppBar position="fixed" className={classes.appBar} style={{display: 'none'}}>
             <Toolbar style={{
               display: "flex",
               justifyContent: "center"

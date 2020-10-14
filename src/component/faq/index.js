@@ -252,18 +252,19 @@ window.scrollTo(0,0)
                                 </strong></h3>
                            
                            <Typography variant="caption"  >
-                                This is a classic fantasy team contest for people who have extensive knowledge about the game.
+                               Coming Soon
+                                {/* This is a classic fantasy team contest for people who have extensive knowledge about the game.
             
 
             Here, create a team of 11 players and join one of contest available. The teams in the winning prize range
             are paid out accordingly.
             
-            The fantasy points are based on standard rules.
+            The fantasy points are based on standard rules. */}
            </Typography>
            <br/>
-            <Typography variant="caption"  >
+            {/* <Typography variant="caption"  >
             The fantasy points are based on standard rules.
-           </Typography>
+           </Typography> */}
                             
                             <h3><strong>
                             4. Custom Duels
@@ -303,7 +304,7 @@ window.scrollTo(0,0)
                                 </strong></h3>
                            
                                 <Typography variant="caption"  >
-                               1. Pick a winner in 2 duels.
+                               1. Analyse and pick 3 players
           </Typography>
                             <div style={{maxWidth:"970px"}} >
                                 <img src={combo2} style={{maxWidth:"100%"}} alt="combo"/>
@@ -311,14 +312,14 @@ window.scrollTo(0,0)
                             <br/>
 
                             <Typography variant="caption"  >
-                                2. Add your desired money and confirm to join.
+                                2. Add your desired amount and confirm to join
           </Typography>
                         <div style={{maxWidth:"970px"}}>
                                 <img src={payslip2} style={{maxWidth:"100%"}} alt="combo"/>
                             </div>
                             <br/>
                             <Typography variant="caption"  >
-                                3. Wait for the results.
+                                3. Wait for the results
           </Typography>
                          
                             <br/>
@@ -414,6 +415,10 @@ window.scrollTo(0,0)
                                *You have to take in account the playing condition, incase of D/L method
                             </strong>
                             </h5>
+                            <h5><strong>
+                               *Amount will be refunded incase match is cancelled
+                            </strong>
+                            </h5>
                             
                         </Paper>
                         <Paper style={index === 2 ? {
@@ -432,7 +437,7 @@ window.scrollTo(0,0)
                            
 
                            <Typography variant="caption"  >
-                               1. Pick a winner in 3 duels.
+                           1. Analyse and pick 3 players
           </Typography>
                             <div style={{maxWidth:"970px"}}>
                                 <img src={combo} style={{maxWidth:"100%"}} alt="combo"/>
@@ -440,7 +445,7 @@ window.scrollTo(0,0)
                             <br/>
 
                             <Typography variant="caption"  >
-                                2. Add your desired money and confirm to join.
+                                2. Add your desired amount and confirm to join
           </Typography>
                         <div style={{maxWidth:"970px"}}>
                                 <img src={payslip} alt="combo" style={{maxWidth:"100%"}}/>
@@ -570,11 +575,11 @@ window.scrollTo(0,0)
                            
 
                            <Typography variant="caption"  >
-
+                                Coming Soon
                             </Typography>
                             
                               
-                            <h3><strong>
+                            {/* <h3><strong>
                                 Create a team
                                 </strong></h3>
                             
@@ -637,7 +642,8 @@ window.scrollTo(0,0)
                              <br/>
                              <h3><strong>
                                Select a contest and join
-                                </strong></h3>
+                                </strong></h3> */}
+                        
                         </Paper>
 
 
@@ -723,7 +729,7 @@ window.scrollTo(0,0)
 
                             <hr />
                             <Typography variant="caption">
-                               *Payout is always 1.9 times
+                               *Commission is 10% of the total prize pool.
                             
                             </Typography >
                             <br />
@@ -822,16 +828,16 @@ window.scrollTo(0,0)
 
 <h3><strong>Withdrawals</strong></h3>
 
-<Typography variant="caption"  >Withdrawals are processed only after your bank account is verified and has the same matching name as submitted verification documents.</Typography>
+<Typography variant="caption"  >Withdrawals are processed only after your KYC documents are submitted.</Typography>
 
 <Typography variant="caption"  >The minimum withdrawal limit is ₹200 to maximum of ₹10000 at a time. </Typography>
 
 
 <h4>Details required</h4>
 
-<Typography variant="caption"  >Name of the bank, Name of the branch, Name of account holder, account no. and IFSC code.</Typography>
+<Typography variant="caption"  >Name of account holder, account no. and IFSC code for bank and UPI for</Typography>
 
-<Typography variant="caption"  >A clear image of bank passbook with your name and address is required for address verification.</Typography>
+{/* <Typography variant="caption"  >A clear image of bank passbook with your name and address is required for address verification.</Typography> */}
 
 <Typography variant="caption"  >You should double check your account no. and IFSC code, if you provide a wrong detail and the withdrawal goes to wrong address we will not be held responsible nor take responsibility of the error.</Typography>
 
@@ -850,21 +856,14 @@ window.scrollTo(0,0)
 
 <h3><strong>Bonus</strong></h3>
 
-<Typography variant="caption"  >Currently, we are offering a 100% deposit bonus on 1st deposit upto ₹25.</Typography>
-
-<Typography variant="caption"  >This amount can't be withdrawed to bank account.</Typography>
-
-<h3><strong>Promotions</strong></h3>
-
-<h4>Signup Bonus</h4>
-
-<Typography variant="caption"  >Signup Bonus, we are offering a ₹25 signup bonus for limited period.</Typography>
+<Typography variant="caption"  >100% deposit bonus on 1st deposit upto ₹25 and additional ₹25 as a signup bonus</Typography>
+<Typography variant="caption"  >100% of the bonus can be used to join contest</Typography>
 
 <h4>Referral Bonus</h4>
 
-<Typography variant="caption"  >A bonus of ₹25 is added everytime someone uses your referral code and deposits in our site.</Typography>
+<Typography variant="caption" >Each referral gives you a bonus of ₹25 provided he/she deposits in our website</Typography>
 <br/>
-<Typography variant="caption"  >* If a user is found to use fake emails and phone number to gain bonus, we will ban the user account with no further notice.</Typography>
+<Typography variant="caption"  ></Typography>
 
                             </Paper>
 

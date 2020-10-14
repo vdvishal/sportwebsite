@@ -384,7 +384,10 @@ const StatFieldDiv = styled.div`
 
 const HeaderDiv = styled.div`
   padding-left: 1.5rem;
-  
+  display:flex;
+  flex-wrap:wrap;
+  justify-content: center;
+  align-items: center;
    border-color: #edeef0;
   padding: .75rem 12px;
   text-align:center;
@@ -652,7 +655,6 @@ background-color: #77BC37;
             width: 25px;
             height: 25px;
             display:flex;
-            border:1px solid white;
             align-content:center;
             justify-content:center;
             color: white;
@@ -2518,7 +2520,11 @@ export default function Contest(props) {
 
               { contest.status === "Discarded" ? 
                               <Typography variant="caption" className="textAlign" style={{ color: "#F38E22" }}>
-                               Contest Cancelled!
+                               {contest.notPlaying === contest.player1 ? 
+                               "Player not in starting 11" :
+                               contest.users.player1 === localStorage.getItem('sid') ? "You won! ₹" + contest.totalAmount : "Won ₹" + contest.totalAmount
+
+                               }
                             </Typography>
               : contest.winner && contest.status !== "Discarded" ? contest.users.player1 === contest.winner ? 
               
@@ -2681,7 +2687,10 @@ export default function Contest(props) {
                 </Typography>
                 { contest.status === "Discarded" ? 
                               <Typography variant="caption" className="textAlign"  style={{ color: "#F38E22" }}>
-                               Contest Cancelled!
+                               {contest.notPlaying === contest.player2 ? 
+                               "Player not in starting 11" :
+                               contest.users.player2 === localStorage.getItem('sid') ? "You won! ₹" + contest.totalAmount : "Won ₹" + contest.totalAmount
+                               }
                             </Typography>
               : contest.winner ? contest.users.player2 === contest.winner ? 
               
@@ -2906,16 +2915,17 @@ export default function Contest(props) {
                         margin: 10
                       }}
                     >
-                      {!match.isLive ? match.status === "Finished" ?
-                        <Typography variant={"caption"}>{match.note}</Typography> :
-                        match.status === "Aban." || match.status === "Cancl." ? <Typography variant={"caption"}>Match Abandoned: {match.note}</Typography>
-
-                          : <Typography variant={"caption"}>
-
+                      {match.isFinished===true && match.isCounting===true
+                        ? <Typography variant={"caption"} style={{fontWeight:600}}>Counting points</Typography>
+                        : !match.isLive
+                        ? match.status === "Finished" 
+                        ? <Typography variant={"caption"}>{match.note}</Typography> 
+                        : match.status === "Aban." || match.status === "Cancl."
+                        ? <Typography variant={"caption"}>Match Abandoned: {match.note}</Typography>
+                        : <Typography variant={"caption"}>
                             <Countdown
                               date={match.starting_at ? match.starting_at : match.starting_at}
                               daysInHours={false} />
-
                           </Typography>
                         : <Typography variant={"caption"}>{match.note}</Typography>
                       }
@@ -3340,7 +3350,21 @@ export default function Contest(props) {
                       fontWeight: "750",
                       lineHeight: "1.5"
                     }}>
-                      Catch/Stump
+                      Catch/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Stump/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      RunOut
           </Typography>
 
                   </HeaderDiv>
@@ -3433,14 +3457,29 @@ export default function Contest(props) {
 
                   </HeaderDiv>
                   <HeaderDiv>
-                    <Typography variant="caption" style={{
+                  <Typography variant="caption" style={{
                       fontSize: "0.85rem",
                       fontWeight: "750",
                       lineHeight: "1.5"
                     }}>
-                      Catch/Stump
+                      Catch/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Stump/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      RunOut
           </Typography>
 
+ 
                   </HeaderDiv>
                   <HeaderDiv style={{
 
@@ -3487,12 +3526,26 @@ export default function Contest(props) {
 
 
                   <HeaderDiv>
-                    <Typography variant="caption" style={{
+                  <Typography variant="caption" style={{
                       fontSize: "0.85rem",
                       fontWeight: "750",
                       lineHeight: "1.5"
                     }}>
-                      Catch/Stump
+                      Catch/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Stump/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      RunOut
           </Typography>
 
                   </HeaderDiv>
@@ -3589,12 +3642,26 @@ export default function Contest(props) {
 
                   </HeaderDiv >
                   <HeaderDiv>
-                    <Typography variant="caption" style={{
+                  <Typography variant="caption" style={{
                       fontSize: "0.85rem",
                       fontWeight: "750",
                       lineHeight: "1.5"
                     }}>
-                      Catch/Stump
+                      Catch/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Stump/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      RunOut
           </Typography>
 
                   </HeaderDiv>
@@ -3688,12 +3755,26 @@ export default function Contest(props) {
 
                   </HeaderDiv>
                   <HeaderDiv>
-                    <Typography variant="caption" style={{
+                  <Typography variant="caption" style={{
                       fontSize: "0.85rem",
                       fontWeight: "750",
                       lineHeight: "1.5"
                     }}>
-                      Catch/Stump
+                      Catch/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Stump/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      RunOut
           </Typography>
 
                   </HeaderDiv>
@@ -3741,12 +3822,26 @@ export default function Contest(props) {
 
 
                   <HeaderDiv>
-                    <Typography variant="caption" style={{
+                  <Typography variant="caption" style={{
                       fontSize: "0.85rem",
                       fontWeight: "750",
                       lineHeight: "1.5"
                     }}>
-                      Catch/Stump
+                      Catch/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      Stump/
+          </Typography>
+          <Typography variant="caption" style={{
+                      fontSize: "0.85rem",
+                      fontWeight: "750",
+                      lineHeight: "1.5"
+                    }}>
+                      RunOut
           </Typography>
 
                   </HeaderDiv>

@@ -127,7 +127,7 @@ export default function KYC() {
                 if(response.status === 200){
                     setComplete(true)
                 }
-                setImage(response.data.link);
+                setImage(response.data ? response.data.link : '');
 
         })
     }
@@ -140,11 +140,11 @@ export default function KYC() {
  
 
         api.uploadImage(formdata).then(response => {
-                 setwaitUpload(false)
-                if(response.status === 200){
-                    setComplete(true)
-                }
-                setImage2(response.data.link);
+            setwaitUpload2(false)
+            if(response.status === 200){
+                setComplete2(true)
+            }
+                setImage2(response.data ? response.data.link : '');
 
         })
     }
@@ -157,9 +157,9 @@ export default function KYC() {
  
 
         api.uploadImage(formdata).then(response => {
-                 setwaitUpload(false)
+                 setwaitUpload3(false)
                 if(response.status === 200){
-                    setComplete(true)
+                    setComplete3(true)
                 }
                 setImage3(response.data.link);
 
@@ -167,14 +167,16 @@ export default function KYC() {
     }
 
     const SubmitForm = () => {
- 
+        
 
         api.submitKyc({id:text,aadhar:text2,type,dob:selectedDate,image,aadharFront:image2,aadharBack:image3}).then(response => {
             if(response.status === 200){
                 handleNotificationClick("Documents uploaded");
                 setTimeout(() => {
-                    history.goBack()
+                    history.push('/profile')
                 }, 500);
+            }else{
+                handleNotificationClick(response.data.message);
             }
         })
     }
@@ -190,7 +192,7 @@ export default function KYC() {
             <Notification message={message} open={openNotification} close={handleNotificationClose} />
 
             {data ?
-                <Container maxWidth={'sm'} style={{ padding: 0 }}>
+                !data.documentSubmitted ?<Container maxWidth={'sm'} style={{ padding: 0 }}>
                     <Paper square style={{display:"flex",flexDirection:"row",justifyContent:"center"}}>
                          
                             <Typography variant="caption" style={{ padding: 10,fontSize:"1em",fontWeight:700 }}>
@@ -208,7 +210,7 @@ export default function KYC() {
                        
                             >
                              <Select
-                             id="demo-simple-select"
+                             
                             value={type}
                             onChange={(event) => setID(event.target.value)}
                             >
@@ -225,7 +227,7 @@ export default function KYC() {
                         style={{ padding:"20px 10px 0 0",}}
                             >
                              <TextField
-                             id="demo-simple-select"
+                             
                             placeholder="Pan Card"//{type === 1 ? "Aadhar Card" : "Pan Card"}
                             value={text}
                             onChange={(event) => setIDText(event.target.value)}
@@ -238,7 +240,7 @@ export default function KYC() {
                             >
                              <TextField
                             helperText="*Address proof"
-                            id="demo-simple-select"
+                            
                             placeholder="Aadhaar Number"//{type === 1 ? "Aadhar Card" : "Pan Card"}
                             value={text2}
                             onChange={(event) => setIDText2(event.target.value)}
@@ -315,7 +317,14 @@ export default function KYC() {
             /> : complete3 ?  <img src={image3} height="50px" alt="Aadhaar" />:
             <LinearProgress color="secondary" />}
                 </Paper>
-                </Container>
+                </Container> : 
+                <Paper elevation={0}  style={{marginTop:15,background:"rgba(0,0,0,0)",textAlign:"center"}} >
+                    
+                    <Typography variant="caption">
+                    Document Submitted
+                    </Typography>
+                    
+                </Paper>
 
                 : <CircularProgress style={{
                     position: "fixed",

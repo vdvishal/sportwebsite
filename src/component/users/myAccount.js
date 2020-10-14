@@ -151,10 +151,10 @@ export default function Profile() {
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
     useEffect(() => {
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.async = true;
-        document.body.appendChild(script);
+        // const script = document.createElement('script');
+        // script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        // script.async = true;
+        // document.body.appendChild(script);
 
         api.profile().then(response => {
             let data = {
@@ -431,7 +431,7 @@ export default function Profile() {
                             </Grid>
 
                         </Grid>
-                        <Grid container >
+                        {/* <Grid container >
                             <Grid item xs={6} sm={6} lg={6} style={{
                                 textAlign: 'left',
                                 fontWeight: 600,
@@ -470,7 +470,8 @@ export default function Profile() {
                             </Grid>
 
                         </Grid>
-                        <Grid container >
+                        */}
+                        {/* <Grid container >
                             <Grid item xs={6} sm={6} lg={6} style={{
                                 textAlign: 'left',
                                 fontWeight: 600,
@@ -508,7 +509,7 @@ export default function Profile() {
                                 </Typography>
                             </Grid>
 
-                        </Grid>
+                        </Grid> */}
 
                     </Paper>
 

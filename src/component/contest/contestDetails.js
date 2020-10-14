@@ -504,7 +504,18 @@ export default function ContestDetails(props) {
     </Paper>
   })
 
-  const viewLeaderBoard = () => leaders.map(leader => {
+  const viewLeaderBoard = () => {
+     
+    console.log('contest: ', contest);
+    if(contest.status === "Discarded")
+{
+  return <Paper elevation={0}>
+    <Typography variant="caption">
+      Contest cancelled due to minimum number of players not joining the contest.
+    </Typography>
+  </Paper>
+} 
+  return leaders.map(leader => {
     console.log('-----------',leader);
     // console.log('-----------',Date.now());
     return leader.users.map(user => <Paper key={user._id + "K"}
@@ -565,7 +576,7 @@ export default function ContestDetails(props) {
 
     </Paper>)
   })
-
+}
   const myLeaderBoard = () => {
 
 

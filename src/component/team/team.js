@@ -332,9 +332,7 @@ export default function Team(props) {
 
     api.userTeam(obj).then(response => {
       handleNotificationClick(response.message);
-      history.goBack({state: {
-        tabNumber: 2
-      }})
+      history.goBack()
     }).catch(() => {
         handleNotificationClick("Error, Please try again")
     });
@@ -342,6 +340,7 @@ export default function Team(props) {
 
   useEffect(() => {
     dynamicObj2 = {}
+    window.scrollTo(0,0)
     ReactGA.pageview(props.location.pathname);
     if(localStorage.getItem('isLogged') !== 'true'){
       setOpenLogin(true)
@@ -486,8 +485,26 @@ export default function Team(props) {
     }
 
 
+    if (Object.keys(Allrounder).length === 3 && player.position.id === 4 && countp === 8 && Object.keys(Batsman).length === 4) {
+      handleNotificationClick("Select bowlers")
+      return
+    }
+
+    if (Object.keys(Allrounder).length === 3 && player.position.id === 4 && countp === 8 && Object.keys(Bowler).length === 4) {
+      handleNotificationClick("Select batsman")
+      return
+    }
+
+    if(Object.keys(Bowler).length === 0 && countp >= 8  && player.position.id !== 2){
+      handleNotificationClick("Select a minimum of 3 bowlers")
+      return
+    }
     
     
+    if(Object.keys(Batsman).length === 0 && countp >= 8  && player.position.id !== 1){
+      handleNotificationClick("Select a minimum of 3 batsman")
+      return
+    }
     
 
 

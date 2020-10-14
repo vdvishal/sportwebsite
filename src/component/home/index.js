@@ -149,7 +149,7 @@ export const WalletBonusContext = React.createContext()
 
 export const TransactContext = React.createContext()
 
-
+var client;
 export default function HomePage(props) {
 
     const history = useHistory()
@@ -274,7 +274,7 @@ export default function HomePage(props) {
             clientId: "MQTT_CLIENT_" + new Date().getTime()
           };
       
-          var client = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
+          client = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
           client.on('connect', function () {
             console.log("ws home connected")
           })
@@ -282,7 +282,7 @@ export default function HomePage(props) {
           client.on('reconnect', function () {
             console.log('ws home reconnect')
           })
-          client.subscribe("withdraw")
+          client.subscribe("withdraw_"+localStorage.getItem('sid'))
       
           client.on('message', function (topic, message) {
             // console.log('message: ', message);
@@ -296,7 +296,7 @@ export default function HomePage(props) {
        
           return () => {
             // HERE I WANT TO UNSUBSCRIBE WHEN THE COMPONENT UNMOUNT 
-            client.unsubscribe("withdraw")
+            client.unsubscribe("withdraw_"+localStorage.getItem('sid'))
           }
 
     }, []);
@@ -408,7 +408,7 @@ export default function HomePage(props) {
                 Cookies.set('token', response.data.token);
                 localStorage.setItem('isLogged', true);
                 localStorage.setItem('_ftoken', response.data.refToken);
-
+ 
  
                 setmessage(response.data.message)
                 setopen(true)
@@ -421,7 +421,8 @@ export default function HomePage(props) {
 
                         setPro(data.profilePic);
                         setMsgCount(data.messageCount);
-                        localStorage.setItem('un', data.userName[0]);
+                        localStorage.setItem('sid',data._id);
+                        client.subscribe("withdraw_"+data._id)
 
                         setWallet(data.wallet.balance)
                         setBonus(data.wallet.bonus)

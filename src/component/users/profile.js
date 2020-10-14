@@ -403,7 +403,11 @@ export default function Profile() {
                                 </Typography>
                             </div>
                             <div style={{ padding: "5px 10px" }}>
-                            {!data.verifiedKYC ? 
+                            {data.documentSubmitted === true && !data.verifiedKYC ?  
+                            <Typography variant="caption">
+                                    Verification pending from admin
+                                    </Typography> : 
+                                    !data.verifiedKYC ?
                                 <Link to={{
                                     pathname:"/kyc"
                                 }} style={{ textDecoration:"none",color:"red", cursor:"pointer" }} >
