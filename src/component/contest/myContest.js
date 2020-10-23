@@ -737,7 +737,7 @@ export default function Contest(props) {
   useEffect(() => {
     uState = {};
     ReactGA.pageview(props.location.pathname);
-
+    window.scrollTo(0,0)
     api.mycontest(props.match.params.matchId).then(response => {
 
       // setVs(response.data.vs.length === 0 ? [] : response.data.vs)
@@ -1140,7 +1140,7 @@ export default function Contest(props) {
                 </Typography>
                       :
                       <Typography variant="caption">
-                        Gets <span style={contest2['winner'] ?
+                        <span style={contest2['winner'] ?
                           contest2['winner'][contest._id] === 1 ? { color: "#77BC37", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 }} >
                           {contest2['selectedTeam'][contest._id]['typeName']}
                         </span>
@@ -1247,13 +1247,13 @@ export default function Contest(props) {
 
                   <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                     <Typography variant="caption">
-                      Entry:
+                      Entry:&nbsp;    
                     <span style={{ color: "#77BC37", fontWeight: 500 }} >
 
                         ₹{contest2.amount}
                       </span>
                     </Typography>
-                    <br />
+                    {/* <br />
                 Payout: <span style={{ color: "#77BC37", fontWeight: 500 }} >
                       {contest2.lostContest !== null && contest2.lostContest.length > 0 ?
                         "You lost " + contest2.lostContest.length + " contest"
@@ -1262,7 +1262,7 @@ export default function Contest(props) {
                           "₹" + contest2.wonContest.length > 0 ?
                             multipleArr2[contest2.wonContest.length - 1] * contest2.amount : 0 : 0}
 
-                    </span>
+                    </span> */}
                   </Typography>}
             </ContestvalueArea>
           </ContestType2>
@@ -1367,7 +1367,7 @@ export default function Contest(props) {
                 </Typography>
                       :
                       <Typography variant="caption">
-                        Gets <span style={contest2['winner'] ?
+                        <span style={contest2['winner'] ?
                           contest2['winner'][contest._id] === 1 ? { color: "#77BC37", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 } : { color: "#F79123", fontWeight: 700 }} >
                           {contest2['selectedTeam'][contest._id]['typeName']}
                         </span>
@@ -1474,13 +1474,13 @@ export default function Contest(props) {
 
                   <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                     <Typography variant="caption">
-                      Entry:
-                    <span style={{ color: "#77BC37", fontWeight: 500 }} >
+                      Entry:&nbsp;
+                      <span style={{ color: "#77BC37", fontWeight: 500 }} >
 
                         ₹{contest2.amount}
                       </span>
                     </Typography>
-                    <br />
+                    {/* <br />
                 Payout: <span style={{ color: "#77BC37", fontWeight: 500 }} >
                       {contest2.lostContest !== null && contest2.lostContest.length > 0 ?
                         "You lost " + contest2.lostContest.length + " contest"
@@ -1489,7 +1489,7 @@ export default function Contest(props) {
                           "₹" + contest2.wonContest.length > 0 ?
                             multipleArr2[contest2.wonContest.length - 1] * contest2.amount : 0 : 0}
 
-                    </span>
+                    </span> */}
                   </Typography>}
             </ContestvalueArea>
           </ContestType2>
@@ -1500,8 +1500,8 @@ export default function Contest(props) {
   const viewCombo = () => matchUps.length !== 0 ? matchUps.map((contest2, index2) =>
     <Paper key={contest2._id} elevation={2} style={{ margin: "5px 2.5px" }} >
       <Paper  >
-        <ContestCardheader >
-          <Typography variant="caption" style={{ fontWeight: 500, fontSize: '1.05rem', color: "white" }}>
+        <ContestCardheader  >
+          <Typography variant="caption" style={{ fontWeight: 450, fontSize: '1.05rem', color: "white" }}>
             Entry #{index2 + 1}
           </Typography>
           <ExpandMoreIcon onClick={() => handleCollapse(`typeB-${index2}`)} style={!uState[`typeB-${index2}`] ? { fontWeight: 800, padding: 10, fontSize: '1.45rem', color: "white", cursor: "pointer" } : { display: "none" }} />
@@ -1623,7 +1623,9 @@ export default function Contest(props) {
                     <Avatar src={contest.players[contest.player1].image_path} variant="circle" />
                     : <Avatar src={contest.players[contest.player2].image_path} variant="circle" />}
                 </div>
-                <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
+                <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end",display:'flex',
+                        flexDirection:"column",
+                        justifyContent:"center", }} >
 
                   {
                     contest.status === "Discarded" ?
@@ -1631,13 +1633,21 @@ export default function Contest(props) {
                         Contest cancelled
                 </Typography>
                       :
+                      <div >
                       <Typography variant="caption">
-                        Collects more points than <span style={{ color: "#E78922", fontWeight: 700 }} >{
+                         <span style={{  fontWeight: 700 }} >{ //color: "#E78922",
                           contest.players[contest.player1].id !== contest2['selectedTeam'][contest._id]['playerDetails'].id ?
                             `${contest.players[contest.player1].firstname[0]}. ${contest.players[contest.player1].lastname}` :
                             `${contest.players[contest.player2].firstname[0]}. ${contest.players[contest.player2].lastname}`
-                        }</span></Typography>}
-                  <br />
+                        }</span></Typography>
+                        <br/>
+                        <Typography variant="caption" style={{ fontWeight: 400 }}>
+                          {contest.players[contest.player1].id !== contest2['selectedTeam'][contest._id]['playerDetails'].id
+                           && contest.players[contest.player1].team ?
+                           contest.players[contest.player1].team.name : contest.players[contest.player2].team ?contest.players[contest.player2].team.name :""}                        </Typography>
+                        </div>
+                        }
+ 
 
 
                 </Typography>
@@ -1726,20 +1736,20 @@ export default function Contest(props) {
                     </Typography>
                 : <Typography variant="caption" style={{ padding: "0 10px", textAlign: "end" }} >
                   <Typography variant="caption">
-                    Entry:
+                    Entry:&nbsp;     
                     <span style={{ color: "#77BC37", fontWeight: 500 }} >
 
                       ₹{contest2.amount}
                     </span>
                   </Typography>
-                  <br />
+                  {/* <br />
                 Payout: <span style={{ color: "#77BC37", fontWeight: 500 }} >
                     {contest2.lostContest !== null && contest2.lostContest.length > 0 ?
                       "You lost " + contest2.lostContest.length + " contest"
                       : contest2.wonContest !== null && contest2.wonContest.length > 0 ?
                         "₹" + Object.keys(contest2.wonContest).length > 0 ?
                           multipleArr[Object.keys(contest2.wonContest).length - 1] * contest2.amount : 0 : 0}
-                  </span>
+                  </span> */}
                 </Typography>}
           </ContestvalueArea>
         </ContestType2>
@@ -2825,17 +2835,18 @@ export default function Contest(props) {
             <div style={{ width: "100%" }}>
               <Typography variant="caption" style={{
                 fontSize: "0.75em",
-                fontWeight: 600
+ 
+                // fontWeight: 600
               }}>
                 {match.league.name}
               </Typography>
-
+<br/>
               <div
                 style={{
                   display: "flex",
                   flexDirection: 'row',
                   width: "100%",
-                  marginTop: 10,
+                  
                   justifyContent: "space-between"
                 }}
               >
@@ -2849,7 +2860,7 @@ export default function Contest(props) {
                   }}
                 >
 
-                  <Avatar src={match.localteam.image_path} variant="circle"></Avatar>
+                  <Avatar src={match.localteam.image_path} variant="square"></Avatar>
                   {/* <Typography variant="caption" style={{
                     fontWeight: 600,
                     margin: 10
@@ -2985,7 +2996,7 @@ export default function Contest(props) {
                   }}>
                     {match.visitorteam.code}
                   </Typography> */}
-                  <Avatar src={match.visitorteam.image_path} variant="circle"></Avatar>
+                  <Avatar src={match.visitorteam.image_path} variant="square"></Avatar>
 
                 </div>
               </div>
@@ -4130,6 +4141,46 @@ export default function Contest(props) {
                           {(playerStats.bowlingScoreCard.runs/playerStats.bowlingScoreCard.overs).toFixed(2)}
                         </Typography>
                       </PlayerStatNestedDiv>
+                    </div>
+                    </div>
+                    : <div />
+                  }
+ 
+                   
+                  {playerStats.catchStump > 0 || playerStats.runOut ?
+                  <div>
+                                      <Divider />
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography variant="caption" style={{
+                        fontSize:"1rem",
+                        fontWeight:500,
+                        
+                      }}>
+                        Fielding Scorecard
+                      </Typography>
+                      <Divider />
+                      <PlayerStatNestedDiv style={{
+                         marginTop:"5px"
+                      }}>
+                        <Typography variant="caption">
+                          Catch/Stump
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.catchStump}
+                        </Typography>
+                        <Typography variant="caption">
+                          Runout(Throw/Stump)
+                        </Typography>
+                        <Typography variant="caption">
+                          {playerStats.runOut ? playerStats.runOut.length : 0 }
+                        </Typography>
+                     </PlayerStatNestedDiv>
                     </div>
                     </div>
                     : <div />

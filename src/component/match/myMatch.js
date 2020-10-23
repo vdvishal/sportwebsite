@@ -97,7 +97,7 @@ export default function MyMatch(props) {
 
     useEffect(() => {
       ReactGA.pageview(props.location.pathname);
-
+      window.scrollTo(0,0)
         api.myMatch(1,page,gameType+1).then(response => {
             setresp(200)
             
@@ -115,7 +115,7 @@ const handleGameChange  = (event, newValue) => {
       setWait(true)
       setMatches([])
       setGameType(newValue)
-      api.myMatch(newValue+1,1,newValue+1).then(response => {
+      api.myMatch(value+1,1,newValue+1).then(response => {
         console.log(response);
           setresp(200)
           setWait(false)
@@ -159,7 +159,7 @@ const handleGameChange  = (event, newValue) => {
       setMatches([])
       setActivePage(page)
       
-      api.myMatch(value+1,page,gameType).then(response => {
+      api.myMatch(value+1,page,gameType+1).then(response => {
         console.log(response);
           setresp(200)
           setWait(false)
@@ -253,7 +253,7 @@ const handleGameChange  = (event, newValue) => {
                       }}
                     >
   
-                      <Avatar src={match.localteam.image_path} variant="circle"></Avatar>
+                      <Avatar src={match.localteam.image_path} variant="square"></Avatar>
                       <Typography variant="caption" style={{
                         fontWeight: 600,
                         margin: 10
@@ -295,7 +295,7 @@ const handleGameChange  = (event, newValue) => {
                       }}>
                         {match.visitorteam.code}
                       </Typography>
-                      <Avatar src={match.visitorteam.image_path} variant="circle"></Avatar>
+                      <Avatar src={match.visitorteam.image_path} variant="square"></Avatar>
   
                     </div>
                   </div>
@@ -391,7 +391,7 @@ const handleGameChange  = (event, newValue) => {
                       }}
                     >
   
-                      <Avatar src={match.localteam.image_path} variant="circle"></Avatar>
+                      <Avatar src={match.localteam.image_path} variant="square"></Avatar>
                       <Typography variant="caption" style={{
                         fontWeight: 600,
                         margin: 10
@@ -438,7 +438,7 @@ const handleGameChange  = (event, newValue) => {
                       }}>
                         {match.visitorteam.code}
                       </Typography>
-                      <Avatar src={match.visitorteam.image_path} variant="circle"></Avatar>
+                      <Avatar src={match.visitorteam.image_path} variant="square"></Avatar>
   
                     </div>
                   </div>
@@ -537,7 +537,7 @@ const handleGameChange  = (event, newValue) => {
                       }}
                     >
   
-                      <Avatar src={match.localteam.image_path} variant="circle"></Avatar>
+                      <Avatar src={match.localteam.image_path} variant="square"></Avatar>
 
   
   
@@ -624,7 +624,7 @@ const handleGameChange  = (event, newValue) => {
                       }}>
   
 
-                      <Avatar src={match.visitorteam.image_path} variant="circle"></Avatar>
+                      <Avatar src={match.visitorteam.image_path} variant="square"></Avatar>
   
                     </div>
                   </div>

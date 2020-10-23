@@ -581,7 +581,7 @@ const ContestButton = styled.div`
 const ContestButtonContent = styled.div`
 cursor: pointer;
               border-radius:4px;
-              border: 1px solid #cbd4df;       
+                
               width:100%;
               background-color:white;
               padding:0 10px;
@@ -1438,7 +1438,13 @@ export default function Contest(props) {
         </div>
 
         <ContestvalueArea>
-          <ContestButton onClick={() => { setEnterContest2(true); setMinimize2(true); makeCombo2(contest._id, contest._id + "playerL", { value1: contest.value1, value2: contest.value2, typeName: contest.typeName }, contest.playerInfo, 1) }}>
+          <ContestButton onClick={() => { 
+            setEnterContest2(true); 
+            setMinimize2(true); 
+            makeCombo2(contest._id, 
+            contest._id + "playerL", 
+            { value1: contest.value1, value2: contest.value2, typeName: contest.typeName }, 
+            contest.playerInfo, 1) }}>
 
             <ContestButtonContent
               onClick={() => { setcontestType(1); setcontestId(contest._id); setteamId(1); }}
@@ -1448,7 +1454,8 @@ export default function Contest(props) {
                 backgroundColor: dynamicObj2[contest._id][contest._id + "playerL"] ? color.secondary.main : mode ? "#232c31" : "#f5f4f8",
                 color: dynamicObj2[contest._id][contest._id + "playerL"] ?
                   "white" :
-                  mode ? "white" : "black"
+                  mode ? "white" : "black",
+                  border: mode ? "" : "1px solid #cbd4df"
               }}
             >
               <Typography variant="caption"  >
@@ -1475,6 +1482,7 @@ export default function Contest(props) {
                 display: "grid",
                 padding: 0,
                 gridTemplateColumns: "45px 1fr 45px",
+                border: mode ? "" : "1px solid #cbd4df",
                 boxShadow: dynamicObj2[contest._id][contest._id + "playerM"] ? "0 0 1em 0 #71bc4f" : "",
                 backgroundColor: dynamicObj2[contest._id][contest._id + "playerM"] ?
                   color.secondary.main : mode ? "#232c31" : "#f5f4f8",
@@ -1537,6 +1545,7 @@ export default function Contest(props) {
                   "0 0 1em 0 #71bc4f" : "",
                 backgroundColor: dynamicObj2[contest._id][contest._id + "playerR"] ?
                   color.secondary.main : mode ? "#232c31" : "#f5f4f8",
+                  border: mode ? "" : "1px solid #cbd4df",
                 color: dynamicObj2[contest._id][contest._id + "playerR"] ?
                   "white" :
                   mode ?
@@ -1622,7 +1631,8 @@ export default function Contest(props) {
                   backgroundColor: dynamicObj3[contest._id][contest._id + "Under"] ? color.secondary.main : mode ? "#232c31" : "#f5f4f8",
                   color: dynamicObj3[contest._id][contest._id + "Under"] ?
                     "white" :
-                    mode ? "white" : "black"
+                    mode ? "white" : "black",
+                    border: mode ? "" : "1px solid #cbd4df",
                 }}
             >
               <Typography variant="caption"  >
@@ -1649,7 +1659,8 @@ export default function Contest(props) {
                   backgroundColor: dynamicObj3[contest._id][contest._id + "Over"] ? color.secondary.main : mode ? "#232c31" : "#f5f4f8",
                   color: dynamicObj3[contest._id][contest._id + "Over"] ?
                     "white" :
-                    mode ? "white" : "black"
+                    mode ? "white" : "black",
+                    border: mode ? "" : "1px solid #cbd4df",
                 }}
 
             >
@@ -1687,6 +1698,8 @@ export default function Contest(props) {
       <DuelSingle onClick={() => { setEnterContest(true); makeCombo(contest._id, contest._id + "playerL", contest.players[contest.player1].id, contest.players[contest.player1]) }}
         style={{
           cursor: "pointer",
+ 
+                    border: mode ? "1px solid rgba(0,0,00,0)" : "1px solid #cbd4df",
           boxShadow: dynamicObj[contest._id][contest._id + "playerL"] ?
             "0 0 1em 0 #71bc4f" : "",
           backgroundColor: dynamicObj[contest._id][contest._id + "playerL"] ?
@@ -1763,6 +1776,7 @@ export default function Contest(props) {
         onClick={() => { setEnterContest(true); makeCombo(contest._id, contest._id + "playerR", contest.players[contest.player2].id, contest.players[contest.player2]) }}
         style={{
           cursor: "pointer",
+                    border: mode ? "1px solid rgba(0,0,00,0)" : "1px solid #cbd4df",
           boxShadow: dynamicObj[contest._id][contest._id + "playerR"] ? "0 0 1em 0 #71bc4f"
             : "",
           backgroundColor: dynamicObj[contest._id][contest._id + "playerR"] ? color.secondary.main
@@ -3089,11 +3103,11 @@ export default function Contest(props) {
             <div>
               <Typography variant="caption" style={!mode ? {
                 fontSize: "0.75em",
-                fontWeight: 600,
+                // fontWeight: 600,
                 color: "black"
               } : {
                   fontSize: "0.75em",
-                  fontWeight: 600,
+                  // fontWeight: 600,
                   color: "white"
                 }}>
                 {match.league.name}
@@ -3118,7 +3132,7 @@ export default function Contest(props) {
                   }}
                 >
 
-                  <Avatar src={match.localteam.image_path} variant="circle"></Avatar>
+                  <Avatar src={match.localteam.image_path} variant="square"></Avatar>
                   <Typography variant="caption" style={
 
                     !mode ? {
@@ -3176,7 +3190,7 @@ export default function Contest(props) {
                     }}>
                     {match.visitorteam.code}
                   </Typography>
-                  <Avatar src={match.visitorteam.image_path} variant="circle"></Avatar>
+                  <Avatar src={match.visitorteam.image_path} variant="square"></Avatar>
 
                 </div>
               </div>

@@ -822,7 +822,7 @@ export default function HomePage(props) {
                                 margin="dense"
 
                                 label="Phone Number"
-                                type="Number"
+                                type="text"
                                 fullWidth
                                 onChange={(event) => setPhoneNumber(event.target.value)}
                             />

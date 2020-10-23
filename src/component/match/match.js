@@ -226,7 +226,7 @@ export default function Match(props) {
                     }}
                   >
 
-                    <Avatar src={match.localteam.image_path} variant="circle"></Avatar>
+                    <Avatar src={match.localteam.image_path} variant="square"></Avatar>
                     <Typography variant="caption" style={{
                       fontWeight: 600,
                       margin: 10
@@ -274,7 +274,7 @@ export default function Match(props) {
                     }}>
                       {match.visitorteam.code}
                     </Typography>
-                    <Avatar src={match.visitorteam.image_path} variant="circle"></Avatar>
+                    <Avatar src={match.visitorteam.image_path} variant="square"></Avatar>
 
                   </div>
                 </div>
@@ -376,7 +376,7 @@ const viewMyMatch = () => matches.map(match =>
                   }}
                 >
 
-                  <Avatar src={match.localteam.image_path} variant="circle"></Avatar>
+                  <Avatar src={match.localteam.image_path} variant="square"></Avatar>
                   <Typography variant="caption" style={{
                     fontWeight: 600,
                     margin: 10
@@ -424,7 +424,7 @@ const viewMyMatch = () => matches.map(match =>
                   }}>
                     {match.visitorteam.code}
                   </Typography>
-                  <Avatar src={match.visitorteam.image_path} variant="circle"></Avatar>
+                  <Avatar src={match.visitorteam.image_path} variant="square"></Avatar>
 
                 </div>
               </div>

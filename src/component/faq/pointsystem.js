@@ -282,6 +282,19 @@ export default function PointSystem() {
                     </Typography>
                 </div>
             </Div>
+            <Div>
+                <div>
+                    <Typography variant="caption">
+                     Run-out(Throw)
+                    </Typography>
+                    
+                </div>
+                <div>
+                <Typography variant="caption">
+                +6
+                    </Typography>
+                </div>
+            </Div>
             <Divider />
 
         
@@ -624,8 +637,7 @@ export default function PointSystem() {
             <Divider />
  
             <h6 style={{marginBottom:0}}>FIELDING</h6>
-            <Typography variant="caption" style={{marginTop:0,marginBlockEnd: "2.33em"}}>*Points are not honored to the thrower in run-outs.</Typography>
-
+ 
             <Div>
                 <div>
                     <Typography variant="caption">
@@ -667,7 +679,19 @@ export default function PointSystem() {
                     </Typography>
                 </div>
             </Div>
-             
+            <Div>
+                <div>
+                    <Typography variant="caption">
+                     Run-out(Throw)
+                    </Typography>
+                    
+                </div>
+                <div>
+                <Typography variant="caption">
+                +6
+                    </Typography>
+                </div>
+            </Div>
             <Divider />
 
         
@@ -1042,6 +1066,19 @@ export default function PointSystem() {
                 <div>
                     <Typography variant="caption">
                      Run-out(Stumping)
+                    </Typography>
+                    
+                </div>
+                <div>
+                <Typography variant="caption">
+                    +3
+                    </Typography>
+                </div>
+            </Div>
+            <Div>
+                <div>
+                    <Typography variant="caption">
+                     Run-out(Throw)
                     </Typography>
                     
                 </div>
