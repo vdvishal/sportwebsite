@@ -236,14 +236,14 @@ const lightTheme = createMuiTheme({
 
 function App() {
 
-  const [mode, setMode] = React.useState(false);
+  const [mode, setMode] = React.useState(true);
 
   useEffect(() => {
     initGA.initGA();
     setMode(
-      localStorage.getItem('mode') === 'true' ? true : false
+      localStorage.getItem('mode') == 'false' ? false : true
     )
-    localStorage.getItem('mode') === 'true' ? localStorage.setItem('mode',true)  : localStorage.setItem('mode',false)
+    localStorage.getItem('mode') === 'false' ?  localStorage.setItem('mode',false) : localStorage.setItem('mode',true)  
   }, [])
 
   const handlemode = () => {

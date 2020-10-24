@@ -309,7 +309,7 @@ const Duels = styled.div`
   @media ${device.mobileL} {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto 0px auto;
+    grid-template-rows: auto 2px auto;
     align-items: center;
     margin:0px 0 12px 0;
      
@@ -621,14 +621,17 @@ ailgn-content:center;
 
 const DiagonalTrans = styled.div`
 text-align: center;
+height: 25px;
+
 -webkit-transform: rotate(-45deg);
 -ms-transform: rotate(-45deg);
 transform: rotate(-45deg);
-width: 25px;
-height: 25px;
-display:flex;
-place-content:center;
-text-align:center;
+
+@media ${device.mobileL} {
+  display: flex;
+  align-items: center;
+   
+}
 `
 
 const AntiDiagonalTrans = styled.div`
@@ -1761,7 +1764,7 @@ export default function Contest(props) {
         alignContent: "center",
         alignItems: "center",
         justifyContent: "center",
-        height: "100%"
+        height:"100%"
       }}>
         <AntiDiagonalTrans>
           <DiagonalTrans>

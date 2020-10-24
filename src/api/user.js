@@ -140,7 +140,11 @@ export const withdraw = (formData) => instance.post(`/users/withdraw`, formData,
 
 export const uploadImage = (formData) => instance.post(`/image/upload`, formData, {
   headers: {
-    'Content-Type': 'multipart/form-data',
+    'content-Type': 'multipart/form-data',
     'Authorization': `${Cookies.get("token")}`,
   }
-}).catch(err => err)
+}).catch(err => {
+  console.log(err)
+  console.log('console.log(err): ', err.message);
+  return err
+})

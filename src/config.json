@@ -1,4 +1,4 @@
 {
-    "url": "http://localhost:3008/api/v1/",
-    "url2": "https://api.fantasyjutsu.com/api/v1/"
+    "url2": "http://localhost:3008/api/v1/",
+    "url": "https://api.fantasyjutsu.com/api/v1/"
 }

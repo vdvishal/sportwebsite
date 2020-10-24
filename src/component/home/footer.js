@@ -56,26 +56,44 @@ export default function Footer(props) {
                     Link
                     </Section1Sub>
                     <div>
-                    <a href="/" style={{textDecoration: "none",
-                    color: "white"}}>
+                    <Link
+                                to={{
+                                    pathname: '/'
+                                }}
+                                style={{
+                                    textDecoration: 'none',
+                                    color: 'white'
+                                }}>
                         Home
-                    </a>
+                    </Link>
 
                     </div>
             
                     <div>
-                    <a href="/faq" style={{textDecoration: "none",
-                    color: "white"}}>
+                    <Link
+                                to={{
+                                    pathname:"/faq"
+                                }}
+                                style={{
+                                    textDecoration: 'none',
+                                    color: 'white'
+                                }}>
                         How to play
-                    </a>
+                    </Link>
+                     
 
                     </div>
                     <div>
-                    <a href="/pointsystem" style={{textDecoration: "none",
-                    color: "white"}}>
+                    <Link
+                                to={{
+                                    pathname:"/pointsystem"
+                                }}
+                                style={{
+                                    textDecoration: 'none',
+                                    color: 'white'
+                                }}>
                         Point System
-                    </a>
-
+                    </Link>
                     </div>
                     <div>
                     <Link to={{
@@ -93,24 +111,44 @@ color: "white"}}>
                     Help & Policy
                     </Section2Sub>
                     <div>
-                    <a href="/faq" style={{textDecoration: "none",
-                    color: "white"}}>
+                    <Link
+                                to={{
+                                    pathname:"/faq"
+                                }}
+                                style={{
+                                    textDecoration: 'none',
+                                    color: 'white'
+                                }}>
                         FAQ
-                    </a>
+                    </Link>
+ 
 
                     </div>
                     <div>
-                    <a href="/terms" style={{textDecoration: "none",
-                    color: "white"}}>
+                    <Link
+                                to={{
+                                    pathname:"/terms"
+                                }}
+                                style={{
+                                    textDecoration: 'none',
+                                    color: 'white'
+                                }}>
                         Terms of service
-                    </a>
+                    </Link>
+                     
                     </div>
                     <div>
-                    <a href="/privacypolicy" style={{textDecoration: "none",
-                    color: "white"}}>
-                        Privacy policy
-                    </a>
-
+                    <Link
+                                to={{
+                                    pathname:"/privacypolicy"
+                                }}
+                                style={{
+                                    textDecoration: 'none',
+                                    color: 'white'
+                                }}>
+                         Privacy policy
+                    </Link>
+                     
                     </div>
             
                 </Section2>

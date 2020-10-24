@@ -268,30 +268,30 @@ export default function HomePage(props) {
           })
 
         
-          const options = {
-            // clientId uniquely identifies client
-            // choose any string you wish
-            clientId: "MQTT_CLIENT_" + new Date().getTime()
-          };
+        //   const options = {
+        //     // clientId uniquely identifies client
+        //     // choose any string you wish
+        //     clientId: "MQTT_CLIENT_" + new Date().getTime()
+        //   };
       
-          client = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
-          client.on('connect', function () {
-            console.log("ws home connected")
-          })
+        //   client = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
+        //   client.on('connect', function () {
+        //     console.log("ws home connected")
+        //   })
       
-          client.on('reconnect', function () {
-            console.log('ws home reconnect')
-          })
-          client.subscribe("withdraw_"+localStorage.getItem('sid'))
+        //   client.on('reconnect', function () {
+        //     console.log('ws home reconnect')
+        //   })
+        //   client.subscribe("withdraw_"+localStorage.getItem('sid'))
       
-          client.on('message', function (topic, message) {
-            // console.log('message: ', message);
-            // Updates React state with message 
-            let m = JSON.parse(message)
-            console.log('message: ', m);
-            handleNotificationClick(m.message)
-            setWallet(m.amount)
-          });
+        //   client.on('message', function (topic, message) {
+        //     // console.log('message: ', message);
+        //     // Updates React state with message 
+        //     let m = JSON.parse(message)
+        //     console.log('message: ', m);
+        //     handleNotificationClick(m.message)
+        //     setWallet(m.amount)
+        //   });
       
        
           return () => {
@@ -1009,16 +1009,14 @@ export default function HomePage(props) {
                         }}>
                         <ArrowBackIosIcon style={arrowView ? {display:"block"} :  {display:"none"} } onClick={() => history.goBack()} />
 
-                            <Link
-                                to={{
-                                    pathname: '/'
-                                }}
+                            <a
+                                href= '/'
                                 style={{
                                     textDecoration: 'none',
                                     color: 'white'
                                 }}>
                                     <img src={logo} height="60px" alt="logo"></img>
-                            </Link>
+                            </a>
                                 <SDiv
                                     style={{
                                         color:game === 1 ? "white" : '',

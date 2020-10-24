@@ -8,7 +8,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 
  
- import { Typography, Paper, Container, TextField } from '@material-ui/core';
+ import { Typography, Paper, Container, TextField,Badge } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
  
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -119,7 +119,10 @@ export default function KYC() {
         const formdata = new FormData();
 
         formdata.append('image',e[0])
-        setwaitUpload(true)
+        for (var pair of formdata.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
+                setwaitUpload(true)
  
 
         api.uploadImage(formdata).then(response => {
@@ -136,7 +139,7 @@ export default function KYC() {
         const formdata = new FormData();
 
         formdata.append('image',e[0])
-        setwaitUpload(true)
+        setwaitUpload2(true)
  
 
         api.uploadImage(formdata).then(response => {
@@ -153,7 +156,7 @@ export default function KYC() {
         const formdata = new FormData();
 
         formdata.append('image',e[0])
-        setwaitUpload(true)
+        setwaitUpload3(true)
  
 
         api.uploadImage(formdata).then(response => {
@@ -161,7 +164,7 @@ export default function KYC() {
                 if(response.status === 200){
                     setComplete3(true)
                 }
-                setImage3(response.data.link);
+                setImage3(response.data ? response.data.link : '');
 
         })
     }
@@ -289,10 +292,20 @@ export default function KYC() {
                 withIcon={true}
                 buttonText='Pan card'
                 onChange={onDrop}
-                imgExtension={['.jpg','.png' ]}
+                imgExtension={['.jpg','.png', '.jpeg' ]}
                 maxFileSize={10485760}
-                label={'Max file size: 10mb, accepted: jpg,png'}
-            /> : complete ?  <img src={image} height="50px" alt="ID" />:
+                label={'Max file size: 10mb, accepted: jpg,png,jpeg'}
+            /> : complete ?
+            <Badge 
+            color="secondary" badgeContent={
+                'X'
+            } 
+            style={{cursor:"pointer"}}
+            onClick={()=>{setImage('');setComplete(false)}}
+            >
+            <img src={image} height="100px" style={{margin:10}} alt="Pan card" />
+            </Badge> 
+            :
             <LinearProgress color="secondary" />}
             
                     
@@ -301,20 +314,38 @@ export default function KYC() {
                 withIcon={true}
                 buttonText='Aadhaar card Front'
                 onChange={onDrop2}
-                imgExtension={['.jpg','.png' ]}
+                imgExtension={['.jpg','.png', '.jpeg' ]}
                 maxFileSize={10485760}
-                label={'Max file size: 10mb, accepted: jpg,png'}
-            /> : complete2 ?  <img src={image2} height="50px" alt="Aadhaar" />:
+                label={'Max file size: 10mb, accepted: jpg,png,jpeg'}
+            /> : complete2 ? 
+            <Badge 
+            color="secondary" badgeContent={
+                'X'
+            } 
+            style={{cursor:"pointer"}}
+            onClick={()=>{setImage2('');setComplete2(false)}}
+            >
+            <img src={image2} height="100px"  style={{margin:10}} alt="Aadhaar" />
+            </Badge>  :
             <LinearProgress color="secondary" />}
 
             { !waitUpload3 && !complete3 ? <ImageUploader
                 withIcon={true}
                 buttonText='Aadhaar card Back'
                 onChange={onDrop3}
-                imgExtension={['.jpg','.png' ]}
+                imgExtension={['.jpg','.png', '.jpeg' ]}
                 maxFileSize={10485760}
-                label={'Max file size: 10mb, accepted: jpg,png'}
-            /> : complete3 ?  <img src={image3} height="50px" alt="Aadhaar" />:
+                label={'Max file size: 10mb, accepted: jpg,png,jpeg'}
+
+            /> : complete3 ?  <Badge 
+            color="secondary" badgeContent={
+                'X'
+            } 
+            style={{cursor:"pointer"}}
+            onClick={()=>{setImage3('');setComplete3(false)}}
+            >
+            <img src={image3} height="100px"  style={{margin:10}} alt="Aadhaar" />
+            </Badge> :
             <LinearProgress color="secondary" />}
                 </Paper>
                 </Container> : 

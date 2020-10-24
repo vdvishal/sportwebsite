@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
   
-import { Paper, Divider, Typography, Avatar } from '@material-ui/core';
+import { Paper, Divider, Typography, Avatar,Button } from '@material-ui/core';
 
 import { ModeContext } from '../../App';
 
@@ -27,7 +27,7 @@ import Countdown from 'react-countdown';
 import * as api from '../../api/match'
 
 
-import { Link,useHistory } from 'react-router-dom';
+import { Link,useHistory, Redirect } from 'react-router-dom';
 
 const size = {
   mobileS: '320px',
@@ -643,6 +643,9 @@ const handleGameChange  = (event, newValue) => {
        
     </div>)})) : <div />}
   
+  const redirectUser = () => {
+    history.push('/')
+  }
 
     return (
     <div>
@@ -683,7 +686,8 @@ const handleGameChange  = (event, newValue) => {
         <Container style={{ position: "relative", marginTop: 0, padding: "0px 5px" }} maxWidth='md'>
           <Paper elevation={0} style={value === 0 ? { display: 'block',minHeight:"80vh", marginTop: '5px',backgroundColor: mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
             { !wait ? matches.length > 0 && value === 0 ? viewUpcMatch() : <EDIV>
-              Join match
+              
+              <Button color="secondary" variant="contained" onClick={redirectUser} >Join match</Button>
             </EDIV> : <CircularProgress style={{
           position: "fixed",
           top: "50%",
@@ -693,7 +697,7 @@ const handleGameChange  = (event, newValue) => {
 
           <Paper elevation={0} style={value === 1 ? { display: 'block',minHeight:"80vh" , marginTop: '5px',backgroundColor:mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
             {!wait ? matches.length > 0 && value === 1 ? viewLiveMatch() : <EDIV>
-              Join match
+              <Button color="secondary" variant="contained" onClick={redirectUser} >Join match</Button>
               </EDIV> : <CircularProgress style={{
           position: "fixed",
           top: "50%",
@@ -702,7 +706,7 @@ const handleGameChange  = (event, newValue) => {
       </Paper>
           <Paper elevation={0} style={value === 2 ? { display: 'block',minHeight:"80vh", marginTop: '5px',backgroundColor:mode ? "#232C31"  :"#F9F8FC" } : { display: 'none' }}>
             {!wait ? matches.length > 0 && value === 2 ? viewCompMatch() : <EDIV>
-              Join match
+              <Button color="secondary" variant="contained" onClick={redirectUser} >Join match</Button>
               </EDIV>
                : <CircularProgress style={{
           position: "fixed",

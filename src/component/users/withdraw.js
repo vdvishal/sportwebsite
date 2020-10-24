@@ -610,14 +610,14 @@ export default function Profile() {
                 padding: 10,
                 marginTop: 10
             }}>
-                <Typography variant="caption">
+                {/* <Typography variant="caption">
                 *Instant/Upi withdraws are charged at ₹4 per withdraw
                 </Typography>
                 <br/>
                 <Typography variant="caption">
                 *Bank withdraws are free of charge
                 </Typography>
-                <br/>
+                <br/> */}
                 <Typography variant="caption">
                 *Max amount withdraws at a time is ₹10000
                 </Typography>                
