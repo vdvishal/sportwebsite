@@ -25,7 +25,16 @@ instance.interceptors.response.use(response => {
      window.location.replace('/');
 
    } 
-   if(error && error.response && error.response.status === 496 && localStorage.getItem("isLogged") === "false" && window.location.pathname !== "/register" && window.location.pathname !== "/"){
+   if(error && error.response 
+    && error.response.status === 496 
+    && localStorage.getItem("isLogged") === "false" 
+    && window.location.pathname !== "/register" 
+    && window.location.pathname !== "/" 
+    &&  window.location.pathname !== "/privacypolicy" 
+    && window.location.pathname !== "/faq"
+    && window.location.pathname !== "/terms"
+    && window.location.pathname !== "/pointsystem" 
+    ){
  
     localStorage.setItem("isLogged",false); 
 

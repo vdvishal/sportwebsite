@@ -30,6 +30,7 @@ export default function Transaction() {
     
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         pg.transaction(1).then(response => {            
             setTransaction(response.data.data);
             setPage(response.data.page)

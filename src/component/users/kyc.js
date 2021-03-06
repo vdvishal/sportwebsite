@@ -68,7 +68,7 @@ export default function KYC() {
 
     useEffect(() => {
 
-
+        window.scrollTo(0, 0)
         api.profile().then(response => {
             let data = {
                 status: response.status,

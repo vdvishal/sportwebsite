@@ -96,6 +96,7 @@ export default function Profile() {
     const [waitUpload, setwaitUpload] = React.useState(false);
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         api.profile().then(response => {
  
             let data = {
@@ -550,7 +551,7 @@ export default function Profile() {
                              }}
                              buttonText='Choose images'
                              onChange={onDrop}
-                             imgExtension={['.jpg','.png' ]}
+                             imgExtension={['.jpg','.jpeg','.png' ]}
                              maxFileSize={10485760}
                              label={'Max file size: 10mb, accepted: jpg,png'}
                          />  }

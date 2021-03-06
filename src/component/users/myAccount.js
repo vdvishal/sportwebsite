@@ -155,7 +155,7 @@ export default function Profile() {
         // script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         // script.async = true;
         // document.body.appendChild(script);
-
+        window.scrollTo(0, 0)
         api.profile().then(response => {
             let data = {
                 status: response.status,
@@ -318,7 +318,7 @@ export default function Profile() {
                                     </span>
                                     <br />
                                     <Typography variant="caption" style={{ fontSize: 11.5 }}>
-                                        100% of bonus can be used when joining a contest upto a total of ₹100, after that 50% of bonus is usable
+                                        100% of bonus can be used when joining a contest upto a total of ₹50, after that 50% of bonus is usable
                             </Typography>
                                 </div>
 

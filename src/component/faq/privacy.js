@@ -29,7 +29,7 @@ export default function PointSystem() {
     const [value, setValue] = React.useState(0)
 
     useEffect(() => {
-
+        window.scrollTo(0, 0)
 
     }, []);
 

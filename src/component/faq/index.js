@@ -118,7 +118,7 @@ export default function FAQ(props) {
     const check = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
-window.scrollTo(0,0)
+        window.scrollTo(0,0)
 
     }, []);
 

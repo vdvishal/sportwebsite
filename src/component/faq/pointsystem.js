@@ -30,7 +30,7 @@ export default function PointSystem() {
 
     useEffect(() => {
 
-
+        window.scrollTo(0, 0)
     }, []);
 
     const handleChange = (event, newValue) => {

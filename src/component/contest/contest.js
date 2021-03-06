@@ -7,7 +7,7 @@ import { useEffect, useContext } from 'react';
 import * as color from '../../json/color.json';
 
 import * as colorTheme from '../../json/colorPallete.json'
-import * as mqtt from 'mqtt';
+// import * as mqtt from 'mqtt';
 
 import { Link } from "react-router-dom";
 
@@ -21,7 +21,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import _ from 'lodash';
 import InputLabel from '@material-ui/core/InputLabel';
 
-//
+import './collapse.css'
+
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
@@ -161,9 +162,6 @@ const useStyles = makeStyles({
     select: {
       height: "51px",
       color: 'grey'
-    },
-    input: {
-      color: 'white'
     },
 
   }
@@ -1199,34 +1197,34 @@ export default function Contest(props) {
       clientId: "MQTT_CLIENT_" + new Date().getTime()
     };
 
-    var client = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
-    client.on('connect', function () {
-      console.log('ws connected')
-    })
+    // var client = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
+    // client.on('connect', function () {
+    //   console.log('ws connected')
+    // })
 
-    client.on('reconnect', function () {
-      console.log('ws connected')
-    })
-    client.subscribe(props.match.params.matchId + "reload")
+    // client.on('reconnect', function () {
+    //   console.log('ws connected')
+    // })
+    // client.subscribe(props.match.params.matchId + "reload")
 
-    client.on('message', function (topic, message) {
-      console.log('message: ', JSON.parse(message));
-      // Updates React state with message 
-      if (JSON.parse(message) == '6') {
-        getCustom2(6)
-      }
+    // client.on('message', function (topic, message) {
+    //   console.log('message: ', JSON.parse(message));
+    //   // Updates React state with message 
+    //   if (JSON.parse(message) == '6') {
+    //     getCustom2(6)
+    //   }
 
-      if (JSON.parse(message) == '5') {
-        getCustom2(5)
-      }
+    //   if (JSON.parse(message) == '5') {
+    //     getCustom2(5)
+    //   }
 
-    });
+    // });
 
 
-    return () => {
-      // HERE I WANT TO UNSUBSCRIBE WHEN THE COMPONENT UNMOUNT 
-      client.unsubscribe(props.match.params.matchId)
-    }
+    // return () => {
+    //   // HERE I WANT TO UNSUBSCRIBE WHEN THE COMPONENT UNMOUNT 
+    //   client.unsubscribe(props.match.params.matchId)
+    // }
 
 
   }, []);
@@ -3757,7 +3755,7 @@ export default function Contest(props) {
                 textAlign: "center"
               }}
               >
-                <Input className={classes.input} type="text" placeholder="Amount" style={{ width: '100%' }} onChange={(e) => setBetAmount((e.target.value))} />
+                <Input className="input" type="number" step="0.01" placeholder="Amount"  onChange={(e) => setBetAmount((e.target.value))} />
               </div>
 
               {/* <IconButton style={{
@@ -3860,7 +3858,7 @@ export default function Contest(props) {
                   >
                     {betAmount}₹
               </Typography> */}
-                <Input className={classes.input} type="text" placeholder="Amount" style={{ width: '100%' }} onChange={(e) => setBetAmount((e.target.value))} />
+                <Input className="input" type="number" step="0.01" placeholder="Amount" style={{ width: '100%','-webkit-appearance': 'none', margin: 0 }} onChange={(e) => setBetAmount((e.target.value))} />
               </div>
 
               {/* <IconButton style={{
@@ -3962,7 +3960,7 @@ export default function Contest(props) {
                   >
                     {betAmount}₹
               </Typography> */}
-                <Input className={classes.input} type="text" placeholder="Amount" style={{ width: '100%' }} onChange={(e) => setBetAmount((e.target.value))} />
+                <Input className="input" type="number" step="0.01" placeholder="Amount" style={{ width: '100%' }} onChange={(e) => setBetAmount((e.target.value))} />
               </div>
 
               {/* <IconButton style={{
@@ -4086,7 +4084,7 @@ export default function Contest(props) {
                 </div>
                 <div>
                   <Typography variant="caption" style={{ color: "#77BC37", fontWeight: 600 }}>
-                    {customDialogDetail.contestInfo.player2 === 1 ? `Under ${customDialogDetail.contestInfo.value + 1} points`
+                    {customDialogDetail.contestInfo.player2 === 1 ? `Under ${customDialogDetail.contestInfo.value - 1} points`
                       : `Over ${customDialogDetail.contestInfo.value + 1} points`}
 
                   </Typography>

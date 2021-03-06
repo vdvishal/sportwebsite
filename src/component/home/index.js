@@ -42,7 +42,7 @@ import Footer from './footer'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { ModeContext } from '../../App';
 
-import * as mqtt from 'mqtt';
+// import * as mqtt from 'mqtt';
 
 import * as api from '../../api/user'
 import * as ref from '../../api/ref'
@@ -211,7 +211,8 @@ export default function HomePage(props) {
     const [matches, setMatches] = React.useState(null);
 
     useEffect(() => {
- 
+        window.scrollTo(0, 0)
+        
         if (localStorage.getItem('isLogged') === "false" || localStorage.getItem('isLogged') === null) {
             api.login({ loginType: 4 }).then(response => {
                 if (response && response.status === 200) {
@@ -401,7 +402,7 @@ export default function HomePage(props) {
  
         await api.login({ email: email, password: password}).then(response => {
             if (response && response.status === 200) {
-                console.log(window.location.pathname)
+                console.log(response.data.pathname)
                 if(window.location.pathname === '/register'){
                     history.goBack()
                 }
@@ -416,29 +417,14 @@ export default function HomePage(props) {
 
                 setOpenLogin(false);
 
-                    api.profile().then(response => {
-                        let data = response.data.data
+                setPro(response.data.data.profilePic);
+                setMsgCount(response.data.data.messageCount);
+                localStorage.setItem('sid',response.data.data._id);
+                // client.subscribe("withdraw_"+data._id)
 
-                        setPro(data.profilePic);
-                        setMsgCount(data.messageCount);
-                        localStorage.setItem('sid',data._id);
-                        client.subscribe("withdraw_"+data._id)
-
-                        setWallet(data.wallet.balance)
-                        setBonus(data.wallet.bonus)
-
-                    }).catch(error => {
-                        if (error.response) {
-
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            // if(error.response.status === 401){
-                            // history.push({
-                            //     pathname : "/login"
-                            // });
-                            // }
-                        }
-                    })
+                setWallet(response.data.data.wallet.balance)
+                setBonus(response.data.data.wallet.bonus)
+ 
 
 
             } else if (response &&  response.status === 401) {
@@ -554,9 +540,15 @@ export default function HomePage(props) {
                 type: 2 // resendOTP
             }).then(response => {
                 setmessage(response.data.message);
-                setopen(true)
-                setType('info')
-                handleClickLoginClose()
+                if(response.status === 200){
+                    setopen(true)
+                    setType('info')
+                    handleClickLoginClose()
+                }else{
+                    setopen(true)
+                    setType('info')
+                }
+                
 
             })
         } else {
@@ -848,7 +840,7 @@ export default function HomePage(props) {
                             alignItems: "center",
                             justifyContent: "space-between",
                             padding: 10
-                        }} onClick={handleClickLoginClose} >
+                        }} >
 
                             <span style={{
                                 justifySelf: "center"
@@ -858,9 +850,10 @@ export default function HomePage(props) {
                                 </Typography>
 
                             </span>
-                            <CloseOutlined />
+                            <CloseOutlined  onClick={handleClickLoginClose} />
                         </div>
                         <DialogContent style={fullScreen ? { marginTop: 100,flexGrow:0 } : { marginTop: 0 }}>
+                        <form>
                             <CssTextField
                                 autoFocus
                                 margin="dense"
@@ -888,6 +881,7 @@ export default function HomePage(props) {
                                 fullWidth
                                 onChange={(event) => setpassword2(event.target.value)}
                             />
+                            </form>
                         </DialogContent>
                         <DialogActions>
                         <p
@@ -916,7 +910,7 @@ export default function HomePage(props) {
                                                 size={40}
                                                 strokeWidth={1}
                                                 colors={[
-                                                ['#004777', 0.33],
+                                                ['#75B936', 0.33],
                                                 ['#F7B801', 0.33],
                                                 ['#A30000', 0.33],
                                                 ]}

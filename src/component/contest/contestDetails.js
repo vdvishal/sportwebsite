@@ -32,7 +32,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
 
-import * as mqtt  from 'mqtt';
+// import * as mqtt  from 'mqtt';
 
 import * as api from '../../api/contest'
 import * as team from '../../api/team'
@@ -219,33 +219,33 @@ export default function ContestDetails(props) {
         setSize(response.data.size)
       })
 
-      const options = {
-         // clientId uniquely identifies client
-        // choose any string you wish
-        clientId: "MQTT_CLIENT_" + new Date().getTime()
-    };
+//       const options = {
+//          // clientId uniquely identifies client
+//         // choose any string you wish
+//         clientId: "MQTT_CLIENT_" + new Date().getTime()
+//     };
   
-    var client  = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
-    client.on('connect', function(){
-      console.log('ws connected')
-  })
+//     var client  = mqtt.connect('wss://mqtt.fantasyjutsu.com:8083/mqtt', options);
+//     client.on('connect', function(){
+//       console.log('ws connected')
+//   })
 
-  client.on('reconnect', function(){
-    console.log('ws connected')
-})
-    client.subscribe(props.match.params.contestId)
+//   client.on('reconnect', function(){
+//     console.log('ws connected')
+// })
+//     client.subscribe(props.match.params.contestId)
 
-    client.on('message', function (topic, message) {
-      // Updates React state with message 
-     console.log(JSON.parse(message));
-     let data= JSON.parse(message)
-      setLeaderBoard(data.leader);
+//     client.on('message', function (topic, message) {
+//       // Updates React state with message 
+//      console.log(JSON.parse(message));
+//      let data= JSON.parse(message)
+//       setLeaderBoard(data.leader);
 
-     });
-      return () => {
-        // HERE I WANT TO UNSUBSCRIBE WHEN THE COMPONENT UNMOUNT 
-         client.unsubscribe(props.match.params.contestId)
-      }
+//      });
+//       return () => {
+//         // HERE I WANT TO UNSUBSCRIBE WHEN THE COMPONENT UNMOUNT 
+//          client.unsubscribe(props.match.params.contestId)
+//       }
   }, [])
 
 

@@ -116,7 +116,7 @@ export default function Match(props) {
 
 
   useEffect(() => {
-     
+    window.scrollTo(0, 0)
     ReactGA.pageview(props.location.pathname);
 
     // api.match(1,1).then(response => {      

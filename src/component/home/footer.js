@@ -176,11 +176,11 @@ color: "white"}}>
 
       </div>
 
-      <div>
+      {/* <div>
         The operator of this website is <br/>
         Nodestack Private Limited,&nbsp;<br/>
         Karnataka, India.
-      </div>
+      </div> */}
     </div>
   </TopContainer2>
     </div>)
